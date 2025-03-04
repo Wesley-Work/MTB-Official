@@ -1,21 +1,9 @@
 // src/router/index.ts
  
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
-import Home from '@/views/Home.vue';
-import About from '@/views/About.vue';
+import { RouterConfigMap } from '@config/routerMaps';
  
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home,
-  },
-  {
-    path: '/About',
-    name: 'About',
-    component: About,
-  },
-];
+const routes: Array<RouteRecordRaw> = RouterConfigMap;
  
 const router = createRouter({
   history: createWebHistory(),
