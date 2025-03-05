@@ -5,6 +5,8 @@
     "target": "esnext",
     "lib": [ "esnext", "dom", "dom.iterable", "scripthost"],
     "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
 
     /* Modules */
     "module": "esnext",
@@ -20,7 +22,7 @@
     "allowJs": true,
 
     /* Emit */
-    "declaration": true,  
+    "declaration": true,
     "removeComments": true,
 
     /* Bundler mode */
@@ -39,6 +41,7 @@
     "paths": {
       "@/*": ["*"],
       "@src/*": ["src/*"],
+      "@assets/*": ["src/assets/*"],
       "@config/*": ["src/config/*"],
       "@pages/*": ["src/pages/*"],
       "@components/*": ["src/components/*"],
@@ -48,7 +51,7 @@
       "@hooks/*": ["src/hooks/*"],
     },
 
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   },
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "*.d.ts"]

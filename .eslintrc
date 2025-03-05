@@ -30,7 +30,7 @@
     "no-console": [
       "error",
       {
-        "allow": ["info", "warn", "error"]
+        "allow": ["info", "warn", "error", "group", "groupEnd", "groupCollapsed", "table"]
       }
     ],
     // code style config
