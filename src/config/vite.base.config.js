@@ -5,7 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 export const resolveConfig = {
   alias: {
     '@': path.resolve(__dirname, '../../'),
-    '@src': path.resolve(__dirname, '../src'),
+    '@src': path.resolve(__dirname, '../'),
     '@assets': path.resolve(__dirname, '../assets'),
     '@test': path.resolve(__dirname, '../test'),
     '@pages': path.resolve(__dirname, '../pages'),
