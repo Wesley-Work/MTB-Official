@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <MTBHeader></MTBHeader>
     <div>index.vue</div>
   </div>
 </template>
@@ -8,7 +7,6 @@
 <script setup lang="tsx">
 import { onMounted } from 'vue';
 import { config } from '@src/config';
-import MTBHeader from '@components/header.vue';
 
 onMounted(() => {
   // 招新Console
