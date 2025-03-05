@@ -6,7 +6,8 @@
   "packageManager": "pnpm@9.5.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vite build",
+    "build:preview": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "lint:fix": "eslint --ext .vue,.js,.ts,.tsx ./src --max-warnings 0 --fix --cache",
     "lint": "pnpm lint:tsc && eslint --ext .vue,.js,.ts,.tsx ./src --max-warnings 0 --cache",

@@ -10,7 +10,12 @@
       <div class="nav">
         <ul class="subnav-ul fl">
           <li v-for="(item, index) in defaultNav" :key="index">
-            <a :class="item.extraClass" :target="item.target" :href="`javascript:void(${index})`">
+            <a
+              :class="item.extraClass"
+              :target="item.target"
+              :href="`javascript:void(${index})`"
+              @click="clickToPath(item.path)"
+            >
               <span>{{ item.label }}</span>
             </a>
           </li>
