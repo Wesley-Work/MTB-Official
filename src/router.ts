@@ -12,7 +12,7 @@ const router = createRouter({
 
 // 在这里添加路由的导航守卫
 router.beforeEach((to, from, next) => {
-  console.log('Navigating to:', to.path);
+  console.info('Navigating to:', to.path, from);
   next();
 });
 
