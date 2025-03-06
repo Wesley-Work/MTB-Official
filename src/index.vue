@@ -1,7 +1,13 @@
 <template>
-  <router-view></router-view>
+  <MTBHeader></MTBHeader>
+  <router-view class="waitHeader"></router-view>
 </template>
+<script setup lang="tsx">
+import MTBHeader from '@components/header.vue';
+</script>
 
-<script setup lang="tsx"></script>
-
-<style scoped></style>
+<style lang="scss">
+.waitHeader {
+  margin-top: 78px;
+}
+</style>

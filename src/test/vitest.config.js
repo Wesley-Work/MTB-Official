@@ -1,6 +1,6 @@
 import { resolveConfig, basePlugin } from '../config/vite.base.config';
 
-const paths = resolve(__dirname, '../pages')
+const paths = resolve(__dirname, '../pages');
 
 // 单元测试相关配置
 const testConfig = {

@@ -1,3 +1,2 @@
-export const config = {
-
-}
+export * from './config';
+export * from './routerMaps';
