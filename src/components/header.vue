@@ -135,7 +135,6 @@ export default defineComponent({
   &:hover,
   &.header-fixed {
     background: var(--td-bg-color-container);
-
     .wrap {
       .logo {
         img:first-of-type {
