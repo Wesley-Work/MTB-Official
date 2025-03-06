@@ -1,14 +1,26 @@
 <template>
   <div class="container">
-    <div>index.vue</div>
+    <div style="height: 1280px">index.vue</div>
   </div>
 </template>
 
 <script setup lang="tsx">
 import { onMounted } from 'vue';
 import { config } from '@src/config';
+import { version } from '@/package.json';
 
 onMounted(() => {
+  console.info(
+    `%c MTB-Official %c Version: ${version} `,
+    'background: #35495e; padding: 4px; border-radius: 3px 0 0 3px; color: #fff',
+    'background: #41b883; padding: 4px; border-radius: 0 3px 3px 0; color: #fff',
+  );
+  console.info(
+    `%c Wesley© Copyright %c All Right Reserved. %c`,
+    `background: rgb(45, 140, 240);border:1px solid rgb(45, 140, 240); padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
+    `border:1px solid rgb(45, 140, 240); padding: 1px; border-radius: 0 4px 4px 0; color: rgb(45, 140, 240);`,
+    'background:transparent',
+  );
   // 招新Console
   if (config.RecruitConsole) {
     console.group(
