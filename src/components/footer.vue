@@ -41,7 +41,6 @@
             ><a target="_self" href="http://sdedu.net/">顺德区教育局</a>
           </div>
         </div>
-        <!--]-->
         <div class="Footer-subfooterdiv">
           <h2>找到我们</h2>
           <div class="clearfix">
@@ -51,8 +50,7 @@
         </div>
       </div>
       <div class="mobile" style="justify-content: center">
-        <!--[-->
-        <div class="Footer-subfooterdiv" id="FooterItem--0">
+        <div id="FooterItem--0" class="Footer-subfooterdiv">
           <div class="arrow">
             <h2>媒体部</h2>
             <svg
@@ -134,7 +132,7 @@
             ><a target="_self" href="http://10.3.146.12/">媒体部OA</a>
           </div>
         </div>
-        <div class="Footer-subfooterdiv" id="FooterItem--2">
+        <div id="FooterItem--2" class="Footer-subfooterdiv">
           <div class="arrow">
             <h2>媒体账号</h2>
             <svg
@@ -182,7 +180,7 @@
             >
           </div>
         </div>
-        <div class="Footer-subfooterdiv" id="FooterItem--3">
+        <div id="FooterItem--3" class="Footer-subfooterdiv">
           <div class="arrow">
             <h2>友情链接</h2>
             <svg
@@ -223,7 +221,6 @@
             ><a target="_self" href="http://sdedu.net/">顺德区教育局</a>
           </div>
         </div>
-        <!--]-->
         <div class="Footer-subfooterdiv find-us">
           <h2>找到我们↓</h2>
           <div class="clearfix">
@@ -234,7 +231,9 @@
       </div>
       <div class="Footer-bootom">
         <a href="javascript:void(0)"><img alt="" src="@src/assets/fhzsn_white.png" width="200" /></a>
-        <div class="links"><a target="_blank" href="https://wj.qq.com/s2/15358157/232e/">问题反馈</a></div>
+        <div class="links">
+          <a target="_blank" href="https://wj.qq.com/s2/15358157/232e/">问题反馈</a>
+        </div>
       </div>
       <div class="copyright">
         <div class="items">
@@ -246,7 +245,10 @@
             <span>顺德区中等专业学校、顺德区技工学校 团委学生会</span><span>顺德中专影视创作基地：媒体部</span
             ><span>顺德中专 全媒体中心</span>
           </div>
-          <span style="text-wrap: nowrap">由 城轨222 文俊亮 提供技术支持</span>
+          <span style="text-wrap: nowrap; display: flex; flex-direction: row; gap: 4px">
+            城轨222 文俊亮 提供服务与支持
+            <span class="PackageVersion">v{{ version }}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -255,6 +257,7 @@
 
 <script setup lang="tsx">
 import { defineComponent, ref } from 'vue';
+import { version } from '@/package.json';
 
 const example = ref({
   data: '',
@@ -370,6 +373,13 @@ export default defineComponent({
         display: flex;
         flex-wrap: wrap;
         gap: 0px 12px;
+      }
+      .PackageVersion {
+        color: #fff9;
+        margin-right: 25px;
+        display: flex;
+        align-items: center;
+        font-size: 11px;
       }
     }
   }
