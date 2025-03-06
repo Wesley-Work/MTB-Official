@@ -1,6 +1,10 @@
 <template>
   <Toppic />
-  <div class="mtb-header" :class="{ hasToppic: hasToppic }" :style="{ top: hasToppic_TOP + 'px' }">
+  <div
+    class="mtb-header"
+    :class="{ hasToppic: hasToppic, 'header-fixed': defaultProps.fixed }"
+    :style="{ top: hasToppic_TOP + 'px' }"
+  >
     <div class="wrap">
       <div class="logo">
         <a style="width: 100%; height: 100%" href="/">
@@ -47,7 +51,7 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, defineComponent, onMounted, onUnmounted, ref, watch, type PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
 import router from '../router';
@@ -56,9 +60,15 @@ import Toppic from './toppic.vue';
 const { theme, toggleTheme } = useTheme();
 const { toppicInfo } = useToppic();
 
+const defaultProps = defineProps({
+  fixed: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
+});
+
 const scrollY = ref(0);
 const hasToppic = computed(() => {
-  console.log(!!toppicInfo.value);
   return !!toppicInfo.value;
 });
 const hasToppic_TOP = computed(() => {
@@ -84,7 +94,6 @@ const clickToPath = (path: string) => {
   router.push(path);
 };
 
-// 监听消息变化，如果有消息了就查看当前滑动距离是否>32,若不大于就显示
 watch(hasToppic, (newVal) => {
   if (newVal) {
     scrollY.value = window.scrollY;
@@ -107,6 +116,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.mtb-header.header-fixed + .waitHeader {
+  position: relative;
+  top: 78px;
+}
 .mtb-header {
   display: flex;
   flex-direction: column;
@@ -119,7 +132,8 @@ export default defineComponent({
   z-index: 1305;
   transition: background 0.28s ease-in-out, top 0.28s ease-in-out;
 
-  &:hover {
+  &:hover,
+  &.header-fixed {
     background: var(--td-bg-color-container);
 
     .wrap {
