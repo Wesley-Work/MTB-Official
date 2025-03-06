@@ -16,7 +16,7 @@ onMounted(() => {
     'background: #41b883; padding: 4px; border-radius: 0 3px 3px 0; color: #fff',
   );
   console.info(
-    `%c Wesley© Copyright %c All Right Reserved. %c`,
+    `%c Copyright © Wesley %c MTB All Right Reserved %c`,
     `background: rgb(45, 140, 240);border:1px solid rgb(45, 140, 240); padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
     `border:1px solid rgb(45, 140, 240); padding: 1px; border-radius: 0 4px 4px 0; color: rgb(45, 140, 240);`,
     'background:transparent',
