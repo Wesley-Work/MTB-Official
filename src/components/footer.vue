@@ -2,7 +2,7 @@
   <div class="footer">
     <div class="wrap">
       <div class="pc" style="justify-content: center">
-        <div v-for="(item, index) in footerConfig" :key="index" class="Footer-subfooterdiv">
+        <div v-for="(item, index) in footerConfig?.links" :key="index" class="Footer-subfooterdiv">
           <h2>{{ item?.title ?? `项目${index + 1}` }}</h2>
           <div class="Footer-subtag">
             <a
@@ -205,7 +205,13 @@
       <div class="Footer-bootom">
         <a href="javascript:void(0)"><img alt="" src="@src/assets/fhzsn_white.png" width="200" /></a>
         <div class="links">
-          <a target="_blank" href="https://wj.qq.com/s2/15358157/232e/">问题反馈</a>
+          <a
+            v-for="(item, index) in footerConfig?.list"
+            :key="index"
+            :target="!!item.isRouter ? '' : item.target"
+            :href="item.href"
+            >{{ item.label }}</a
+          >
         </div>
       </div>
       <div class="copyright">
