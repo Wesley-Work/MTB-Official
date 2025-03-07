@@ -1,10 +1,5 @@
-// useTheme.ts
+// useToppic.ts
 import { ref, onMounted } from 'vue';
-
-type ToppicInfo = {
-  data: string;
-  type: string;
-};
 
 export default function useToppic() {
   const toppicInfo = ref<ToppicInfo>();

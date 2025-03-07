@@ -237,9 +237,11 @@
 <script setup lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
 import { version } from '@/package.json';
-import useFooter from '../hooks/useFooter';
+import useFooter from '@hooks/useFooter';
+import { getDevice } from '@utils/device';
 
 const { footerList, refreshList } = useFooter();
+const { isMobile, isPC } = getDevice();
 
 const footerConfig = computed(() => footerList.value as FooterData);
 
