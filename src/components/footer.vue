@@ -2,46 +2,19 @@
   <div class="footer">
     <div class="wrap">
       <div class="pc" style="justify-content: center">
-        <div class="Footer-subfooterdiv">
-          <h2>媒体部</h2>
-          <div class="Footer-subtag">
-            <a target="_self" href="http://10.3.146.11/about-MTB">介绍</a
-            ><a target="_self" href="http://10.3.146.11/join-us">加入我们</a
-            ><a target="_self" href="javascript:void(0)">&lt;广告位招租&gt;</a>
-          </div>
-        </div>
-        <div class="Footer-subfooterdiv">
-          <h2>服务与支持</h2>
-          <div class="clearfix">
-            <a target="_self" href="http://10.3.146.11/share-network-disk">共享网盘</a
-            ><a target="_self" href="http://10.3.146.13/">统一认证系统</a
-            ><a target="_self" href="http://10.3.146.12/">媒体部OA</a>
-          </div>
-        </div>
-        <div class="Footer-subfooterdiv">
-          <h2>媒体账号</h2>
+        <div v-for="(item, index) in footerConfig" :key="index" class="Footer-subfooterdiv">
+          <h2>{{ item?.title ?? `项目${index + 1}` }}</h2>
           <div class="Footer-subtag">
             <a
-              target="_self"
-              href="https://mp.weixin.qq.com/mp/profile_ext?action=home&amp;__biz=Mzg2MjYwMDE4MA==&amp;scene=124#wechat_redirect"
-              >微信公众号</a
-            ><a target="_self" href="https://space.bilibili.com/257175059">Bilibili</a
-            ><a
-              target="_self"
-              href="https://mp.weixin.qq.com/mp/profile_ext?action=home&amp;__biz=MzkxNjI4MDk4MQ==&amp;scene=124#wechat_redirect"
-              >全媒体中心公众号</a
+              v-for="(aItem, aIndex) in item.children"
+              :key="aIndex"
+              :target="!!aItem.isRouter ? '' : aItem.target"
+              :href="aItem.href"
+              >{{ aItem?.label ?? `项目${aIndex + 1}` }}</a
             >
           </div>
         </div>
-        <div class="Footer-subfooterdiv">
-          <h2>友情链接</h2>
-          <div class="Footer-subtag">
-            <a target="_self" href="https://www.ysjf.com/">影视飓风</a
-            ><a target="_self" href="http://sdzz.net/">顺德中专门户网站</a
-            ><a target="_self" href="http://sdedu.net/">顺德区教育局</a>
-          </div>
-        </div>
-        <div class="Footer-subfooterdiv">
+        <div class="Footer-subfooterdiv find-us">
           <h2>找到我们</h2>
           <div class="clearfix">
             <h3>办公楼 一楼 德育处主任室 旁</h3>
@@ -256,8 +229,13 @@
 </template>
 
 <script setup lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { version } from '@/package.json';
+import useFooter from '../hooks/useFooter';
+
+const { footerList, refreshList } = useFooter();
+
+const footerConfig = computed(() => footerList.value as FooterData);
 
 const example = ref({
   data: '',
