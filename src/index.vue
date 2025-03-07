@@ -1,5 +1,5 @@
 <template>
-  <MTBHeader :fixed="true"></MTBHeader>
+  <MTBHeader></MTBHeader>
   <router-view class="waitHeader"></router-view>
   <MTBFooter></MTBFooter>
 </template>

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import useToppic from '@hooks/useToppic';
 
 const { toppicInfo } = useToppic();

@@ -2,7 +2,7 @@
   <Toppic />
   <div
     class="mtb-header"
-    :class="{ hasToppic: hasToppic, 'header-fixed': defaultProps.fixed }"
+    :class="{ hasToppic: hasToppic, 'header-fixed': defaultProps.fixed || fixedHeader }"
     :style="{ top: hasToppic_TOP + 'px' }"
   >
     <div class="wrap">
@@ -14,15 +14,59 @@
       </div>
       <div class="nav">
         <ul class="subnav-ul fl">
-          <li v-for="(item, index) in defaultNav" :key="index">
-            <a
-              :class="item.extraClass"
-              :target="item.target"
-              :href="`javascript:void(${index})`"
-              @click="clickToPath(item.path)"
+          <li
+            v-for="(item, index) in headerConfig"
+            :key="index"
+            class="navView"
+            :class="{ dropdown: item?.type === 'list', labelCard: item.type === 'label' }"
+          >
+            <div class="navItem">
+              <a
+                v-if="isNormalTab(item?.type)"
+                class="isTabs"
+                :class="item.extraClass"
+                :target="item.target"
+                :href="`javascript:void(${index})`"
+                @click="clickToPath(item.href)"
+              >
+                <span>{{ item.label }}</span>
+              </a>
+              <span v-else class="isTabs">{{ item.label }}</span>
+            </div>
+            <!--Extra View-->
+            <div
+              v-if="!isNormalTab(item.type)"
+              :class="{
+                'navItem-type--list': item.type === 'list',
+                'navItem-type--label': item.type === 'label',
+              }"
+              :style="{ '--index-padding-width': '24px' }"
             >
-              <span>{{ item.label }}</span>
-            </a>
+              <!---->
+              <ul v-if="item.type === 'list' && item.children">
+                <li v-for="(listItem, listIndex) in item.children" :key="listIndex">
+                  <a :href="listItem.href || '#'" :target="listItem.target || '_self'" class="nav-link">
+                    {{ listItem.label }}
+                  </a>
+                </li>
+              </ul>
+              <!---->
+              <div v-else-if="item.type === 'label' && item.children">
+                <div v-for="(labelItem, labelIndex) in item.children" :key="labelIndex" class="navItem-labelCard-item">
+                  <h2>{{ labelItem.title || `项目${labelIndex + 1}` }}</h2>
+                  <a
+                    v-for="(labelItemListEl, labelItemListIndex) in labelItem?.children"
+                    :key="labelItemListIndex"
+                    :href="labelItem.href || '#'"
+                    :target="labelItem.target || '_self'"
+                    class="nav-link"
+                  >
+                    {{ labelItemListEl?.label }}
+                  </a>
+                </div>
+              </div>
+              <!---->
+            </div>
           </li>
         </ul>
       </div>
@@ -54,11 +98,22 @@
 import { computed, defineComponent, onMounted, onUnmounted, ref, watch, type PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
+import useHeader from '@hooks/useHeader';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { getDevice } from '@utils/device';
 import router from '../router';
 import Toppic from './toppic.vue';
 
 const { theme, toggleTheme } = useTheme();
 const { toppicInfo } = useToppic();
+const { headerList } = useHeader();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { isMobile, isPC } = getDevice();
+
+const isNormalTab = (type: string | undefined) => {
+  return type !== 'list' && type !== 'label';
+};
+const headerConfig = computed(() => headerList.value as HeaderData);
 
 const defaultProps = defineProps({
   fixed: {
@@ -67,6 +122,7 @@ const defaultProps = defineProps({
   },
 });
 
+const fixedHeader = ref(false);
 const scrollY = ref(0);
 const hasToppic = computed(() => {
   return !!toppicInfo.value;
@@ -79,18 +135,14 @@ const hasToppic_TOP = computed(() => {
 
 const handleScroll = () => {
   scrollY.value = window.scrollY;
+  fixedHeader.value = scrollY.value > 32;
 };
 
-const defaultNav = ref([
-  {
-    extraClass: '',
-    label: '首页',
-    target: '_blank',
-    path: '/',
-  },
-]);
-
-const clickToPath = (path: string) => {
+const clickToPath = (path: string | undefined) => {
+  if (!path) {
+    console.warn('路径为空，请检查！');
+    return;
+  }
   router.push(path);
 };
 
@@ -116,9 +168,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.mtb-header.header-fixed + .waitHeader {
+.waitHeader {
   position: relative;
-  top: 78px;
+  top: 0px;
+  transition: all 0.28s ease-in-out;
+}
+.mtb-header.header-fixed + .waitHeader {
+  top: 78px !important;
 }
 .mtb-header {
   display: flex;
@@ -135,6 +191,7 @@ export default defineComponent({
   &:hover,
   &.header-fixed {
     background: var(--td-bg-color-container);
+    box-shadow: var(--td-shadow-1);
     .wrap {
       .logo {
         img:first-of-type {
@@ -145,8 +202,11 @@ export default defineComponent({
         }
       }
       .nav {
-        .subnav-ul a {
-          color: var(--td-text-color-primary);
+        .subnav-ul {
+          a.isTabs,
+          span.isTabs {
+            color: var(--td-text-color-primary);
+          }
         }
       }
       .operation .themeChange {
@@ -166,6 +226,8 @@ export default defineComponent({
     width: 78%;
     margin: 0px auto;
     font-size: 0;
+    display: flex;
+    align-items: center;
 
     .logo {
       position: relative;
@@ -187,46 +249,175 @@ export default defineComponent({
       vertical-align: middle;
       width: calc(100% - 280px);
       font-size: 0;
-      padding-left: 86px;
-      .subnav-ul li {
-        display: inline-block;
-        vertical-align: top;
-        font-size: 14px;
-
-        a {
-          display: block;
-          margin: 0px 25px;
-          line-height: 78px;
-          transition: all 0.3s;
-          color: var(--td-text-color-anti);
-          vertical-align: middle;
-          font-weight: 500;
-          font-size: 16px;
-          cursor: pointer;
-          position: relative;
-          justify-content: center;
-          letter-spacing: -0.02em;
-          word-spacing: 0;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          &::after {
-            content: ' ';
-            display: flex;
-            width: 0;
-            height: 3px;
-            background: var(--td-text-color-primary);
-            transition: all 0.28s ease-in-out;
-            transform: translate(-50%);
-            bottom: 22px;
-            left: 50%;
-            position: absolute;
-          }
+      padding-left: 128px;
+      ul,
+      .subnav-ul {
+        list-style: none;
+        vertical-align: middle;
+        display: flex;
+        max-width: 900px;
+        height: 100%;
+        li + li {
+          padding-left: 36px;
         }
+        > li {
+          display: inline-block;
+          vertical-align: top;
+          &.navView {
+            font-size: 14px;
+            line-height: 14px;
+            display: flex;
+            text-wrap: nowrap;
+            &.dropdown {
+              position: relative;
+              .navItem-type--list {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                color: #000;
+                top: 64px;
+                left: calc(50% + var(--index-padding-width));
+                pointer-events: none;
+                opacity: 0;
+                transform: translate(-50%, 6px);
+                transition: all 0.28s ease-in-out;
+                ul {
+                  position: relative;
+                  overflow: visible;
+                  display: flex;
+                  flex-direction: column;
+                  align-content: stretch;
+                  vertical-align: middle;
+                  margin: 0;
+                  list-style: none;
+                  background: var(--td-bg-color-container);
+                  color: var(--td-text-color-primary);
+                  white-space: nowrap;
+                  box-shadow: var(--td-shadow-2);
+                  align-items: stretch;
+                  padding: 8px 0;
+                  font-size: 14px;
+                  border-radius: 2px;
+                  li {
+                    padding-left: 0;
+                    cursor: pointer;
+                    transition: all 0.28s ease-in-out;
+                    &:hover {
+                      background: #f6f6f6;
+                    }
+                    a {
+                      height: 40px;
+                      padding: 0 16px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: flex-start;
+                      vertical-align: middle;
+                      color: var(--td-text-color-primary);
+                    }
+                  }
+                }
+              }
+            }
+            &.labelCard {
+              .navItem-type--label {
+                pointer-events: auto;
+                width: 100%;
+                background: var(--td-bg-color-container);
+                left: 0;
+                z-index: 0;
+                opacity: 0;
+                position: absolute;
+                top: 64px;
+                height: auto;
+                min-height: 80px;
+                box-shadow: var(--td-shadow-2);
+                color: var(--td-text-color-primary);
+                pointer-events: none;
+                transform: translateY(6px);
+                transition: all 0.28s ease-in-out;
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                padding: 48px 0;
+                .navItem-labelCard-item {
+                  display: inline-block;
+                  width: 180px;
+                  margin: 0 24px 0 0;
+                  font-size: 14px;
+                  line-height: 30px;
+                  color: #333;
+                  vertical-align: top;
+                  transition: all 0.28s ease-in-out;
+                  text-align: center;
+                  height: auto;
+                  > h2 {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: var(--td-text-color-primary);
+                    margin-bottom: 10px;
+                  }
+                  > a {
+                    display: block;
+                    margin: 0 25px;
+                    color: var(--td-text-color-primary);
+                    cursor: pointer;
+                    transition: all 0.28s ease-in-out;
+                  }
+                }
+              }
+            }
+            .navItem {
+              font-size: 16px;
+              font-weight: 600;
+            }
+          }
+          a.isTabs,
+          span.isTabs {
+            line-height: 78px;
+            transition: all 0.28s ease-in-out;
+            color: var(--td-text-color-anti);
+            vertical-align: middle;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            justify-content: center;
+            letter-spacing: -0.02em;
+            word-spacing: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            &::after {
+              content: ' ';
+              display: flex;
+              width: 0;
+              height: 3px;
+              background: var(--td-text-color-primary);
+              transition: all 0.28s ease-in-out;
+              transform: translate(-50%);
+              bottom: 22px;
+              left: 50%;
+              position: absolute;
+            }
+          }
 
-        &:hover {
-          a::after {
-            width: 100%;
+          &:hover {
+            .navItem-type--list {
+              opacity: 1 !important;
+              transform: translate(-50%, 12px) !important;
+              pointer-events: auto !important;
+              animation: disable-pointer-events 0.3s;
+            }
+            .navItem-type--label {
+              opacity: 1 !important;
+              transform: translateY(12px) !important;
+              pointer-events: auto !important;
+              animation: disable-pointer-events 0.3s;
+            }
+            a::after,
+            span::after {
+              width: 100%;
+            }
           }
         }
       }
@@ -259,6 +450,16 @@ export default defineComponent({
   }
   img {
     object-fit: cover;
+  }
+}
+
+@keyframes disable-pointer-events {
+  0%,
+  99% {
+    pointer-events: none;
+  }
+  100% {
+    pointer-events: auto;
   }
 }
 </style>
