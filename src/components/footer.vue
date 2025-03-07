@@ -235,21 +235,16 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { version } from '@/package.json';
 import useFooter from '@hooks/useFooter';
 import { getDevice } from '@utils/device';
 
-const { footerList, refreshList } = useFooter();
+const { footerList } = useFooter();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { isMobile, isPC } = getDevice();
 
 const footerConfig = computed(() => footerList.value as FooterData);
-
-const example = ref({
-  data: '',
-  type: 'static', //| scroll
-  title: '',
-});
 </script>
 
 <script lang="tsx">

@@ -27,15 +27,14 @@ export default function useTheme() {
   };
 
   // 监听系统主题变化
-  // eslint-disable-next-line no-unused-vars
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  // eslint-disable-next-line no-unused-vars
-  const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-    if (!localStorage.getItem('theme')) {
-      theme.value = e.matches ? 'dark' : 'light';
-      htmlEl.setAttribute('theme-mode', theme.value);
-    }
-  };
+  // const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  // const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+  //   if (!localStorage.getItem('theme')) {
+  //     theme.value = e.matches ? 'dark' : 'light';
+  //     htmlEl.setAttribute('theme-mode', theme.value);
+  //   }
+  // };
 
   onMounted(() => {
     initTheme();

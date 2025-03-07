@@ -44,7 +44,7 @@
             >
               <!---->
               <ul v-if="item.type === 'list' && item.children">
-                <li v-for="listItem in item.children" :key="listItem.id || listItem.label">
+                <li v-for="(listItem, listIndex) in item.children" :key="listIndex">
                   <a :href="listItem.href || '#'" :target="listItem.target || '_self'" class="nav-link">
                     {{ listItem.label }}
                   </a>
@@ -52,11 +52,7 @@
               </ul>
               <!---->
               <div v-else-if="item.type === 'label' && item.children">
-                <div
-                  v-for="(labelItem, labelIndex) in item.children"
-                  :key="labelItem.id || labelItem.label"
-                  class="navItem-labelCard-item"
-                >
+                <div v-for="(labelItem, labelIndex) in item.children" :key="labelIndex" class="navItem-labelCard-item">
                   <h2>{{ labelItem.title || `项目${labelIndex + 1}` }}</h2>
                   <a
                     v-for="(labelItemListEl, labelItemListIndex) in labelItem?.children"
@@ -103,6 +99,7 @@ import { computed, defineComponent, onMounted, onUnmounted, ref, watch, type Pro
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
 import useHeader from '@hooks/useHeader';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getDevice } from '@utils/device';
 import router from '../router';
 import Toppic from './toppic.vue';
@@ -110,6 +107,7 @@ import Toppic from './toppic.vue';
 const { theme, toggleTheme } = useTheme();
 const { toppicInfo } = useToppic();
 const { headerList } = useHeader();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { isMobile, isPC } = getDevice();
 
 const isNormalTab = (type: string | undefined) => {
