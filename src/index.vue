@@ -4,8 +4,8 @@
   <MTBFooter></MTBFooter>
 </template>
 <script setup lang="tsx">
-import MTBHeader from '@components/header.vue';
-import MTBFooter from '@components/footer.vue';
+import MTBHeader from '@components/header.tsx';
+import MTBFooter from '@components/footer.tsx';
 </script>
 
 <style lang="scss">

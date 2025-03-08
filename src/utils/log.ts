@@ -110,7 +110,7 @@ class ConsoleLogger {
   }
 
   red(msg: string, size?: SizeOption) {
-    return this.createLogger(msg, '#ff0000', size);
+    return this.createLogger(msg, '#fa5151', size);
   }
 
   custom(msg: string, options: StyleConfig) {
