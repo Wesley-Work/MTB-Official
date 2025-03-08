@@ -4,6 +4,7 @@ node_modules
 # /server
 /log
 package-lock.json
+init.*.py
 
 # local env files
 .env.local

@@ -68,12 +68,7 @@ export default defineComponent({
 
     // 通用链接渲染方法
     const renderLink = (item: FooterItem, index: number) => (
-      <a
-        key={index}
-        target={item.isRouter ? '' : item.target}
-        href={item.href}
-        style={{ color: '#fff9', display: 'block' }}
-      >
+      <a key={index} target={item.isRouter ? '' : item.target} href={item.href}>
         {item.label}
       </a>
     );
@@ -108,7 +103,7 @@ export default defineComponent({
             </div>
             <div class="Footer-subtag">
               {section.links.map((link, idx) => (
-                <a key={idx} target="_self" href={link.href} style={{ color: '#fff9' }}>
+                <a key={idx} target="_self" href={link.href}>
                   {link.label}
                 </a>
               ))}
