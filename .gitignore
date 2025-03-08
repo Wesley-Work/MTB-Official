@@ -5,6 +5,7 @@ node_modules
 /log
 package-lock.json
 init.*.py
+database.config*
 
 # local env files
 .env.local
