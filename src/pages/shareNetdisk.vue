@@ -263,3 +263,557 @@
     </t-table>
   </div>
 </template>
+
+<script setup lang="jsx">
+import {
+  FolderOpen1Icon,
+  FileWordIcon,
+  FileExcelIcon,
+  FileZipIcon,
+  FilePdfIcon,
+  FileCode1Icon,
+  FileIcon,
+  FileImageIcon,
+  VideoIcon,
+  DownloadIcon,
+  FileCopyIcon,
+} from 'tdesign-icons-vue-next';
+const filenamePrefix = [];
+const HandleFileName = (row) => {};
+</script>
+
+<script lang="jsx">
+import { ref, defineComponent } from 'vue';
+var that = Object;
+import ConsoleLogClass from '../components/consoleLog.js';
+
+var ConsoleLog = Object;
+import useClipboard from 'vue-clipboard3';
+const { toClipboard } = useClipboard();
+
+export default defineComponent({
+  asyncData({ store, url }) {
+    console.log('Running Index');
+    var searchParams = new URLSearchParams(url.substring(1));
+    var path = searchParams.get('dir');
+    return store.dispatch('getFileList', path);
+  },
+  data() {
+    return {
+      menuValue: 'index',
+      //status
+      filelist: [],
+      path: '',
+      notfound: false,
+      loaded: false,
+      showdialog: false,
+      // main config
+      menu_title: '顺德中专团委学生会媒体部 共享网盘',
+      BreadcrumbOption: [{ content: '首页', href: '/' }],
+      //CONFIG
+      VERSION: 'v2.0.2',
+      BACKVERSION: '23H21018g',
+      BUILDVERSION: '5074',
+      DEBUG: true,
+      CHANGETIME: '2023-10-18 21:32:46',
+      BUILDDATA: '2023-10-19',
+      AutoTheme: null,
+      Theme: 'light',
+      ThemeMode: 0,
+      Cache: ['Theme', 'ThemeMode'],
+      //StyleControl
+      styleClass: {
+        tableWidth: false,
+      },
+      // table head
+      columns: [
+        {
+          colKey: 'filename',
+          title: '文件名',
+          width: 300,
+        },
+        {
+          colKey: 'mt',
+          title: '修改时间',
+          width: 170,
+          ellipsis: true,
+        },
+        {
+          colKey: 'filesize',
+          title: '文件大小',
+          width: 120,
+          cell: (h, { col, row }) => {
+            const { isfolder } = row;
+            if (isfolder != 1) {
+              const { filesize } = row;
+              const kb = filesize / 1024;
+              const mb = kb / 1024;
+              const gb = mb / 1024;
+              let unit = 'KB';
+              if (kb >= 1024 && mb < 1024) {
+                unit = 'MB';
+                return <span>{`${mb.toFixed(2)} ${unit}`}</span>;
+              }
+              if (mb >= 1024) {
+                unit = 'GB';
+                return <span>{`${gb.toFixed(2)} ${unit}`}</span>;
+              }
+              return <span>{`${kb.toFixed(2)} ${unit}`}</span>;
+            }
+            return <span>-</span>;
+          },
+        },
+        {
+          colKey: 'operation',
+          title: '操作',
+          width: 150,
+        },
+      ],
+    };
+  },
+  mounted() {
+    this.$data.notfound = false;
+    this.$data.loaded = true;
+    ConsoleLog = new ConsoleLogClass(this, this.$data.DEBUG);
+    ConsoleLog.success('App Loaded');
+
+    console.log(`%c${this.$data.VERSION} & ${this.$data.BACKVERSION}`, 'color: #00a870; font-size: 24px;');
+
+    // 更新面包屑
+    const { search } = location;
+    var searchParams = new URLSearchParams(search);
+    var path = searchParams.get('dir');
+    // 因为目录是/xxx/xxx/xxx这样的，所以要slice(1)去掉第一项
+    var item;
+    try {
+      item = path.split('/').slice(1);
+    } catch {
+      item = path;
+    }
+    var BCO = this.$data.BreadcrumbOption;
+    // 遍历地址栏
+    for (const key in item) {
+      if (Object.hasOwnProperty.call(item, key)) {
+        const element = item[key];
+        var name = [];
+        var targetURL;
+        // 非第一项
+        if (key != 0) {
+          for (let index = 0; index <= key; index++) {
+            const element = item[index];
+            name.push(element);
+          }
+          targetURL = name.join('/');
+        } else {
+          targetURL = element;
+        }
+        const BCitem = { content: element, href: `/?dir=/${targetURL}` };
+        BCO.push(BCitem);
+      }
+    }
+    // 代理this
+    that = this;
+    // 页面大小变更/屏幕尺寸适配
+    if (document.body.clientWidth < 1500) {
+      that.$data.menu_title = '团委学生会媒体部 共享网盘';
+      that.$data.styleClass.tableWidth = true;
+    }
+    window.onresize = function () {
+      if (document.body.clientWidth < 1500) {
+        that.$data.menu_title = '团委学生会媒体部 共享网盘';
+        that.$data.styleClass.tableWidth = true;
+      } else if (that.$data.menu_title == '团委学生会媒体部 共享网盘') {
+        that.$data.menu_title = '顺德中专团委学生会媒体部 共享网盘';
+        that.$data.styleClass.tableWidth = false;
+      }
+    };
+    // 自动样式
+    if (Number(window.localStorage.getItem('ThemeMode')) < 4 && window.localStorage.getItem('ThemeMode')) {
+      console.log(Number(window.localStorage.getItem('ThemeMode')));
+      this.$data.ThemeMode = Number(window.localStorage.getItem('ThemeMode'));
+      this.ToggleTheme(false);
+    } else {
+      this.StartAutoThemeOfTime();
+    }
+    // 文件列表
+    this.$data.filelist = this.$store.state.fileList.filelist;
+    if (!this.$data.filelist) {
+      // 无数据尝试在本地再次获取
+      this.fetchData();
+      return;
+    }
+    // console.log(this.$data.filelist, this.$store.state)
+    //CONSOLE
+    var CHANGELOGLIST = [
+      {
+        version: 'v2.0.0',
+        v: '23H21012d',
+        log: '更新文件列表的样式\n修复文件列表已知问题',
+      },
+      {
+        version: 'v2.0.1',
+        v: '23H21014f',
+        log: '更新菜单选项\n新增详细信息框',
+      },
+      {
+        version: 'v2.0.2',
+        v: '23H21018a',
+        log: '更新提示条样式\n优化逻辑',
+      },
+    ];
+    let CHANGELOG = [];
+    for (const key in CHANGELOGLIST) {
+      if (Object.hasOwnProperty.call(CHANGELOGLIST, key)) {
+        const element = CHANGELOGLIST[key];
+        CHANGELOG.push(`#【${element.version}】-[${element.v}]：\n${element.log}`);
+      }
+    }
+    ConsoleLog.warn(`\n【CHANGELOG】\n${CHANGELOG.join('\n')}`);
+  },
+  methods: {
+    // 还原菜单选项
+    ChangeMenu(e) {
+      this.$data.menuValue = 'index';
+    },
+    // 表格行按下
+    handleColClick(e) {
+      if (e.colIndex != 0) return;
+      if (e.row.isfolder == 0) return;
+      // this.$store.dispatch('appendPath', `${e.row.filename}`)
+      const { search } = location;
+      var searchParams = new URLSearchParams(search);
+      var path = searchParams.get('dir');
+      try {
+        path.split('/').slice(1);
+      } catch {
+        NEWUrl = this.replaceUrlParam(location.href, 'dir', `/${e.row.filename}`);
+        location.href = NEWUrl;
+      }
+      var item = path.split('/').slice(1);
+      var NEWUrl;
+      if (item || item.length == 1) {
+        NEWUrl = this.replaceUrlParam(location.href, 'dir', `${path}/${e.row.filename}`);
+      } else {
+        NEWUrl = this.replaceUrlParam(location.href, 'dir', `/${e.row.filename}`);
+      }
+      location.href = NEWUrl;
+    },
+    // 文件夹列鼠标指针
+    handleRowCursor(e) {
+      if (e.row.isfolder == 1) {
+        return 'Isfloder';
+      }
+      // return {
+      //     rowIndex: 0,
+      //     row: e.row,
+      //     type: 'body',
+      // }
+    },
+    // 加载文件列表
+    fetchData() {
+      ConsoleLog.warn('Server无法获取文件列表，尝试获取文件列表');
+      const { search } = location;
+      var searchParams = new URLSearchParams(search);
+      var path = searchParams.get('dir');
+      console.log(path);
+      axios.post('http://10.3.146.100:9090/getFileList', { path: path }).then((res) => {
+        console.log(res);
+        if (res.data.errcode == 0) {
+          this.$data.filelist = res.data.data.filelist;
+        } else {
+          if (res.data.errcode == -404) {
+            this.$data.loaded = false;
+            this.$data.notfound = true;
+          } else {
+            this.$notify.error({ title: '获取文件列表失败', content: `${res.data.errcode}:${res.data.errmsg}` });
+          }
+        }
+        console.log(this.$data.filelist);
+      });
+    },
+    // 替换浏览器参数
+    replaceUrlParam(url, key, value) {
+      if (url.indexOf(key) > -1) {
+        let reg = new RegExp(`((?=${key}=).*?(?=&))|((?=${key}=).*)`);
+        url = url.replace(reg, `${key}=${value}`);
+      } else {
+        let join = url.indexOf('?') > -1 ? '&' : '?';
+        url += `${join}${key}=${value}`;
+      }
+      return url;
+    },
+    // 复制下载链接
+    handleCopyFileDownloadUrl(fileEx) {
+      const { download_url } = fileEx;
+      try {
+        toClipboard(download_url);
+        this.$message.success('复制成功');
+      } catch (e) {
+        console.log(e);
+        this.$message.error('复制失败！');
+      }
+    },
+    // 点击下载
+    handleFileDownload(fileEx) {
+      const { download_url } = fileEx;
+      var a = document.createElement('a');
+      a.href = download_url;
+      a.download = fileEx.name;
+      a.click();
+      const content = () => {
+        return (
+          <div>
+            <span>已自动开始下载，如未开始请点击</span>
+            <a
+              class="t-link t-link--theme-primary t-link--hover-color"
+              style="padding: 0 3px"
+              href={download_url}
+              download={fileEx.name}
+            >
+              这里
+            </a>
+            <span>重试</span>
+          </div>
+        );
+      };
+      this.$message.success({ content: content });
+    },
+
+    /**
+     * @StartAutoThemeOfTime
+     * @根据时间切换样式
+     */
+    StartAutoThemeOfTime() {
+      var date = new Date();
+      var hours = date.getHours();
+      if (hours > 18 || hours < 6) {
+        document.querySelector('html').setAttribute('theme-mode', 'dark');
+        this.$data.Theme = 'dark';
+        window.localStorage.setItem('Theme', 'dark');
+      } else {
+        document.querySelector('html').setAttribute('theme-mode', 'light');
+        this.$data.Theme = 'light';
+        window.localStorage.setItem('Theme', 'light');
+      }
+      this.$data.AutoTheme = setInterval(() => {
+        var date = new Date();
+        var hours = date.getHours();
+        // 晚上6点
+        if (hours > 18 || hours < 6) {
+          document.querySelector('html').setAttribute('theme-mode', 'dark');
+          this.$data.Theme = 'dark';
+          window.localStorage.setItem('Theme', 'dark');
+        } else {
+          document.querySelector('html').setAttribute('theme-mode', 'light');
+          this.$data.Theme = 'light';
+          window.localStorage.setItem('Theme', 'light');
+        }
+      }, 1000);
+    },
+
+    /**
+     * @StartAutoThemeOfSystem
+     * @根据时间切换样式
+     */
+    StartAutoThemeOfSystem() {
+      const { matches } = window.matchMedia('(prefers-color-scheme: dark)');
+      if (!matches) {
+        document.querySelector('html').setAttribute('theme-mode', 'light');
+        this.$data.Theme = 'light';
+        window.localStorage.setItem('Theme', 'light');
+      } else {
+        document.querySelector('html').setAttribute('theme-mode', 'dark');
+        this.$data.Theme = 'dark';
+        window.localStorage.setItem('Theme', 'dark');
+      }
+      this.$data.AutoTheme = setInterval(() => {
+        const { matches } = window.matchMedia('(prefers-color-scheme: dark)');
+        if (!matches) {
+          document.querySelector('html').setAttribute('theme-mode', 'light');
+          this.$data.Theme = 'light';
+          window.localStorage.setItem('Theme', 'light');
+        } else {
+          document.querySelector('html').setAttribute('theme-mode', 'dark');
+          this.$data.Theme = 'dark';
+          window.localStorage.setItem('Theme', 'dark');
+        }
+      }, 1000);
+    },
+
+    /**
+     * @ToggleTheme
+     * @按钮点击切换样式模式
+     * 0 跟随时间
+     * 1 浅色模式
+     * 2 深色模式
+     * 3 跟随系统
+     */
+    ToggleTheme(change = true) {
+      clearInterval(this.$data.AutoTheme);
+      if (change) {
+        if (this.$data.ThemeMode == 3) {
+          this.$data.ThemeMode = 0;
+        } else {
+          this.$data.ThemeMode++;
+        }
+      }
+      // 开始判定
+      if (this.$data.ThemeMode == 0) {
+        // 跟随时间
+        this.StartAutoThemeOfTime();
+      }
+      if (this.$data.ThemeMode == 3) {
+        this.StartAutoThemeOfSystem();
+      }
+      if (this.$data.ThemeMode == 1) {
+        document.querySelector('html').setAttribute('theme-mode', 'light');
+        this.$data.Theme = 'light';
+        window.localStorage.setItem('Theme', 'light');
+      }
+      if (this.$data.ThemeMode == 2) {
+        document.querySelector('html').setAttribute('theme-mode', 'dark');
+        this.$data.Theme = 'dark';
+        window.localStorage.setItem('Theme', 'dark');
+      }
+      window.localStorage.setItem('ThemeMode', this.$data.ThemeMode);
+      // if (this.$data.AutoTheme != null) {
+      //     clearInterval(this.$data.AutoTheme)
+      //     this.$data.AutoTheme = null
+      //     this.$message.info("自动切换已失效，刷新页面重置。")
+      // }
+    },
+
+    /**
+     * @CleanCache
+     * @清除缓存
+     */
+    CleanCache() {
+      var chche = this.$data.Cache;
+      for (const key in chche) {
+        if (Object.hasOwnProperty.call(chche, key)) {
+          const element = chche[key];
+          window.localStorage.removeItem(element);
+        }
+      }
+      this.$message.success('清除缓存成功');
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
+    },
+
+    /**
+     * @GetDateString
+     * @获取当前时间 yyyy-mm-dd hh:mm:ss
+     * @return {String}
+     */
+    GetDateString() {
+      var Dates = new Date();
+      return Dates.toLocaleString().replaceAll('/', '-');
+    },
+  },
+});
+</script>
+
+<style lang="less">
+:root {
+  --breadcrumb-background-color: var(--td-gray-color-4);
+  --ripple-color: rgba(0, 0, 0, 0.35);
+}
+
+:root[theme-mode='dark'] {
+  --breadcrumb-background-color: var(--td-gray-color-12);
+  --ripple-color: rgb(75, 75, 75);
+}
+
+.t-menu__operations {
+  .t-button {
+    margin-left: 8px;
+  }
+}
+
+.t-head-menu .t-menu {
+  justify-content: flex-end !important;
+  padding-right: 12px;
+}
+
+.top-menu {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  z-index: 90;
+
+  > div {
+    padding-left: 36px;
+    padding-right: 24px;
+
+    .menu__title {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.3px;
+    }
+  }
+}
+
+.MenuStoragePopupProps {
+  margin-left: 16px !important;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-direction: row;
+  margin: 16px auto !important;
+}
+
+.breadcrumb,
+.fileList {
+  width: 60%;
+  margin: 0 auto;
+  transition: all 0.28s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.breadcrumb.width70p,
+.fileList:has(.width70p) {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.fileList {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+  .t-table td {
+    padding: 14px var(--td-comp-paddingLR-l);
+    line-height: var(--td-line-height-body-large);
+    font-size: 14px;
+  }
+
+  .t-button.t-button--variant-dashed.t-button--theme-default.t-button--ghost {
+    color: var(--td-text-color-primary);
+    border-color: var(--td-text-color-primary);
+  }
+
+  .t-button--ghost {
+    --ripple-color: var(--ripple-color);
+  }
+
+  .t-button--variant-dashed.t-button--ghost:hover,
+  .t-button--variant-dashed.t-button--ghost:focus-visible {
+    color: var(--td-brand-color-hover) !important;
+    border-color: var(--td-brand-color-hover) !important;
+  }
+
+  .t-button--variant-dashed {
+    height: 28px;
+  }
+
+  .Isfloder > td:first-child {
+    cursor: pointer;
+  }
+}
+
+.t-message__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

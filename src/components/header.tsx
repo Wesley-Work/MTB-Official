@@ -54,11 +54,7 @@ export default defineComponent({
       <>
         <Toppic />
         <div
-          class={[
-            'mtb-header',
-            hasToppic.value && 'hasToppic',
-            (props.fixed || fixedHeader.value) && 'header-fixed',
-          ].join(' ')}
+          class={['mtb-header', hasToppic.value && 'hasToppic', (props.fixed || fixedHeader.value) && 'header-fixed']}
           style={{ top: `${hasToppic_TOP.value}px` }}
         >
           <div class="wrap">
@@ -74,16 +70,14 @@ export default defineComponent({
                 {headerConfig.value?.map((item, index) => (
                   <li
                     key={index}
-                    class={['navView', item?.type === 'list' && 'dropdown', item?.type === 'label' && 'labelCard'].join(
-                      ' ',
-                    )}
+                    class={['navView', item?.type === 'list' && 'dropdown', item?.type === 'label' && 'labelCard']}
                   >
                     <div class="navItem">
                       {isNormalTab(item?.type) ? (
                         <a
-                          class={['isTabs', item.extraClass].join(' ')}
-                          target={item.target}
-                          href={`javascript:void(${index})`}
+                          class={['isTabs', item.extraClass]}
+                          target={!!item?.isRouter ? undefined : item.target}
+                          href={!!item?.isRouter ? 'javascript:void(0)' : item.href}
                           onClick={() => clickToPath(item.href)}
                         >
                           <span>{item.label}</span>
@@ -98,14 +92,18 @@ export default defineComponent({
                         class={[
                           item.type === 'list' && 'navItem-type--list',
                           item.type === 'label' && 'navItem-type--label',
-                        ].join(' ')}
-                        style={{ '--index-padding-width': '24px' }}
+                        ]}
                       >
                         {item.type === 'list' && item.children && (
                           <ul>
                             {item.children.map((listItem, listIndex) => (
                               <li key={listIndex}>
-                                <a class="nav-link" href={listItem.href || '#'} target={listItem.target || '_self'}>
+                                <a
+                                  class="nav-link"
+                                  target={!!listItem?.isRouter ? undefined : listItem.target}
+                                  href={!!listItem?.isRouter ? 'javascript:void(0)' : listItem.href}
+                                  onClick={() => clickToPath(listItem.href)}
+                                >
                                   {listItem.label}
                                 </a>
                               </li>
@@ -122,8 +120,9 @@ export default defineComponent({
                                   <a
                                     key={labelItemListIndex}
                                     class="nav-link"
-                                    href={labelItem.href || '#'}
-                                    target={labelItem.target || '_self'}
+                                    target={!!labelItem?.isRouter ? undefined : labelItem.target}
+                                    href={!!labelItem?.isRouter ? 'javascript:void(0)' : labelItem.href}
+                                    onClick={() => clickToPath(labelItem.href)}
                                   >
                                     {labelItemListEl?.label}
                                   </a>
