@@ -12,9 +12,7 @@ export default defineComponent({
     return () => (
       <div class={['toppic', example.value && 'has-toppic'].join(' ')}>
         <div class={['scrollToppic', example.value?.type === 'scroll' ? 'scrollToppic' : ''].join(' ')}>
-          <span class="content" style={{ cursor: 'pointer' }}>
-            {example.value?.data || ''}
-          </span>
+          <span class="content" style={{ cursor: 'pointer' }} v-html={example.value?.data || ''}></span>
         </div>
       </div>
     );
