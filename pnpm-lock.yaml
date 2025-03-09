@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      ngprogress:
-        specifier: ^1.1.3
-        version: 1.1.3
+      nprogress:
+        specifier: ^0.2.0
+        version: 0.2.0
       path:
         specifier: ^0.12.7
         version: 0.12.7
@@ -51,6 +51,9 @@ importers:
       '@types/node':
         specifier: 22.5.1
         version: 22.5.1
+      '@types/nprogress':
+        specifier: ^0.2.3
+        version: 0.2.3
       '@types/raf':
         specifier: ^3.4.3
         version: 3.4.3
@@ -1105,6 +1108,9 @@ packages:
 
   '@types/node@22.5.1':
     resolution: {integrity: sha512-KkHsxej0j9IW1KKOOAA/XBA0z08UFSrRQHErzEfA3Vgq57eXIMYboIlHJuYIfd+lwCQjtKqUu3UnmKbtUc9yRw==}
+
+  '@types/nprogress@0.2.3':
+    resolution: {integrity: sha512-k7kRA033QNtC+gLc4VPlfnue58CM1iQLgn1IMAU8VPHGOj7oIHPp9UlhedEnD/Gl8evoCjwkZjlBORtZ3JByUA==}
 
   '@types/raf@3.4.3':
     resolution: {integrity: sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==}
@@ -2924,9 +2930,6 @@ packages:
     engines: {node: '>= 4.4.x'}
     hasBin: true
 
-  ngprogress@1.1.3:
-    resolution: {integrity: sha512-VtqyoRRAwzpUeNiYstWJjAHb5MUih/cKNk8+EhgPzUANm3TwwT+ic/2vcMazWp80qYvyUNHkFaQ+GLOQmTg90A==}
-
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
 
@@ -2955,6 +2958,9 @@ packages:
   npm-run-path@5.3.0:
     resolution: {integrity: sha512-ppwTtiJZq0O/ai0z7yfudtBpWIoxM8yE6nHi1X47eFR2EWORqfbu6CnPlNsjeN683eT0qG6H/Pyf9fCcvjnnnQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  nprogress@0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -5217,6 +5223,8 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
+  '@types/nprogress@0.2.3': {}
+
   '@types/raf@3.4.3': {}
 
   '@types/resolve@1.20.2': {}
@@ -7315,8 +7323,6 @@ snapshots:
       sax: 1.4.1
     optional: true
 
-  ngprogress@1.1.3: {}
-
   node-releases@2.0.19: {}
 
   nopt@7.2.1:
@@ -7345,6 +7351,8 @@ snapshots:
   npm-run-path@5.3.0:
     dependencies:
       path-key: 4.0.0
+
+  nprogress@0.2.0: {}
 
   nth-check@2.1.1:
     dependencies:

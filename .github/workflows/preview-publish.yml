@@ -34,7 +34,7 @@ jobs:
       - name: Upload surge service and generate preview URL
         id: deploy
         run: |
-          export DEPLOY_DOMAIN=https://preview-pr-${{ steps.pr.outputs.id }}-MTBOfficial.surge.sh
+          export DEPLOY_DOMAIN=https://preview-pr-${{ steps.pr.outputs.id }}-mtb-official.surge.sh
           npx surge --project dist --domain $DEPLOY_DOMAIN --token ${{ secrets.SURGE_TOKEN }}
           echo the preview URL is $DEPLOY_DOMAIN
           echo "url=$DEPLOY_DOMAIN" >> $GITHUB_OUTPUT
