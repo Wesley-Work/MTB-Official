@@ -1,6 +1,6 @@
-@import "./variables.less";
+// @import "./variables.less";
 @import "./_reset.less";
-@import "./theme/_index.less";
+// @import "./theme/_index.less";
 
 @keyframes light-to-dark {
   0% {
@@ -40,4 +40,8 @@
 
 :root[theme-mode=dark]::view-transition-new(root) {
   animation-name: light-to-dark
+}
+
+html :has(.shareNetdisk){
+  background: var(--td-bg-color-page);
 }

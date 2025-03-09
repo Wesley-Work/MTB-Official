@@ -11,6 +11,16 @@ export const RouterConfigMap: RouteRecordRaw[] = [
     path: '/about',
     component: () => import('@pages/about.vue'),
   },
+  {
+    name: 'shareNetdisk',
+    path: '/shareNetdisk',
+    component: () => import('@pages/shareNetdisk.vue'),
+    meta: {
+      noHeader: true,
+      noFooter: true,
+      extraClass: ['shareNetdisk'],
+    },
+  },
 ];
 
 export const RouterConfig = {

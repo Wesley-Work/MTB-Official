@@ -1,0 +1,111 @@
+:root {
+  --footer-bg-color-primary: #1c436e;
+}
+/* #18304b */
+:root[theme-mode='dark'] {
+  --footer-bg-color-primary: #112f52;
+}
+.footer {
+  position: absolute;
+  left: 0;
+  font-size: 14px;
+  line-height: 36px;
+  color: #fff9;
+  background-color: var(--footer-bg-color-primary);
+  padding-top: 70px;
+  padding-bottom: 30px;
+  width: 100%;
+  z-index: 501;
+
+  .wrap {
+    height: 100%;
+    width: 78%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    .pc {
+      display: flex;
+      .Footer-subfooterdiv {
+        float: left;
+        width: 16.6%;
+        h2 {
+          font-size: 16px;
+          color: #fff;
+          margin-bottom: 15px;
+          font-weight: 700;
+        }
+        a {
+          color: #fff9;
+          display: block;
+          transition: all 0.3s ease-out;
+          &:hover {
+            color: #1d70f2;
+            padding-left: 2px;
+          }
+        }
+      }
+    }
+    .mobile {
+      padding: 0px 3.0313rem;
+      display: none;
+      flex-direction: column;
+    }
+
+    .Footer-bootom {
+      border-bottom: 1px solid rgba(248, 248, 248, 0.1);
+      font-size: 16px;
+      margin-top: 60px;
+      padding-bottom: 12px;
+      display: flex;
+      flex-direction: row;
+      a {
+        color: #fff9;
+        margin-right: 25px;
+        transition: all 0.3s ease-out;
+        display: flex;
+        align-items: center;
+        &:hover {
+          color: #1d70f2 !important;
+        }
+      }
+      .links {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+    .copyright {
+      margin-top: 6px;
+      font-variant-numeric: normal;
+      font-variant-east-asian: normal;
+      font-variant-alternates: normal;
+      font-kerning: auto;
+      font-optical-sizing: auto;
+      font-feature-settings: normal;
+      font-variation-settings: normal;
+      font-variant-position: normal;
+      font-weight: 400;
+      font-stretch: normal;
+      font-size: 13px;
+      line-height: normal;
+      font-family: Helvetica Neue;
+      .items {
+        color: #adb3bc;
+        display: flex;
+        gap: 14px;
+      }
+      .becareful {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0px 12px;
+      }
+      .PackageVersion {
+        color: #fff9;
+        margin-right: 25px;
+        display: flex;
+        align-items: center;
+        font-size: 11px;
+      }
+    }
+  }
+}

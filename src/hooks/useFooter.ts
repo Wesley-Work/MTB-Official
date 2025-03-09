@@ -40,6 +40,11 @@ export default function useFooter() {
               isRouter: true,
             },
             {
+              label: '速度测试',
+              href: 'speedtest',
+              isRouter: true,
+            },
+            {
               label: 'SSO[统一身份认证平台]',
               href: '//10.3.146.13',
             },
@@ -88,7 +93,7 @@ export default function useFooter() {
               target: '_blank',
             },
             {
-              label: '广东省人民政府门户网站',
+              label: '广东省人民政府',
               href: 'https://www.gd.gov.cn/',
               target: '_blank',
             },

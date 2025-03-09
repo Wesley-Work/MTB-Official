@@ -1,9 +1,11 @@
 .DS_Store
 node_modules
 /dist
-/server
+# /server
 /log
 package-lock.json
+init.*.py
+database.config*
 
 # local env files
 .env.local

@@ -16,11 +16,5 @@ export const resolveConfig = {
     '@hooks': path.resolve(__dirname, '../hooks'),
   },
 };
-export const basePlugin = [
-  [
-    vue({
-      ssr: false,
-    }),
-    vueJsx(),
-  ],
-];
+// {ssr: false}
+export const basePlugin = [[vue(), vueJsx()]];
