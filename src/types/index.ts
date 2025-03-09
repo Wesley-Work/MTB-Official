@@ -8,6 +8,8 @@ declare global {
      * 是否使用View Transition API切换主题
      */
     useViewTransitionToggleTheme: false;
+    OfficialAPI: string;
+    ShareNetdiskAPI: string;
   };
 
   type ToppicInfo = {

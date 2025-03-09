@@ -1,6 +1,8 @@
 export const config: CONFIG = {
   RecruitConsole: false,
   useViewTransitionToggleTheme: false,
+  OfficialAPI: 'http://localhost:16485/',
+  ShareNetdiskAPI: 'http://localhost:17964/',
 };
 
 export const defaultConfig: DefaultConfig = {
