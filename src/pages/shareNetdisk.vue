@@ -239,7 +239,6 @@ const tableColumns = [
   },
 ];
 
-/* eslint-disable */
 const updateBreadCrumb = () => {
   const { search } = location;
   var searchParams = new URLSearchParams(search);
@@ -401,7 +400,6 @@ const GetDateString = () => {
 
 const filenamePrefix = [];
 const HandleFileName = (row) => {};
-/* eslint-enable */
 </script>
 
 <script lang="tsx">

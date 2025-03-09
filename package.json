@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build:only": "vite build",
-    "build": "vue-tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint:fix": "eslint --ext .vue,.js,.ts,.tsx ./src --max-warnings 0 --fix --cache",
     "lint": "pnpm lint:tsc && eslint --ext .vue,.js,.ts,.tsx ./src --max-warnings 0 --cache",
@@ -47,6 +47,7 @@
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
     "babel-eslint": "^10.1.0",
+    "cypress": "^14.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import": "^2.31.0",
@@ -64,8 +65,7 @@
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "vite": "^6.2.0",
-    "vitest": "^3.0.7",
-    "vue-tsc": "^2.2.8"
+    "vitest": "^3.0.7"
   },
   "lint-staged": {
     "*.{vue,js,jsx,ts,tsx}": [
