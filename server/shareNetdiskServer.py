@@ -7,23 +7,23 @@ from fake_useragent import UserAgent
 import requests
 from flask_cors import CORS
 
-ua=UserAgent()
-#请求头
+ua = UserAgent()
+# 请求头
 # headers={"User-Agent":ua.random,"Host":"10.3.146.102:5000"}
-headers={
+headers = {
     "User-Agent": ua.random,
-    "Host": "10.3.146.102:5000",
+    "Host": "10.3.146.10:5000",
     "Connection": "keep-alive",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     "Accept-Encoding": "gzip, deflate",
-    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
-    }
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+}
 
 # 初始化
 app = flask.Flask(__name__)
 CORS(app, supports_credentials=True)
 # 主地址
-main_UrlT = "http://10.3.146.102:5000"
+main_UrlT = "http://10.3.146.10:5000"
 
 # 共享目录ssid
 ssid = "a5458f75cd1346799519c7f3346af397"
@@ -63,10 +63,14 @@ main_Url = f"{main_UrlT}/share.cgi?func=get_list&ssid={ssid}&fid={ssid}"
 # 下载单文件地址【前端GET】
 # filename {必填} 文件名
 # path {非必填} 路径(/xxx、/xxx/xxx)，根目录下非必填
-download_file_Url = f"{main_UrlT}/share.cgi?ssid={ssid}&openfolder=forcedownload&fid={ssid}&filename="
+download_file_Url = (
+    f"{main_UrlT}/share.cgi?ssid={ssid}&openfolder=forcedownload&fid={ssid}&filename="
+)
 
 # 下载全部文件（打包zip）地址【前端GET】
-download_all_file_Url = f"{main_UrlT}/share.cgi?ssid={ssid}&openfolder=forcedownload&fid={ssid}"
+download_all_file_Url = (
+    f"{main_UrlT}/share.cgi?ssid={ssid}&openfolder=forcedownload&fid={ssid}"
+)
 
 # 屏蔽文件列表
 # 支持文件全名、文件后缀、一级目录
@@ -77,18 +81,19 @@ shieldFileList = []
 # 不显示后缀的文件列表
 notShowSuffixFileList = [".txt", ".md"]
 
-#外部配置文件
+# 外部配置文件
 # with open(sys.path[0]+'/config.yaml', 'r', encoding='utf-8') as f:
 #     s = yaml.safe_load(f)
-    # print(yaml.dump(s,default_flow_style=False)) # 输出yaml文件内容
+# print(yaml.dump(s,default_flow_style=False)) # 输出yaml文件内容
 
 # 屏蔽文件列表
 # shieldFileList = s['shieldFileList']
 # 不显示后缀的文件列表
 # notShowSuffixFileList = s['notShowSuffixFileList']
 
+
 # 获取共享文件夹ssid
-@app.route('/getssid', methods=["GET", "POST"])
+@app.route("/getssid", methods=["GET", "POST"])
 def getssid():
     res = {}
     try:
@@ -99,8 +104,9 @@ def getssid():
         res = {"errcode": -1, "errmsg": traceback.format_exc()}
     return flask.jsonify(res)
 
+
 # 获取文件列表
-@app.route('/getFileList', methods=["GET","POST"])
+@app.route("/getFileList", methods=["GET", "POST"])
 def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
 
     res = {}
@@ -114,9 +120,9 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
             if request.method == "GET":
                 comment = request.args.get(needparam)
             if request.method == "POST":
-                if request.content_type.startswith('application/json'):
+                if request.content_type.startswith("application/json"):
                     comment = request.json.get(needparam)
-                elif request.content_type.startswith('multipart/form-data'):
+                elif request.content_type.startswith("multipart/form-data"):
                     comment = request.form.get(needparam)
                 else:
                     comment = request.values.get(needparam)
@@ -133,14 +139,13 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
             "limit": limit,
             "path": comment,
         }
-        reqresult = requests.post(url=main_Url, data=data,
-                            headers=headers, stream=True)
+        reqresult = requests.post(url=main_Url, data=data, headers=headers, stream=True)
         # print(reqresult.text)
         if reqresult.status_code != 200:
             if reqresult.status_code == 500:
                 res = {"errcode": -404, "errmsg": "文件路径不存在"}
                 return flask.jsonify(res)
-            res = {"errcode": 2, "errmsg": "请求失败","code": reqresult.status_code}
+            res = {"errcode": 2, "errmsg": "请求失败", "code": reqresult.status_code}
             return flask.jsonify(res)
         result = reqresult.json()
         # 忽略文件
@@ -148,9 +153,9 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
             if shieldFileList == []:
                 pass
             # 因为or运算符特性，所以不用not in
-            i1 = i["filename"] in shieldFileList #全文件名
-            i2_1 = i["filename"].split(".") #后缀名
-            i3_1 = i["isfolder"] == 1 #目录
+            i1 = i["filename"] in shieldFileList  # 全文件名
+            i2_1 = i["filename"].split(".")  # 后缀名
+            i3_1 = i["isfolder"] == 1  # 目录
             if i3_1:
                 i3 = f"/{i['filename']}" in shieldFileList
             else:
@@ -162,7 +167,7 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
             else:
                 # 因为拆分不到，所以不是
                 i2 = False
-            #目录只支持一级目录
+            # 目录只支持一级目录
             if i1 or i2 or i3:
                 pass
             else:
@@ -174,7 +179,7 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
             l["download_url"] = getFileDownloadURL(l["filename"], comment)
             # 不显示后缀
             try:
-                wfilehassuffix = l["filename"].split(".",1)
+                wfilehassuffix = l["filename"].split(".", 1)
             except:
                 print("分割失败")
             if len(wfilehassuffix) >= 2:
@@ -184,7 +189,7 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
                 filesuffix = None
                 l["suffix"] = ""
             if filesuffix in notShowSuffixFileList:
-                l["filename"] = l["filename"].split(".",1)[0]
+                l["filename"] = l["filename"].split(".", 1)[0]
         # 处理后数据返回
         resdata["filelist"] = filelist
         resdata["total"] = total
@@ -201,22 +206,31 @@ def getFileList(sort="natural", dirs="ASC", start=0, limit=50, path=None):
         res = {"errcode": -1, "errmsg": traceback.format_exc()}
     return flask.jsonify(res)
 
+
 # 获取文件下载地址
-@app.route('/getFileDownloadURL', methods=["GET", "POST"])
+@app.route("/getFileDownloadURL", methods=["GET", "POST"])
 def APPgetFileDownloadURL():
     res = {}
     try:
         p_data = request.form
         g_data = request.args
         try:
-            filename = str(g_data.get("filename")) if str(p_data.get("filename")) == "None" else str(p_data.get("filename"))
-            path = str(g_data.get("path")) if str(p_data.get("path")) == "None" else str(p_data.get("path"))
+            filename = (
+                str(g_data.get("filename"))
+                if str(p_data.get("filename")) == "None"
+                else str(p_data.get("filename"))
+            )
+            path = (
+                str(g_data.get("path"))
+                if str(p_data.get("path")) == "None"
+                else str(p_data.get("path"))
+            )
         except:
             res = {"errcode": 1, "errmsg": "参数错误"}
         if filename == "None":
             res = {"errcode": 1, "errmsg": "参数错误"}
             return flask.jsonify(res)
-        url = getFileDownloadURL(filename,path)
+        url = getFileDownloadURL(filename, path)
         res["errcode"] = 0
         res["errmsg"] = "ok"
         res["url"] = url
@@ -225,13 +239,14 @@ def APPgetFileDownloadURL():
     return flask.jsonify(res)
 
 
-def getFileDownloadURL(filename,path):
-    if path != None or path != 'None':
+def getFileDownloadURL(filename, path):
+    if path != None or path != "None":
         url = f"{download_file_Url}{filename}&path={path}"
     else:
         url = f"{download_file_Url}{filename}"
     return url
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # app.run(host='0.0.0.0', port=9091, debug=False)
-    app.run(host='0.0.0.0', port=9090, debug=False)
+    app.run(host="0.0.0.0", port=9090, debug=False)
