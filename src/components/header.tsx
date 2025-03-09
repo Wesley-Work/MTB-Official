@@ -4,12 +4,13 @@ import type { PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
 import useHeader from '@hooks/useHeader';
-import { getDevice } from '@utils/device';
+// import { getDevice } from '@utils/device';
 import router from '@src/router';
 import Toppic from './toppic';
 import fhzsn_red from '@assets/fhzsn_red.png';
 import fhzsn_white from '@assets/fhzsn_white.png';
 import '@style/header.scss';
+
 export default defineComponent({
   name: 'MTBHeader',
   props: {
@@ -22,7 +23,7 @@ export default defineComponent({
     const { theme, toggleTheme } = useTheme();
     const { toppicInfo } = useToppic();
     const { headerList } = useHeader();
-    const { isMobile } = getDevice();
+    // const { isMobile } = getDevice();
 
     const headerConfig = computed(() => headerList.value);
     const fixedHeader = ref(false);

@@ -106,7 +106,7 @@ jobs:
 
       # 构建站点
       - name: Build site
-        run: pnpm run build:preview
+        run: pnpm run build
 
       # 将构建的 tdesign-vue-next 站点文件压缩为 zip
       - run: |
