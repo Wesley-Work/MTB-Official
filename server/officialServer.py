@@ -1173,8 +1173,22 @@ def downloadFile():
     sid = getSid()
     # &source_total=4
     # source_file=
-    api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/filemanager/utilRequest.cgi?func=download&sid={sid}"
-    return CombineData(0, "ok", {"url": api, "source_path": "/媒体部/@共享网盘"})
+    path = f"/cgi-bin/filemanager/utilRequest.cgi?func=download&sid={sid}"
+    return CombineData(
+        0,
+        "ok",
+        {
+            "protocol": "http",
+            "out_ip": QNAP_Config["out_ip"],
+            "out_port": QNAP_Config["out_port"],
+            "internal_ip": QNAP_Config["ip"],
+            "internal_port": QNAP_Config["port"],
+            "path": path,
+            "source_path": "/媒体部/@共享网盘",
+            "source_total": None,
+            "source_file": None,
+        },
+    )
 
 
 @app.get("/pick-up")
