@@ -1126,6 +1126,7 @@ async def getSid():
 
 @app.get("/getFileList")
 async def getFileList(
+    path: str = fastapi.Form(default=None),
     sort: str = fastapi.Form(default="'filename"),
     dirs: str = fastapi.Form(default="'DESC"),
 ):
@@ -1136,7 +1137,11 @@ async def getFileList(
             return CombineData(sid["errcode"], sid["errmsg"])
         # sort = "mt"  # (filename/filesize/filetype/mt/privilege/owner/group)
         # dirs = "DESC"  # ASC / DESC
-        api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/filemanager/utilRequest.cgi?func=get_list&sid={sid}&sort={sort}&dir={dirs}&start=0&limit=9999&list_mode=all&path=%2F%E5%AA%92%E4%BD%93%E9%83%A8%2F%40%E5%85%B1%E4%BA%AB%E7%BD%91%E7%9B%98"
+        filePath = "/媒体部/@共享网盘"
+        if path:
+            filePath += path
+        print(path, filePath)
+        api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/filemanager/utilRequest.cgi?func=get_list&sid={sid}&sort={sort}&dir={dirs}&start=0&limit=9999&list_mode=all&path={filePath}"
         # requestResult = requests.get(api)
         # JsonData = requestResult.json()
         async with httpx.AsyncClient() as client:
@@ -1152,14 +1157,36 @@ async def getFileList(
                     and item["filename"] not in ignore_folders
                 ):
                     filtered.append(item)
+            filePath = filePath.replace("/媒体部/@共享网盘", "")
+            if filePath == "":
+                filePath = "/"
+            JsonData["filePath"] = filePath
             # 判断有没有值再做替换，防止报错
             if getValue(JsonData, "datas"):
                 JsonData["datas"] = filtered
                 return CombineData(0, "ok", JsonData)
+            if getValue(JsonData, "status") == 5:
+                return CombineData(
+                    "GetFileListFail:5",
+                    "文件夹不存在",
+                    {
+                        "datas": [],
+                        "filePath": filePath,
+                    },
+                )
+            elif getValue(JsonData, "status") == 3:
+                return CombineData(
+                    "GetFileListFail:3",
+                    "登录凭证有误",
+                    {
+                        "datas": [],
+                        "filePath": filePath,
+                    },
+                )
         return CombineData(
             "GetFileListFail:0",
             f"获取文件列表失败，因为返回状态为{JsonData['status']}",
-            [],
+            {},
         )
     except Exception as err:
         print(err)
