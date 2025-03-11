@@ -1,12 +1,16 @@
 <template>
   <div>
-    <div style="height: 56px"></div>
+    <div style="height: 78px"></div>
+    <!--header-->
+    <MTBHeader :fixed="true" :hiddenToppic="true" :useCustomData="headerConfig" />
     <!---->
     <div class="top-menu">
       <!-- @change="changeHandler"  -->
-      <!--menu-->
       <t-head-menu v-model="menuValue" theme="light" expand-type="popup" :on-change="ChangeMenu">
         <template #logo>
+          <div class="BackUp">
+            <t-button variant="outline" @click="backUp">返回</t-button>
+          </div>
           <span class="menu__title" style="cursor: pointer" @click="dialogVisible = true">{{ menuTitle }}</span>
         </template>
         <template #operations>
@@ -175,7 +179,8 @@
 <script setup lang="tsx">
 import { ref, defineComponent } from 'vue';
 import useClipboard from 'vue-clipboard3';
-const { toClipboard } = useClipboard();
+import { useRouter } from 'vue-router';
+import MTBHeader from '@components/header';
 import {
   FolderOpen1Icon,
   FileWordIcon,
@@ -190,6 +195,21 @@ import {
   FileCopyIcon,
 } from 'tdesign-icons-vue-next';
 
+const router = useRouter();
+const { toClipboard } = useClipboard();
+const headerConfig: HeaderData = [
+  {
+    label: '返回官网',
+    href: '/',
+    isRouter: true,
+  },
+  {
+    label: '『取件码』取件',
+    callBack: () => {
+      console.info('123');
+    },
+  },
+];
 const menuTitle = ref('顺德中专团委学生会媒体部 共享网盘');
 const dialogVisible = ref(false);
 const fileList = ref([]);
@@ -238,6 +258,10 @@ const tableColumns = [
     width: 150,
   },
 ];
+
+const backUp = () => {
+  router.push('/');
+};
 
 const updateBreadCrumb = () => {
   const { search } = location;

@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import { defineComponent, computed, ref, onMounted, onUnmounted, watch } from 'vue';
-import type { PropType } from 'vue';
+import type { ComputedRef, PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
 import useHeader from '@hooks/useHeader';
@@ -18,20 +18,29 @@ export default defineComponent({
       type: Boolean as PropType<boolean>,
       default: false,
     },
+    hiddenToppic: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
+    useCustomData: {
+      type: Array<HeaderItem>,
+      default: undefined,
+    },
   },
   setup(props) {
     const { theme, toggleTheme } = useTheme();
     const { toppicInfo } = useToppic();
     const { headerList } = useHeader();
     // const { isMobile } = getDevice();
-
-    const headerConfig = computed(() => headerList.value);
+    const headerConfig = computed(() => {
+      return props?.useCustomData ?? headerList.value;
+    });
     const fixedHeader = ref(false);
     const scrollY = ref(0);
     const hasToppic = computed(() => !!toppicInfo.value);
     const hasToppic_TOP = computed(() => {
       const y = scrollY.value - 32;
-      return hasToppic.value ? Math.max(0, Math.min(-y, 32)) : 0;
+      return hasToppic.value && !props?.hiddenToppic ? Math.max(0, Math.min(-y, 32)) : 0;
     });
 
     const isNormalTab = (type?: string) => type !== 'list' && type !== 'label';
@@ -41,8 +50,15 @@ export default defineComponent({
       fixedHeader.value = scrollY.value > 32;
     };
 
-    const clickToPath = (path?: string) => {
-      if (!path) return console.warn('路径为空');
+    const clickToPath = (item: HeaderItem | HeaderItemChildren, path?: string) => {
+      if (item?.callBack) {
+        item?.callBack?.();
+        return;
+      }
+      if (!path) {
+        console.warn('路径为空');
+        return;
+      }
       router.push(path);
     };
 
@@ -53,9 +69,14 @@ export default defineComponent({
 
     return () => (
       <>
-        <Toppic />
+        {!props?.hiddenToppic ? <Toppic /> : null}
         <div
-          class={['mtb-header', hasToppic.value && 'hasToppic', (props.fixed || fixedHeader.value) && 'header-fixed']}
+          class={[
+            'mtb-header',
+            'canT-Select',
+            hasToppic.value && !props?.hiddenToppic && 'hasToppic',
+            (props?.fixed || fixedHeader.value) && 'header-fixed',
+          ]}
           style={{ top: `${hasToppic_TOP.value}px` }}
         >
           <div class="wrap">
@@ -79,7 +100,7 @@ export default defineComponent({
                           class={['isTabs', item.extraClass]}
                           target={!!item?.isRouter ? undefined : item.target}
                           href={!!item?.isRouter ? 'javascript:void(0)' : item.href}
-                          onClick={() => clickToPath(item.href)}
+                          onClick={() => clickToPath(item, item.href)}
                         >
                           <span>{item.label}</span>
                         </a>

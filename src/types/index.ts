@@ -26,6 +26,8 @@ declare global {
     onlyPC?: boolean;
     onlyMobile?: boolean;
     children?: Omit<HeaderItemChildren, 'children'>[];
+    /**当CallBack存在时，无论是否为路由都只执行CallBack */
+    callBack?: () => void;
   }
 
   interface HeaderItem {
@@ -38,6 +40,8 @@ declare global {
     onlyPC?: boolean;
     onlyMobile?: boolean;
     children?: HeaderItemChildren[];
+    /**当CallBack存在时，无论是否为路由都只执行CallBack */
+    callBack?: () => void;
   }
 
   type HeaderData = HeaderItem[];
