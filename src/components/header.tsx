@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import { defineComponent, computed, ref, onMounted, onUnmounted, watch } from 'vue';
-import type { ComputedRef, PropType } from 'vue';
+import type { PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
 import useHeader from '@hooks/useHeader';
@@ -124,7 +124,7 @@ export default defineComponent({
                                   class="nav-link"
                                   target={!!listItem?.isRouter ? undefined : listItem.target}
                                   href={!!listItem?.isRouter ? 'javascript:void(0)' : listItem.href}
-                                  onClick={() => clickToPath(listItem.href)}
+                                  onClick={() => clickToPath(listItem, listItem.href)}
                                 >
                                   {listItem.label}
                                 </a>
@@ -144,7 +144,7 @@ export default defineComponent({
                                     class="nav-link"
                                     target={!!labelItem?.isRouter ? undefined : labelItem.target}
                                     href={!!labelItem?.isRouter ? 'javascript:void(0)' : labelItem.href}
-                                    onClick={() => clickToPath(labelItem.href)}
+                                    onClick={() => clickToPath(labelItem, labelItem.href)}
                                   >
                                     {labelItemListEl?.label}
                                   </a>
