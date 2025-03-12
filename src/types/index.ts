@@ -3,11 +3,11 @@ declare global {
     /**
      * 是否显示招新Console
      */
-    RecruitConsole: false;
+    RecruitConsole: boolean;
     /**
      * 是否使用View Transition API切换主题
      */
-    useViewTransitionToggleTheme: false;
+    useViewTransitionToggleTheme: boolean;
     OfficialAPI: string;
     ShareNetdiskAPI: string;
   };

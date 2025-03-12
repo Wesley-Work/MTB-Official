@@ -4,59 +4,60 @@
     <!--header-->
     <MTBHeader :fixed="true" :hiddenToppic="true" :useCustomData="headerConfig" />
     <!---->
-    <div class="top-menu">
-      <!-- @change="changeHandler"  -->
-      <t-head-menu v-model="menuValue" theme="light" expand-type="popup" :on-change="ChangeMenu">
-        <template #logo>
-          <div class="BackUp">
-            <t-button variant="outline" @click="backUp">返回</t-button>
-          </div>
-          <span class="menu__title" style="cursor: pointer" @click="dialogVisible = true">{{ menuTitle }}</span>
-        </template>
-        <template #operations>
+    <t-dialog
+      v-model:visible="dialogVisible"
+      :confirm-btn="null"
+      :cancel-btn="null"
+      :close-btn="false"
+      header="顺德中专团委媒体部 共享网盘"
+      width="45%"
+    >
+      <template #body>
+        <!--TagBadge-->
+        <div style="margin-bottom: 16px">
+          <t-space size="small">
+            <a href="https://tdesign.tencent.com/" target="_blank">
+              <img
+                src="https://img.shields.io/badge/腾讯企业级设计体系-grey?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1LjAwNDEgMzcuMDAwMUg4LjUyODE2QzguNDIwODggMzcgOC4zMTQ4NyAzNi45NzY5IDguMjE3MjggMzYuOTMyNEM4LjExOTY5IDM2Ljg4NzkgOC4wMzI3OCAzNi44MjI5IDcuOTYyNCAzNi43NDE5QzcuODkyMDMgMzYuNjYxIDcuODM5ODMgMzYuNTY1OSA3LjgwOTMyIDM2LjQ2M0M3Ljc3ODgxIDM2LjM2MDIgNy43NzA3IDM2LjI1MiA3Ljc4NTUzIDM2LjE0NTdMOS4wNDcxOSAyOS4wMjI5SDE3LjAzMjRMMTUuNzMwOCAzNi40MDEzQzE1LjY5NjIgMzYuNTY5IDE1LjYwNTIgMzYuNzE5OSAxNS40NzMxIDM2LjgyODhDMTUuMzQwOSAzNi45Mzc4IDE1LjE3NTQgMzYuOTk4MiAxNS4wMDQxIDM3LjAwMDFaIiBmaWxsPSIjMDA5QkZGIi8+CjxwYXRoIGQ9Ik0zMy4yMzQxIDEyLjk4ODVIMTEuODY1N0wxMy4yNzExIDUuMDAzMzZIMzQuMzUyQzM0LjQ2NzQgNC45OTIzNCAzNC41ODM5IDUuMDA4NSAzNC42OTE5IDUuMDUwNTZDMzQuOCA1LjA5MjYyIDM0Ljg5NjcgNS4xNTk0IDM0Ljk3NDQgNS4yNDU1NkMzNS4wNTIgNS4zMzE3MiAzNS4xMDgzIDUuNDM0ODYgMzUuMTM4OSA1LjU0NjcyQzM1LjE2OTUgNS42NTg1OCAzNS4xNzM1IDUuNzc2MDUgMzUuMTUwNSA1Ljg4OTcyTDMzLjk2ODcgMTIuMzg5N0MzMy45MzY3IDEyLjU2MDIgMzMuODQ1NCAxMi43MTM4IDMzLjcxMDkgMTIuODIzNEMzMy41NzY0IDEyLjkzMyAzMy40MDc1IDEyLjk5MTUgMzMuMjM0MSAxMi45ODg1WiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzczNl8xMDUpIi8+CjxwYXRoIGQ9Ik0xMS44NjU4IDEyLjk4NzRINC43NTg5OUM0LjY1MDI2IDEyLjk4ODYgNC41NDI1NyAxMi45NjYyIDQuNDQzMzYgMTIuOTIxN0M0LjM0NDE2IDEyLjg3NzIgNC4yNTU4MSAxMi44MTE2IDQuMTg0NDIgMTIuNzI5NkM0LjExMzA0IDEyLjY0NzYgNC4wNjAzMiAxMi41NTEgNC4wMjk5MyAxMi40NDY3QzMuOTk5NTMgMTIuMzQyMyAzLjk5MjE4IDEyLjIzMjUgNC4wMDgzOCAxMi4xMjVMNS4xNjYyMyA1LjYxNzA2QzUuMTk3ODYgNS40NDUwMyA1LjI4ODU4IDUuMjg5NDUgNS40MjI3MSA1LjE3NzE5QzUuNTU2ODQgNS4wNjQ5MyA1LjcyNTk2IDUuMDAzMDMgNS45MDA4NyA1LjAwMjJIMTMuMjcxMkwxMS44NjU4IDEyLjk4NzRaIiBmaWxsPSIjMDA2NEZGIi8+CjxwYXRoIGQ9Ik0xNy4wNDAyIDI4Ljk5ODdIOS4wMzkwNkwxMS44NjU4IDEzLjAwNDRIMTkuODY3TDE3LjA0MDIgMjguOTk4N1oiIGZpbGw9InVybCgjcGFpbnQxX2xpbmVhcl83MzZfMTA1KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzczNl8xMDUiIHgxPSIxMi41NTEiIHkxPSI5LjAwMzk0IiB4Mj0iMzMuODU5OCIgeTI9IjEyLjgzOTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agb2Zmc2V0PSIwLjAzIiBzdG9wLWNvbG9yPSIjRTlGRkZGIi8+CjxzdG9wIG9mZnNldD0iMC4xNyIgc3RvcC1jb2xvcj0iI0M0RkFDOSIvPgo8c3RvcCBvZmZzZXQ9IjAuMzMiIHN0b3AtY29sb3I9IiNBMEY2OTQiLz4KPHN0b3Agb2Zmc2V0PSIwLjQ4IiBzdG9wLWNvbG9yPSIjODJGMjY5Ii8+CjxzdG9wIG9mZnNldD0iMC42MyIgc3RvcC1jb2xvcj0iIzZBRUY0NyIvPgo8c3RvcCBvZmZzZXQ9IjAuNzYiIHN0b3AtY29sb3I9IiM1QUVEMkYiLz4KPHN0b3Agb2Zmc2V0PSIwLjg5IiBzdG9wLWNvbG9yPSIjNEZFQjIwIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRDRUIxQiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MV9saW5lYXJfNzM2XzEwNSIgeDE9IjE1Ljg1NjciIHkxPSIxMi40MjE1IiB4Mj0iMTYuMDA3OCIgeTI9IjI3LjQ3MDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzAwOUJGRiIvPgo8c3RvcCBvZmZzZXQ9IjAuMzUiIHN0b3AtY29sb3I9IiMwMDgxRkUiLz4KPHN0b3Agb2Zmc2V0PSIwLjc1IiBzdG9wLWNvbG9yPSIjMDA2QUZEIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwNjJGRCIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo="
+              />
+            </a>
+            <a href="https://python.org/" target="_blank" title="API服务框架">
+              <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=%23fff" />
+            </a>
+            <a href="https://cn.vuejs.org/" target="_blank" title="主体框架">
+              <img src="https://img.shields.io/badge/Vue--Next-grey?style=for-the-badge&logo=vue.js" />
+            </a>
+            <a href="https://cn.vitejs.dev/guide/ssr.html" target="_blank" title="主要使用框架">
+              <img src="https://img.shields.io/badge/Vite_SSR-646CFF?style=for-the-badge&logo=vite&logoColor=%23fff" />
+            </a>
+            <img src="https://img.shields.io/badge/Wesley-20B2AA?style=for-the-badge" />
+          </t-space>
+        </div>
+        <!--bodyContent-->
+      </template>
+    </t-dialog>
+    <!--取件码弹窗-->
+    <t-dialog
+      v-model:visible="pickUpCodeDialogVisible"
+      :confirm-btn="null"
+      :cancel-btn="null"
+      header="使用『取件码』获取文件"
+      width="40%"
+    >
+      <template #body>
+        <div>
+          <NumberInput
+            v-model:value="pickUpCodeValue"
+            :total="pickUpCodeItemTotal"
+            :split="pickUpCodeSplit"
+            :extra="pickUpCodeLastIsExtra"
+          />
           <div>
-            <t-button> 『取件码』取件 </t-button>
+            <t-button theme="primary" variant="outline" block size="large"> 查 询 </t-button>
           </div>
-        </template>
-      </t-head-menu>
-      <!--dialog-->
-      <t-dialog
-        v-model:visible="dialogVisible"
-        :confirm-btn="null"
-        :cancel-btn="null"
-        :close-btn="false"
-        header="顺德中专团委媒体部 共享网盘"
-        width="45%"
-      >
-        <template #body>
-          <!--TagBadge-->
-          <div style="margin-bottom: 16px">
-            <t-space size="small">
-              <a href="https://tdesign.tencent.com/" target="_blank">
-                <img
-                  src="https://img.shields.io/badge/腾讯企业级设计体系-grey?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1LjAwNDEgMzcuMDAwMUg4LjUyODE2QzguNDIwODggMzcgOC4zMTQ4NyAzNi45NzY5IDguMjE3MjggMzYuOTMyNEM4LjExOTY5IDM2Ljg4NzkgOC4wMzI3OCAzNi44MjI5IDcuOTYyNCAzNi43NDE5QzcuODkyMDMgMzYuNjYxIDcuODM5ODMgMzYuNTY1OSA3LjgwOTMyIDM2LjQ2M0M3Ljc3ODgxIDM2LjM2MDIgNy43NzA3IDM2LjI1MiA3Ljc4NTUzIDM2LjE0NTdMOS4wNDcxOSAyOS4wMjI5SDE3LjAzMjRMMTUuNzMwOCAzNi40MDEzQzE1LjY5NjIgMzYuNTY5IDE1LjYwNTIgMzYuNzE5OSAxNS40NzMxIDM2LjgyODhDMTUuMzQwOSAzNi45Mzc4IDE1LjE3NTQgMzYuOTk4MiAxNS4wMDQxIDM3LjAwMDFaIiBmaWxsPSIjMDA5QkZGIi8+CjxwYXRoIGQ9Ik0zMy4yMzQxIDEyLjk4ODVIMTEuODY1N0wxMy4yNzExIDUuMDAzMzZIMzQuMzUyQzM0LjQ2NzQgNC45OTIzNCAzNC41ODM5IDUuMDA4NSAzNC42OTE5IDUuMDUwNTZDMzQuOCA1LjA5MjYyIDM0Ljg5NjcgNS4xNTk0IDM0Ljk3NDQgNS4yNDU1NkMzNS4wNTIgNS4zMzE3MiAzNS4xMDgzIDUuNDM0ODYgMzUuMTM4OSA1LjU0NjcyQzM1LjE2OTUgNS42NTg1OCAzNS4xNzM1IDUuNzc2MDUgMzUuMTUwNSA1Ljg4OTcyTDMzLjk2ODcgMTIuMzg5N0MzMy45MzY3IDEyLjU2MDIgMzMuODQ1NCAxMi43MTM4IDMzLjcxMDkgMTIuODIzNEMzMy41NzY0IDEyLjkzMyAzMy40MDc1IDEyLjk5MTUgMzMuMjM0MSAxMi45ODg1WiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzczNl8xMDUpIi8+CjxwYXRoIGQ9Ik0xMS44NjU4IDEyLjk4NzRINC43NTg5OUM0LjY1MDI2IDEyLjk4ODYgNC41NDI1NyAxMi45NjYyIDQuNDQzMzYgMTIuOTIxN0M0LjM0NDE2IDEyLjg3NzIgNC4yNTU4MSAxMi44MTE2IDQuMTg0NDIgMTIuNzI5NkM0LjExMzA0IDEyLjY0NzYgNC4wNjAzMiAxMi41NTEgNC4wMjk5MyAxMi40NDY3QzMuOTk5NTMgMTIuMzQyMyAzLjk5MjE4IDEyLjIzMjUgNC4wMDgzOCAxMi4xMjVMNS4xNjYyMyA1LjYxNzA2QzUuMTk3ODYgNS40NDUwMyA1LjI4ODU4IDUuMjg5NDUgNS40MjI3MSA1LjE3NzE5QzUuNTU2ODQgNS4wNjQ5MyA1LjcyNTk2IDUuMDAzMDMgNS45MDA4NyA1LjAwMjJIMTMuMjcxMkwxMS44NjU4IDEyLjk4NzRaIiBmaWxsPSIjMDA2NEZGIi8+CjxwYXRoIGQ9Ik0xNy4wNDAyIDI4Ljk5ODdIOS4wMzkwNkwxMS44NjU4IDEzLjAwNDRIMTkuODY3TDE3LjA0MDIgMjguOTk4N1oiIGZpbGw9InVybCgjcGFpbnQxX2xpbmVhcl83MzZfMTA1KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzczNl8xMDUiIHgxPSIxMi41NTEiIHkxPSI5LjAwMzk0IiB4Mj0iMzMuODU5OCIgeTI9IjEyLjgzOTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agb2Zmc2V0PSIwLjAzIiBzdG9wLWNvbG9yPSIjRTlGRkZGIi8+CjxzdG9wIG9mZnNldD0iMC4xNyIgc3RvcC1jb2xvcj0iI0M0RkFDOSIvPgo8c3RvcCBvZmZzZXQ9IjAuMzMiIHN0b3AtY29sb3I9IiNBMEY2OTQiLz4KPHN0b3Agb2Zmc2V0PSIwLjQ4IiBzdG9wLWNvbG9yPSIjODJGMjY5Ii8+CjxzdG9wIG9mZnNldD0iMC42MyIgc3RvcC1jb2xvcj0iIzZBRUY0NyIvPgo8c3RvcCBvZmZzZXQ9IjAuNzYiIHN0b3AtY29sb3I9IiM1QUVEMkYiLz4KPHN0b3Agb2Zmc2V0PSIwLjg5IiBzdG9wLWNvbG9yPSIjNEZFQjIwIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRDRUIxQiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MV9saW5lYXJfNzM2XzEwNSIgeDE9IjE1Ljg1NjciIHkxPSIxMi40MjE1IiB4Mj0iMTYuMDA3OCIgeTI9IjI3LjQ3MDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzAwOUJGRiIvPgo8c3RvcCBvZmZzZXQ9IjAuMzUiIHN0b3AtY29sb3I9IiMwMDgxRkUiLz4KPHN0b3Agb2Zmc2V0PSIwLjc1IiBzdG9wLWNvbG9yPSIjMDA2QUZEIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwNjJGRCIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo="
-                />
-              </a>
-              <a href="https://python.org/" target="_blank" title="API服务框架">
-                <img
-                  src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=%23fff"
-                />
-              </a>
-              <a href="https://cn.vuejs.org/" target="_blank" title="主体框架">
-                <img src="https://img.shields.io/badge/Vue--Next-grey?style=for-the-badge&logo=vue.js" />
-              </a>
-              <a href="https://cn.vitejs.dev/guide/ssr.html" target="_blank" title="主要使用框架">
-                <img
-                  src="https://img.shields.io/badge/Vite_SSR-646CFF?style=for-the-badge&logo=vite&logoColor=%23fff"
-                />
-              </a>
-              <img src="https://img.shields.io/badge/Wesley-20B2AA?style=for-the-badge" />
-            </t-space>
-          </div>
-          <!--bodyContent-->
-        </template>
-      </t-dialog>
-    </div>
+        </div>
+      </template>
+    </t-dialog>
     <!--temp-->
     <div style="width: 60%; margin: 24px auto">
       <div class="t-alert t-alert--info">
@@ -90,7 +91,7 @@
     <!---->
     <div class="breadcrumb">
       <div style="display: flex; background: var(--breadcrumb-background-color); padding: 6px 8px; border-radius: 6px">
-        <span>当前位置：</span>
+        <span class="breadcrumb--title">当前位置：</span>
         <t-breadcrumb :options="breadCrumbOption" separator="/"></t-breadcrumb>
       </div>
     </div>
@@ -173,6 +174,8 @@
         </template>
       </t-table>
     </div>
+    <!---->
+    <WesleyFooter />
   </div>
 </template>
 
@@ -181,6 +184,8 @@ import { ref, defineComponent } from 'vue';
 import useClipboard from 'vue-clipboard3';
 import { useRouter } from 'vue-router';
 import MTBHeader from '@components/header';
+import WesleyFooter from '@components/wesley_footer';
+import NumberInput from '@components/numberInput';
 import {
   FolderOpen1Icon,
   FileWordIcon,
@@ -199,19 +204,35 @@ const router = useRouter();
 const { toClipboard } = useClipboard();
 const headerConfig: HeaderData = [
   {
-    label: '返回官网',
+    label: '返回 官网',
     href: '/',
     isRouter: true,
   },
   {
     label: '『取件码』取件',
     callBack: () => {
-      console.info('123');
+      pickUpCodeDialogVisible.value = true;
     },
   },
+  {
+    label: '问题反馈',
+    href: 'https://wj.qq.com/s2/14786781/3fb8/',
+    target: '_blank',
+  },
+  {
+    label: 'Github Repository',
+    href: 'https://github.com/Wesley-0808/MTB-Official/',
+    target: '_blank',
+  },
 ];
-const menuTitle = ref('顺德中专团委学生会媒体部 共享网盘');
 const dialogVisible = ref(false);
+const pickUpCodeDialogVisible = ref(false);
+const pickUpCodeItemTotal = ref(8);
+const pickUpCodeValue = ref('');
+// 从后往前数，几项为额外项
+const pickUpCodeLastIsExtra = ref(2);
+// 以几项进行分隔
+const pickUpCodeSplit = ref(3);
 const fileList = ref([]);
 const menuValue = ref('index');
 const breadCrumbOption = ref([{ content: '首页', href: '/' }]);
@@ -258,11 +279,6 @@ const tableColumns = [
     width: 150,
   },
 ];
-
-const backUp = () => {
-  router.push('/');
-};
-
 const updateBreadCrumb = () => {
   const { search } = location;
   var searchParams = new URLSearchParams(search);
@@ -432,7 +448,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
+<style lang="scss">
 :root {
   --breadcrumb-background-color: var(--td-gray-color-4);
   --ripple-color: rgba(0, 0, 0, 0.35);
@@ -533,5 +549,11 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.breadcrumb--title {
+  display: flex;
+  align-items: center;
+  color: var(--td-text-color-primary);
 }
 </style>

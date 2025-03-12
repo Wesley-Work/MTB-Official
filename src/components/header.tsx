@@ -50,8 +50,9 @@ export default defineComponent({
       fixedHeader.value = scrollY.value > 32;
     };
 
-    const clickToPath = (item: HeaderItem | HeaderItemChildren, path?: string) => {
+    const clickToPath = (e: MouseEvent, item: HeaderItem | HeaderItemChildren, path?: string) => {
       if (item?.callBack) {
+        e.preventDefault?.();
         item?.callBack?.();
         return;
       }
@@ -100,7 +101,7 @@ export default defineComponent({
                           class={['isTabs', item.extraClass]}
                           target={!!item?.isRouter ? undefined : item.target}
                           href={!!item?.isRouter ? 'javascript:void(0)' : item.href}
-                          onClick={() => clickToPath(item, item.href)}
+                          onClick={(e) => clickToPath(e, item, item.href)}
                         >
                           <span>{item.label}</span>
                         </a>
@@ -124,7 +125,7 @@ export default defineComponent({
                                   class="nav-link"
                                   target={!!listItem?.isRouter ? undefined : listItem.target}
                                   href={!!listItem?.isRouter ? 'javascript:void(0)' : listItem.href}
-                                  onClick={() => clickToPath(listItem, listItem.href)}
+                                  onClick={(e) => clickToPath(e, listItem, listItem.href)}
                                 >
                                   {listItem.label}
                                 </a>
@@ -144,7 +145,7 @@ export default defineComponent({
                                     class="nav-link"
                                     target={!!labelItem?.isRouter ? undefined : labelItem.target}
                                     href={!!labelItem?.isRouter ? 'javascript:void(0)' : labelItem.href}
-                                    onClick={() => clickToPath(labelItem, labelItem.href)}
+                                    onClick={(e) => clickToPath(e, labelItem, labelItem.href)}
                                   >
                                     {labelItemListEl?.label}
                                   </a>
