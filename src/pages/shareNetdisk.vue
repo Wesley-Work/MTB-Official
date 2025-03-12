@@ -219,11 +219,11 @@ const headerConfig: HeaderData = [
     href: 'https://wj.qq.com/s2/14786781/3fb8/',
     target: '_blank',
   },
-  {
-    label: 'Github Repository',
-    href: 'https://github.com/Wesley-0808/MTB-Official/',
-    target: '_blank',
-  },
+  // {
+  //   label: 'Github Repository',
+  //   href: 'https://github.com/Wesley-0808/MTB-Official/',
+  //   target: '_blank',
+  // },
 ];
 const dialogVisible = ref(false);
 const pickUpCodeDialogVisible = ref(false);
