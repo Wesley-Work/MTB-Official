@@ -1,6 +1,9 @@
 export const config: CONFIG = {
   RecruitConsole: false,
-  useViewTransitionToggleTheme: false,
+  // 使用新API进行切换
+  useViewTransitionToggleTheme: true,
+  OfficialAPI: 'http://localhost:16485/',
+  ShareNetdiskAPI: 'http://localhost:17964/',
 };
 
 export const defaultConfig: DefaultConfig = {
