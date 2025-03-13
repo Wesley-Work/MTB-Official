@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
+import ShareNetdiskComponent from '@pages/shareNetdisk/component.tsx';
 
 export const RouterConfigMap: RouteRecordRaw[] = [
   {
@@ -12,14 +13,40 @@ export const RouterConfigMap: RouteRecordRaw[] = [
     component: () => import('@pages/about.vue'),
   },
   {
-    name: 'shareNetdisk',
+    name: 'shareNetdiskComponent',
     path: '/shareNetdisk',
-    component: () => import('@pages/shareNetdisk.vue'),
+    component: ShareNetdiskComponent,
+    children: [
+      {
+        name: 'index',
+        path: '',
+        component: () => import('@pages/shareNetdisk/shareNetdisk.vue'),
+        meta: {
+          noHeader: true,
+          noFooter: true,
+          extraClass: ['shareNetdisk--index'],
+        },
+      },
+      {
+        name: 'filePreview',
+        path: 'filePreview',
+        component: () => import('@pages/shareNetdisk/filePreview.vue'),
+        meta: {
+          noHeader: true,
+          noFooter: true,
+          extraClass: ['shareNetdisk--filePreview'],
+        },
+      },
+    ],
     meta: {
       noHeader: true,
       noFooter: true,
       extraClass: ['shareNetdisk'],
     },
+  },
+  {
+    path: '/:w+',
+    redirect: '/',
   },
 ];
 

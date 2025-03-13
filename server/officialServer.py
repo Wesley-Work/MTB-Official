@@ -1117,23 +1117,6 @@ async def getSid():
             update_sid_cache()
             return loginSid
         return CombineData("NAS-LoginFail:0", "NAS设备登录失败，无法获取sid")
-        # if not sid or not checkSid(sid):
-        #     if QNAP_Config['useDoubleSid'] is True:
-        #         print("二次缓存token")
-        #         qtoken = getDBQtoken()
-        #         if not qtoken:
-        #             sid = QNAP_Login()
-        #             if isinstance(sid, dict):
-        #                 return sid
-        #         else:
-        #             sid = qtokenGetSid(qtoken)
-        #         if not sid:
-        #             sid = QNAP_Login()
-        #     sid = QNAP_Login()
-        #     if isinstance(sid, dict):
-        #         print("失败了")
-        #         return sid
-        # return sid
     except:
         return CombineData("NAS-LoginFail:5", "NAS设备登录失败，无法获取会话id")
 
@@ -1225,8 +1208,10 @@ async def getFileList(
 
 
 @app.get(f"{URLPREFIX}/netdisk/getDownloadUrl")
-def downloadFile():
-    sid = getSid()
+async def downloadFile():
+    sid = await getSid()
+    if isinstance(sid, dict):
+        return CombineData(sid["errcode"], sid["errmsg"])
     # &source_total=4
     # source_file=
     path = f"/cgi-bin/filemanager/utilRequest.cgi?func=download&sid={sid}"

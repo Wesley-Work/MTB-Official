@@ -1,8 +1,9 @@
 <template>
+  <router-view />
   <div>
     <div style="height: 78px"></div>
     <!--header-->
-    <MTBHeader :fixed="true" :hiddenToppic="true" :useCustomData="headerConfig" />
+    <MTBHeader :fixed="true" :hidden-toppic="true" :use-custom-data="headerConfig" />
     <!---->
     <t-dialog
       v-model:visible="dialogVisible"
@@ -58,7 +59,7 @@
         </div>
       </template>
     </t-dialog>
-    <!--temp-->
+    <!---->
     <div style="width: 60%; margin: 24px auto">
       <div class="t-alert t-alert--info">
         <div class="t-alert__icon">
@@ -71,7 +72,7 @@
         </div>
         <div class="t-alert__content">
           <div class="t-alert__message">
-            <div class="t-alert__description">当前版本正在测试中，如遇Bug，欢迎您向我们</div>
+            <div class="t-alert__description">文件内容来源于媒体部NAS设备，如有疑问请联系工作人员处理</div>
             <div class="t-alert__operation">
               <span
                 ><a
@@ -86,13 +87,26 @@
         </div>
       </div>
     </div>
-    <!-- <t-alert theme="error">高危操作/出错信息提示</t-alert> -->
-    <!--temp-->
     <!---->
     <div class="breadcrumb">
-      <div style="display: flex; background: var(--breadcrumb-background-color); padding: 6px 8px; border-radius: 6px">
+      <div
+        style="display: flex; background: var(--td-bg-color-component-disabled); padding: 6px 8px; border-radius: 6px"
+      >
+        <div>
+          <t-button shape="circle" variant="outline" style="margin-right: 4px" @click="fetchData()">
+            <RefreshIcon />
+          </t-button>
+        </div>
         <span class="breadcrumb--title">当前位置：</span>
-        <t-breadcrumb :options="breadCrumbOption" separator="/"></t-breadcrumb>
+        <t-breadcrumb separator="/">
+          <t-breadcrumb-item
+            v-for="(item, index) in breadCrumbOption"
+            :key="index"
+            @click="handleClickBreadcrumb(item?.path)"
+          >
+            {{ item.content }}
+          </t-breadcrumb-item>
+        </t-breadcrumb>
       </div>
     </div>
     <!---->
@@ -101,62 +115,29 @@
         row-key="epochmt"
         :data="fileList"
         :columns="tableColumns"
-        empty="该文件夹为空"
+        :empty="tableError.error ? tableError.errorMessage : '该文件夹为空'"
         :hover="true"
+        :loading="tableLoading"
         :on-cell-click="handleColClick"
         :row-class-name="handleRowCursor"
       >
+        <template v-if="breadCrumbOption.length >= 2" #firstFullRow>
+          <div class="fileList-firstFullRow--backFolder isfloder" @click="handleBackLastPath">
+            <FolderOpen1Icon />
+            <div style="font-weight: bold">... 返回上级</div>
+          </div>
+        </template>
         <template #filename="{ row }">
           <t-space size="small">
             <FolderOpen1Icon v-if="row.isfolder == 1" />
-            <FileWordIcon v-else-if="row.suffix == 'doc' || row.suffix == 'docx'" />
-            <VideoIcon
-              v-else-if="
-                row.suffix == 'mp4' ||
-                row.suffix == 'avi' ||
-                row.suffix == 'rmvb' ||
-                row.suffix == 'mov' ||
-                row.suffix == 'flv' ||
-                row.suffix == 'mkv' ||
-                row.suffix == 'mpg' ||
-                row.suffix == 'mpge'
-              "
-            />
-            <FileImageIcon
-              v-else-if="
-                row.suffix == 'png' ||
-                row.suffix == 'jpg' ||
-                row.suffix == 'jpeg' ||
-                row.suffix == 'svg' ||
-                row.suffix == 'gif' ||
-                row.suffix == 'tiff' ||
-                row.suffix == 'bmp'
-              "
-            />
-            <FileCode1Icon
-              v-else-if="
-                row.suffix == 'vue' ||
-                row.suffix == 'js' ||
-                row.suffix == 'css' ||
-                row.suffix == 'html' ||
-                row.suffix == 'json' ||
-                row.suffix == 'py' ||
-                row.suffix == 'ts'
-              "
-            />
-            <FilePdfIcon v-else-if="row.suffix == 'pdf'" />
-            <FileZipIcon
-              v-else-if="
-                row.suffix == 'zip' ||
-                row.suffix == 'rar' ||
-                row.suffix == '7z' ||
-                row.suffix == 'tag.gz' ||
-                row.suffix == 'gz' ||
-                row.suffix == 'bz2'
-              "
-            />
-            <FilePowerpointIcon v-else-if="row.suffix == 'pptx' || row.suffix == 'ppt'" />
-            <FileExcelIcon v-else-if="row.suffix == 'xlsx' || row.suffix == 'xls'" />
+            <FileWordIcon v-else-if="fileIsDoc(row.filename)" />
+            <VideoIcon v-else-if="fileIsVideo(row.filename)" />
+            <FileImageIcon v-else-if="fileIsImage(row.filename)" />
+            <FileCode1Icon v-else-if="fileIsCode(row.filename)" />
+            <FilePdfIcon v-else-if="fileIsPdf(row.filename)" />
+            <FileZipIcon v-else-if="fileIsZip(row.filename)" />
+            <FilePowerpointIcon v-else-if="fileIsPpt(row.filename)" />
+            <FileExcelIcon v-else-if="fileIsXls(row.filename)" />
             <FileIcon v-else />
             {{ row.filename }}
           </t-space>
@@ -164,11 +145,19 @@
         <template #operation="{ row }">
           <!-- <span>{{ row }}</span> -->
           <t-space v-if="row.isfolder == 0" size="small">
-            <t-button variant="dashed" ghost @click.end="handleCopyFileDownloadUrl(row)">
+            <t-button v-if="false" variant="dashed" ghost @click.end="handleCopyFileDownloadUrl(row)">
               <fileCopyIcon />
             </t-button>
-            <t-button variant="dashed" theme="primary" ghost @click.end="handleFileDownload(row)">
+            <t-button
+              class="button-hover-text-width--animation"
+              variant="dashed"
+              theme="primary"
+              ghost
+              title="下载文件"
+              @click.end="handleFileDownload(row)"
+            >
               <DownloadIcon />
+              <span class="button-text">下载</span>
             </t-button>
           </t-space>
         </template>
@@ -180,12 +169,13 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, defineComponent } from 'vue';
+import { ref, defineComponent, reactive, onBeforeMount, watch } from 'vue';
 import useClipboard from 'vue-clipboard3';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import MTBHeader from '@components/header';
 import WesleyFooter from '@components/wesley_footer';
 import NumberInput from '@components/numberInput';
+import useFetch from '@utils/fetch';
 import {
   FolderOpen1Icon,
   FileWordIcon,
@@ -198,9 +188,41 @@ import {
   VideoIcon,
   DownloadIcon,
   FileCopyIcon,
+  RefreshIcon,
 } from 'tdesign-icons-vue-next';
+import { MessagePlugin, NotifyPlugin } from 'tdesign-vue-next';
+import {
+  countFileSize,
+  fileIsCode,
+  fileIsDoc,
+  fileIsImage,
+  fileIsPdf,
+  fileIsPpt,
+  fileIsVideo,
+  fileIsXls,
+  fileIsZip,
+  isInternet,
+  isMTBInternet,
+} from '@utils/common';
 
 const router = useRouter();
+const route = useRoute();
+const dir = ref(route.query.dir);
+
+// 监听dir
+watch(
+  () => route.query,
+  (newVal) => {
+    dir.value = newVal.dir;
+    fetchData();
+  },
+);
+
+interface BreadcrumbOption {
+  content: string;
+  path: string;
+}
+
 const { toClipboard } = useClipboard();
 const headerConfig: HeaderData = [
   {
@@ -234,8 +256,6 @@ const pickUpCodeLastIsExtra = ref(2);
 // 以几项进行分隔
 const pickUpCodeSplit = ref(3);
 const fileList = ref([]);
-const menuValue = ref('index');
-const breadCrumbOption = ref([{ content: '首页', href: '/' }]);
 const tableColumns = [
   {
     colKey: 'filename',
@@ -252,23 +272,12 @@ const tableColumns = [
     colKey: 'filesize',
     title: '文件大小',
     width: 120,
-    cell: (h, { col, row }) => {
+    cell: (_h: any, { row }: { row?: any }) => {
       const { isfolder } = row;
       if (isfolder != 1) {
         const { filesize } = row;
-        const kb = filesize / 1024;
-        const mb = kb / 1024;
-        const gb = mb / 1024;
-        let unit = 'KB';
-        if (kb >= 1024 && mb < 1024) {
-          unit = 'MB';
-          return <span>{`${mb.toFixed(2)} ${unit}`}</span>;
-        }
-        if (mb >= 1024) {
-          unit = 'GB';
-          return <span>{`${gb.toFixed(2)} ${unit}`}</span>;
-        }
-        return <span>{`${kb.toFixed(2)} ${unit}`}</span>;
+        const { size, unit } = countFileSize(Number(filesize));
+        return <span>{`${size} ${unit}`}</span>;
       }
       return <span>-</span>;
     },
@@ -279,97 +288,133 @@ const tableColumns = [
     width: 150,
   },
 ];
-const updateBreadCrumb = () => {
-  const { search } = location;
-  var searchParams = new URLSearchParams(search);
-  var path = searchParams.get('dir');
-  if (!path) {
-    path = '/';
+const breadCrumbOption = ref<BreadcrumbOption[]>([{ content: '首页', path: '/' }]);
+const tableLoading = ref(false);
+const tableError = reactive({
+  error: false,
+  errorMessage: '',
+});
+
+// 返回上一页
+const handleBackLastPath = () => {
+  const path = (dir.value as string) ?? (route.query?.dir as string);
+  const pathGroup = path.split('/').filter(Boolean);
+  if (pathGroup.length === 0) {
+    // 已经是根路径，无需跳转
+    return;
   }
-  // 因为目录是/xxx/xxx/xxx这样的，所以要slice(1)去掉第一项
-  var item;
-  try {
-    item = path.split('/').slice(1);
-  } catch {
-    item = [path];
-  }
-  var BCO = this.$data.BreadcrumbOption;
-  // 遍历地址栏
-  for (const key in item) {
-    if (Object.hasOwnProperty.call(item, key)) {
-      const element = item[key];
-      var name = [];
-      var targetURL;
-      // 非第一项
-      if (key != 0) {
-        for (let index = 0; index <= key; index++) {
-          const element = item[index];
-          name.push(element);
-        }
-        targetURL = name.join('/');
-      } else {
-        targetURL = element;
-      }
-      const BCitem = { content: element, href: `/?dir=/${targetURL}` };
-      BCO.push(BCitem);
-    }
-  }
+  // 移除最后一级目录
+  pathGroup.pop();
+  // 上一级路径
+  const lastPath = `/${pathGroup.join('/')}`;
+  router.push({
+    path: route.path,
+    query: {
+      dir: lastPath,
+    },
+  });
 };
-const fetchFileList = () => {
-  console.warn('Server无法获取文件列表，尝试获取文件列表');
-  // const { search } = location;
-  // var searchParams = new URLSearchParams(search);
-  // var path = searchParams.get('dir');
-  // console.log(path);
-  // axios.post('http://10.3.146.100:9090/getFileList', { path: path }).then((res) => {
-  //   console.log(res);
-  //   if (res.data.errcode == 0) {
-  //     this.$data.filelist = res.data.data.filelist;
-  //   } else {
-  //     if (res.data.errcode == -404) {
-  //       this.$data.loaded = false;
-  //       this.$data.notfound = true;
-  //     } else {
-  //       this.$notify.error({ title: '获取文件列表失败', content: `${res.data.errcode}:${res.data.errmsg}` });
-  //     }
-  //   }
-  //   console.log(this.$data.filelist);
-  // });
+
+const handleClickBreadcrumb = (path: string) => {
+  if (route.query?.dir === path) {
+    return;
+  }
+  router.push({
+    path: route.path,
+    query: {
+      dir: path,
+    },
+  });
+};
+
+// 根据路径更新
+const breadCrumbUpdate = (path: string) => {
+  breadCrumbOption.value = [{ content: '首页', path: '/' }];
+  const pathSegments = path.split('/').filter((s) => s.trim() !== '');
+  let currentPath = '';
+  pathSegments.forEach((segment) => {
+    currentPath += `/${segment}`;
+    breadCrumbOption.value.push({
+      content: segment,
+      path: currentPath,
+    });
+  });
+};
+
+const fetchData = () => {
+  tableLoading.value = true;
+  tableError.error = false;
+  tableError.errorMessage = '';
+  const path = dir.value ?? route.query?.dir ?? '/';
+  useFetch({
+    url: '/netdisk/getFileList',
+    // sort = "mt"  # (filename/filesize/filetype/mt/privilege/owner/group)
+    // dirs = "DESC"  # ASC / DESC
+    data: {
+      path: path,
+    },
+    success: (res: any) => {
+      const result = JSON.parse(res);
+      const { filePath, datas: data } = result.data;
+      breadCrumbUpdate(filePath);
+      if (result?.errcode !== 0) {
+        if (result?.errcode === 'GetFileListFail:5') {
+          tableError.error = true;
+          tableError.errorMessage = `文件夹路径不存在`;
+          NotifyPlugin.warning({ title: '获取列表失败', content: `文件夹不存在！` });
+          return;
+        }
+        tableError.error = true;
+        tableError.errorMessage = `获取文件列表失败: ${result?.errmsg}`;
+        NotifyPlugin.error({ title: '获取文件列表失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        return;
+      }
+      fileList.value = data;
+    },
+    error: (desc: string, res: any) => {
+      console.error(desc, res);
+      NotifyPlugin.error({ title: '获取文件列表失败(Fail)', content: `[desc]:${res}` });
+      tableError.error = true;
+      tableError.errorMessage = `获取文件列表失败: ${res}`;
+    },
+    complete: () => {
+      tableLoading.value = false;
+    },
+  });
 };
 
 // 表格行按下
-const handleColClick = (e) => {
-  if (e.colIndex != 0) return;
-  if (e.row.isfolder == 0) return;
-  // this.$store.dispatch('appendPath', `${e.row.filename}`)
-  const { search } = location;
-  var searchParams = new URLSearchParams(search);
-  var path = searchParams.get('dir');
-  if (!path) {
-    path = '/';
+const handleColClick = (e: any) => {
+  // 按的不是第一格 或 不是文件夹 直接返回
+  if (e.colIndex !== 0 || e.row.isfolder === 0) return;
+
+  // 获取标准化当前路径
+  const currentPath = (route.query.dir as string) || '/';
+  const normalizedCurrent = currentPath.replace(/\/+/g, '/').replace(/\/$/, ''); // 处理多余斜杠
+
+  // 构建新路径
+  const pathSegments = normalizedCurrent.split('/').filter(Boolean);
+  pathSegments.push(e.row.filename);
+  const newDir = `/${pathSegments.join('/')}`;
+
+  // 检查是否与当前路径相同
+  if (decodeURIComponent(newDir) === decodeURIComponent(normalizedCurrent)) {
+    console.warn('重复跳转到相同路径:', newDir);
+    return;
   }
-  try {
-    path.split('/').slice(1);
-  } catch {
-    NEWUrl = replaceUrlParam(location.href, 'dir', `/${e.row.filename}`);
-    location.href = NEWUrl;
-  }
-  var item = path.split('/').slice(1);
-  if (item.length == 1) {
-    item = [];
-  }
-  var NEWUrl;
-  if (item.length == 1) {
-    NEWUrl = replaceUrlParam(location.href, 'dir', `${path}/${e.row.filename}`);
-  } else {
-    NEWUrl = replaceUrlParam(location.href, 'dir', `/${e.row.filename}`);
-  }
-  location.href = NEWUrl;
+
+  // 执行路由跳转
+  router.push({
+    path: route.path,
+    query: {
+      dir: newDir,
+    },
+  });
 };
 // 文件夹列鼠标指针
 const handleRowCursor = (e) => {
   if (e.row.isfolder == 1) {
-    return 'Isfloder';
+    return 'isfloder';
   }
   // return {
   //     rowIndex: 0,
@@ -378,18 +423,18 @@ const handleRowCursor = (e) => {
   // }
 };
 // 替换浏览器参数
-const replaceUrlParam = (url, key, value) => {
-  if (url.indexOf(key) > -1) {
-    let reg = new RegExp(`((?=${key}=).*?(?=&))|((?=${key}=).*)`);
-    url = url.replace(reg, `${key}=${value}`);
-  } else {
-    let join = url.indexOf('?') > -1 ? '&' : '?';
-    url += `${join}${key}=${value}`;
-  }
-  return url;
-};
+// const replaceUrlParam = (url: string, key: string, value: string) => {
+//   if (url.indexOf(key) > -1) {
+//     let reg = new RegExp(`((?=${key}=).*?(?=&))|((?=${key}=).*)`);
+//     url = url.replace(reg, `${key}=${value}`);
+//   } else {
+//     let join = url.indexOf('?') > -1 ? '&' : '?';
+//     url += `${join}${key}=${value}`;
+//   }
+//   return url;
+// };
 // 复制下载链接
-const handleCopyFileDownloadUrl = (fileEx) => {
+const handleCopyFileDownloadUrl = (fileEx: any) => {
   const { download_url } = fileEx;
   try {
     toClipboard(download_url);
@@ -400,46 +445,78 @@ const handleCopyFileDownloadUrl = (fileEx) => {
   }
 };
 // 点击下载
-const handleFileDownload = (fileEx) => {
-  const { download_url } = fileEx;
-  var a = document.createElement('a');
-  a.href = download_url;
-  a.download = fileEx.name;
-  a.click();
-  const content = () => {
-    return (
-      <div>
-        <span>已自动开始下载，如未开始请点击</span>
-        <a
-          class="t-link t-link--theme-primary t-link--hover-color"
-          style="padding: 0 3px"
-          href={download_url}
-          download={fileEx.name}
-        >
-          这里
-        </a>
-        <span>重试</span>
-      </div>
-    );
-  };
-  // this.$message.success({ content: content });
+const handleFileDownload = (row: any) => {
+  const { filename } = row;
+  const filePath = route.query?.dir ?? dir.value;
+
+  useFetch({
+    url: '/netdisk/getDownloadUrl',
+    success: (res: any) => {
+      const result = JSON.parse(res);
+      if (result?.errcode !== 0) {
+        NotifyPlugin.error({ title: '获取下载链接失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        return;
+      }
+      const { data } = result;
+      const ip = isMTBInternet() ? data.internal_ip : isInternet() ? data.out_ip : null;
+      const port = isMTBInternet() ? data.internal_port : isInternet() ? data.out_port : null;
+      if (!ip || !port) {
+        NotifyPlugin.warning({ title: '无法组合下载链接', content: `判断网络环境失败` });
+        return;
+      }
+      // 组合
+      const downloadUrl = `${data.protocol}://${ip}:${port}${data.path}&source_path=${data.source_path}${filePath}&source_file=${filename}&source_total=1`;
+      var a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = filename;
+      a.click();
+      const content = () => {
+        return (
+          <div>
+            <span>已开始下载，如未启动下载请点击</span>
+            <a
+              class="t-link t-link--theme-primary t-link--hover-color"
+              style="padding: 0 3px"
+              href={downloadUrl}
+              download={filename}
+            >
+              这里
+            </a>
+            <span>重试</span>
+          </div>
+        );
+      };
+      MessagePlugin.success({ content: content });
+    },
+    error: (desc: string, res: any) => {
+      console.error(desc, res);
+      NotifyPlugin.error({ title: '获取下载链接失败(Main)', content: `[desc]:${res}` });
+    },
+  });
 };
 
-const ChangeMenu = (e) => {
-  menuValue.value = 'index';
-};
 /**
  * @GetDateString
  * @获取当前时间 yyyy-mm-dd hh:mm:ss
  * @return {String}
  */
-const GetDateString = () => {
-  var Dates = new Date();
-  return Dates.toLocaleString().replaceAll('/', '-');
-};
+// const GetDateString = () => {
+//   var Dates = new Date();
+//   return Dates.toLocaleString().replaceAll('/', '-');
+// };
 
-const filenamePrefix = [];
-const HandleFileName = (row) => {};
+onBeforeMount(() => {
+  fetchData();
+});
+
+// defineOptions({
+//   beforeRouteEnter(to, from, next) {
+//     // 加载数据
+//     fetchData(true).finally(() => {
+//       next();
+//     });
+//   },
+// });
 </script>
 
 <script lang="tsx">
@@ -449,16 +526,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-:root {
-  --breadcrumb-background-color: var(--td-gray-color-4);
-  --ripple-color: rgba(0, 0, 0, 0.35);
-}
-
-:root[theme-mode='dark'] {
-  --breadcrumb-background-color: var(--td-gray-color-12);
-  --ripple-color: rgb(75, 75, 75);
-}
-
 .t-menu__operations {
   .t-button {
     margin-left: 8px;
@@ -515,6 +582,17 @@ export default defineComponent({
 .fileList {
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 
+  .t-table__row-full-element {
+    &:has(.fileList-firstFullRow--backFolder) {
+      padding: 0 !important;
+    }
+    .fileList-firstFullRow--backFolder {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
   .t-table td {
     padding: 14px var(--td-comp-paddingLR-l);
     line-height: var(--td-line-height-body-large);
@@ -540,7 +618,8 @@ export default defineComponent({
     height: 28px;
   }
 
-  .Isfloder > td:first-child {
+  .isfloder > td:first-child,
+  .isfloder {
     cursor: pointer;
   }
 }
@@ -555,5 +634,23 @@ export default defineComponent({
   display: flex;
   align-items: center;
   color: var(--td-text-color-primary);
+}
+
+.button-hover-text-width--animation {
+  transition: all 0.28s ease-in-out;
+  &:hover {
+    .button-text {
+      max-width: 100% !important;
+      width: auto !important;
+    }
+  }
+  .t-button__text {
+    align-items: center;
+    .button-text {
+      max-width: 0px;
+      overflow: hidden;
+      transition: all 0.28s ease-in-out;
+    }
+  }
 }
 </style>
