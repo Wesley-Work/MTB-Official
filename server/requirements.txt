@@ -5,3 +5,8 @@ requests
 flask_cors
 pymysql
 uvicorn
+aiofiles
+httpx
+pydantic
+xmltodict
+functools

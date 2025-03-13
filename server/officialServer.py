@@ -7,14 +7,17 @@ import pymysql
 import json
 import os
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 import httpx
+import urllib
 import uvicorn
 from pymysql.converters import escape_string
 import pymysql.cursors
 from pydantic import BaseModel, Field
 import xmltodict
 from functools import lru_cache
+
 
 # 官网业务API
 
@@ -116,13 +119,24 @@ def CombineData(errcode: any = 0, errmsg: str = "", data: any = {}) -> dict:
 
 app = fastapi.FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins="*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/", description="API根")
+
+URLPREFIX = "/api"
+
+
+@app.get(f"{URLPREFIX}", description="API根")
 def index():
     return {}
 
 
-@app.get("/getToppic", description="获取置顶通知内容列表")
+@app.get(f"{URLPREFIX}/getToppic", description="获取置顶通知内容列表")
 def getToppic():
     try:
         with pymysql.connect(**mysqlConfig) as conn:
@@ -135,7 +149,7 @@ def getToppic():
         return CombineData("gte1", traceback.format_exc())
 
 
-@app.get("/getHeaderList", description="获取顶菜单内容配置")
+@app.get(f"{URLPREFIX}/getHeaderList", description="获取顶菜单内容配置")
 def getHeaderList():
     try:
         with pymysql.connect(**mysqlConfig) as conn:
@@ -207,7 +221,7 @@ def getHeaderList():
         return CombineData("ghe1", traceback.format_exc())
 
 
-@app.get("/getFooterList", description="获取底部页脚列表")
+@app.get(f"{URLPREFIX}/getFooterList", description="获取底部页脚列表")
 def getFooterList():
     try:
         with pymysql.connect(**mysqlConfig) as conn:
@@ -282,7 +296,7 @@ def getFooterList():
 
 
 # 管理功能API
-@app.post("/setToppic/del", description="设置置顶通知内容-删除")
+@app.post(f"{URLPREFIX}/setToppic/del", description="设置置顶通知内容-删除")
 def delToppic(
     id: int = fastapi.Form(),
 ):
@@ -299,7 +313,7 @@ def delToppic(
         return CombineData("dte1", f"删除失败: {traceback.format_exc()}")
 
 
-@app.post("/setToppic/add", description="设置置顶通知内容-添加")
+@app.post(f"{URLPREFIX}/setToppic/add", description="设置置顶通知内容-添加")
 def addToppic(
     data: str = fastapi.Form(),
     type: str = fastapi.Form(),
@@ -327,7 +341,7 @@ def addToppic(
         )
 
 
-@app.post("/setToppic/edit", description="设置置顶通知内容-修改")
+@app.post(f"{URLPREFIX}/setToppic/edit", description="设置置顶通知内容-修改")
 def editToppic(
     id: int = fastapi.Form(),
     data: str = fastapi.Form(),
@@ -349,7 +363,7 @@ def editToppic(
         )
 
 
-@app.post("/setHeader/del", description="设置顶菜单-删除")
+@app.post(f"{URLPREFIX}/setHeader/del", description="设置顶菜单-删除")
 def delHeader(
     id: List[int] = fastapi.Form(),
 ):
@@ -373,7 +387,7 @@ def delHeader(
         return CombineData("dhe1", f"删除失败: {traceback.format_exc()}")
 
 
-@app.post("/setHeader/add", description="设置顶菜单-新增")
+@app.post(f"{URLPREFIX}/setHeader/add", description="设置顶菜单-新增")
 def addHeader(data: str = fastapi.Form()):
     # 解析数据
     try:
@@ -401,7 +415,7 @@ def addHeader(data: str = fastapi.Form()):
                     else:
                         # 检查ID是否冲突
                         if node["id"] in existing_ids:
-                            raise ValueError(f"ID {node["id"]} 已存在")
+                            raise ValueError(f"ID {node['id']} 已存在")
                         sql = """
                             INSERT INTO header
                             (`id`, `title`, `label`, `href`, `target`, `isRouter`, `onlyPC`, `onlyMobile`, `type`, `extraClass`, `bindParent`, `deep`)
@@ -443,7 +457,7 @@ def addHeader(data: str = fastapi.Form()):
         return CombineData("ahe1", f"添加失败: {traceback.format_exc()}")
 
 
-@app.post("/setHeader/edit", description="设置顶菜单-修改")
+@app.post(f"{URLPREFIX}/setHeader/edit", description="设置顶菜单-修改")
 def editHeader(data: str = fastapi.Form()):
     try:
         data = json.loads(data)
@@ -510,7 +524,7 @@ def editHeader(data: str = fastapi.Form()):
 
 
 # ManageFooter
-@app.post("/setFooter/del", description="设置底部页脚-删除")
+@app.post(f"{URLPREFIX}/setFooter/del", description="设置底部页脚-删除")
 def delFooter(
     id: List[int] = fastapi.Form(),
 ):
@@ -534,7 +548,7 @@ def delFooter(
         return CombineData("dfe1", f"删除失败: {traceback.format_exc()}")
 
 
-@app.post("/setFooter/add", description="设置底部页脚-新增")
+@app.post(f"{URLPREFIX}/setFooter/add", description="设置底部页脚-新增")
 def addFooter(data: str = fastapi.Form()):
     # 解析数据
     try:
@@ -571,7 +585,7 @@ def addFooter(data: str = fastapi.Form()):
                         if types:
                             # 检查ID是否冲突
                             if node["id"] in existing_ids:
-                                raise ValueError(f"ID {node["id"]} 已存在")
+                                raise ValueError(f"ID {node['id']} 已存在")
                             sql = """
                                 INSERT INTO footer
                                 (`id`, `type`, `title`, `label`, `target`, `href`, `isRouter`, `onlyPC`, `onlyMobile`, `bindParent`, `deep`)
@@ -614,7 +628,7 @@ def addFooter(data: str = fastapi.Form()):
         return CombineData("afe1", f"添加失败: {traceback.format_exc()}")
 
 
-@app.post("/setFooter/edit", description="设置底部页脚-修改")
+@app.post(f"{URLPREFIX}/setFooter/edit", description="设置底部页脚-修改")
 def editFooter(data: str = fastapi.Form()):
     try:
         data = json.loads(data)
@@ -648,7 +662,7 @@ def editFooter(data: str = fastapi.Form()):
                                 continue
                         if types:
                             if node["id"] in existing_ids:
-                                raise ValueError(f"ID {node["id"]} 已存在")
+                                raise ValueError(f"ID {node['id']} 已存在")
                             sql = """
                                 INSERT INTO footer
                                 (`id`, `type`, `title`, `label`, `target`, `href`, `isRouter`, `onlyPC`, `onlyMobile`, `bindParent`, `deep`)
@@ -697,7 +711,7 @@ def getBanner():
     return {"data": "getBanner"}
 
 
-@app.post("/setBanner", description="设置滑动展示列表内容-数据库操作")
+@app.post(f"{URLPREFIX}/setBanner", description="设置滑动展示列表内容-数据库操作")
 def setBanner(
     id: int = fastapi.Form(),
     mode: str = fastapi.Form(),  # add or delete or edit
@@ -748,7 +762,7 @@ def setBanner(
     return {"data": "uploadBanner"}
 
 
-@app.post("/setBanner/upload", description="设置滑动展示列表内容-上传文件")
+@app.post(f"{URLPREFIX}/setBanner/upload", description="设置滑动展示列表内容-上传文件")
 async def uploadBanner(
     file: fastapi.UploadFile = fastapi.File(...),
     title: str = fastapi.Form(),
@@ -965,7 +979,7 @@ def update_qtoken_cache():
 def qtokenGetSid(qtoken: str):
     global SidCache
     try:
-        api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/authLogin.cgi?user={QNAP_Config["username"]}&qtoken={qtoken}&remme=1&duration=-1"
+        api = f"http://{QNAP_Config['ip']}:{QNAP_Config['port']}/cgi-bin/authLogin.cgi?user={QNAP_Config['username']}&qtoken={qtoken}&remme=1&duration=-1"
         print(api)
         requestResult = requests.get(api)
         JsonData = XMLToDict(requestResult.content)
@@ -1022,7 +1036,7 @@ def checkSid(sid: str):
     try:
         if not sid:
             return False
-        api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/filemanager/utilRequest.cgi?func=check_sid&sid={sid}"
+        api = f"http://{QNAP_Config['ip']}:{QNAP_Config['port']}/cgi-bin/filemanager/utilRequest.cgi?func=check_sid&sid={sid}"
         requestResult = requests.get(api)
         JsonData = requestResult.json()
         status = getValue(JsonData, "status")
@@ -1036,7 +1050,7 @@ def checkSid(sid: str):
 def QNAP_Login():
     global SidCache
     try:
-        api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/authLogin.cgi?user={QNAP_Config["username"]}&pwd={QNAP_Config["password"]}&service=1&device=ShareNetdiskServer&duraion=-1&remme=1"
+        api = f"http://{QNAP_Config['ip']}:{QNAP_Config['port']}/cgi-bin/authLogin.cgi?user={QNAP_Config['username']}&pwd={QNAP_Config['password']}&service=1&device=ShareNetdiskServer&duraion=-1&remme=1"
         requestResult = requests.get(api)
         JsonData = XMLToDict(requestResult.content)
         # 若解析失败
@@ -1103,32 +1117,15 @@ async def getSid():
             update_sid_cache()
             return loginSid
         return CombineData("NAS-LoginFail:0", "NAS设备登录失败，无法获取sid")
-        # if not sid or not checkSid(sid):
-        #     if QNAP_Config["useDoubleSid"] is True:
-        #         print("二次缓存token")
-        #         qtoken = getDBQtoken()
-        #         if not qtoken:
-        #             sid = QNAP_Login()
-        #             if isinstance(sid, dict):
-        #                 return sid
-        #         else:
-        #             sid = qtokenGetSid(qtoken)
-        #         if not sid:
-        #             sid = QNAP_Login()
-        #     sid = QNAP_Login()
-        #     if isinstance(sid, dict):
-        #         print("失败了")
-        #         return sid
-        # return sid
     except:
         return CombineData("NAS-LoginFail:5", "NAS设备登录失败，无法获取会话id")
 
 
-@app.get("/getFileList")
+@app.get(f"{URLPREFIX}/netdisk/getFileList")
 async def getFileList(
-    path: str = fastapi.Form(default=None),
-    sort: str = fastapi.Form(default="'filename"),
-    dirs: str = fastapi.Form(default="'DESC"),
+    path: str = None,
+    sort: str = "filename",
+    dirs: str = "DESC",
 ):
     global SidCache
     try:
@@ -1140,49 +1137,64 @@ async def getFileList(
         filePath = "/媒体部/@共享网盘"
         if path:
             filePath += path
-        print(path, filePath)
-        api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/filemanager/utilRequest.cgi?func=get_list&sid={sid}&sort={sort}&dir={dirs}&start=0&limit=9999&list_mode=all&path={filePath}"
-        # requestResult = requests.get(api)
-        # JsonData = requestResult.json()
+        params = {
+            "func": "get_list",
+            "sid": sid,
+            "sort": sort,
+            "dir": dirs,
+            "path": filePath,
+            "start": 0,
+            "limit": 9999,
+            "list_mode": "all",
+        }
+        api = f"http://{QNAP_Config['ip']}:{QNAP_Config['port']}/cgi-bin/filemanager/utilRequest.cgi?{urllib.parse.urlencode(params)}"
         async with httpx.AsyncClient() as client:
             response = await client.get(api)
             JsonData = response.json()
             # 忽略文件夹
             ignore_folders = ["_upload"]
-            filtered = []
-            for item in JsonData.get("datas", []):
-                if (
-                    isinstance(item, dict)
-                    and "filename" in item
-                    and item["filename"] not in ignore_folders
-                ):
-                    filtered.append(item)
+            filtered = [
+                item
+                for item in JsonData.get("datas", [])
+                if isinstance(item, dict) and not item.get("filename") in ignore_folders
+            ]
             filePath = filePath.replace("/媒体部/@共享网盘", "")
             if filePath == "":
                 filePath = "/"
-            JsonData["filePath"] = filePath
-            # 判断有没有值再做替换，防止报错
-            if getValue(JsonData, "datas"):
-                JsonData["datas"] = filtered
-                return CombineData(0, "ok", JsonData)
-            if getValue(JsonData, "status") == 5:
+            returnStatus = getValue(JsonData, "status")
+            if returnStatus == 5:
                 return CombineData(
                     "GetFileListFail:5",
                     "文件夹不存在",
                     {
                         "datas": [],
                         "filePath": filePath,
+                        "currentPath": path,
                     },
                 )
-            elif getValue(JsonData, "status") == 3:
+            elif returnStatus == 3:
                 return CombineData(
                     "GetFileListFail:3",
                     "登录凭证有误",
                     {
                         "datas": [],
                         "filePath": filePath,
+                        "currentPath": path,
                     },
                 )
+            JsonData["datas"] = filtered
+            JsonData.update(
+                {
+                    "filePath": filePath,
+                    "currentPath": path,
+                    "ignoreFolders": ignore_folders,
+                }
+            )
+            return CombineData(
+                0,
+                "ok",
+                JsonData,
+            )
         return CombineData(
             "GetFileListFail:0",
             f"获取文件列表失败，因为返回状态为{JsonData['status']}",
@@ -1195,9 +1207,11 @@ async def getFileList(
         )
 
 
-@app.get("/getDownloadUrl")
-def downloadFile():
-    sid = getSid()
+@app.get(f"{URLPREFIX}/netdisk/getDownloadUrl")
+async def downloadFile():
+    sid = await getSid()
+    if isinstance(sid, dict):
+        return CombineData(sid["errcode"], sid["errmsg"])
     # &source_total=4
     # source_file=
     path = f"/cgi-bin/filemanager/utilRequest.cgi?func=download&sid={sid}"
@@ -1218,7 +1232,7 @@ def downloadFile():
     )
 
 
-@app.get("/pick-up")
+@app.get(f"{URLPREFIX}/netdisk/pick-up")
 def pickUp(
     code: str = None,
 ):
@@ -1238,7 +1252,7 @@ def pickUp(
         )
 
 
-@app.post("/pick-up/add")
+@app.post(f"{URLPREFIX}/netdisk/pick-up/add")
 def addPickUp(
     code: str = fastapi.Form(default=None),
     extra: str = fastapi.Form(default=None),
@@ -1262,7 +1276,7 @@ def addPickUp(
         )
 
 
-@app.post("/pick-up/delete")
+@app.post(f"{URLPREFIX}/netdisk/pick-up/delete")
 def deletePickUp(
     id: int = fastapi.Form(default=None),
 ):
@@ -1284,7 +1298,7 @@ def deletePickUp(
 # @app.get("/getUploadUrl")
 # def getUploadUrl():
 #     http://ip:8080/cgi-bin/filemanager/utilRequest.cgi?func=upload&type=standard&sid=xxxx&dest_path=/Public&overwrite=1&progress=-Public-test.zip
-#     api = f"http://{QNAP_Config["ip"]}:{QNAP_Config["port"]}/cgi-bin/filemanager/utilRequest.cgi?func=upload&type=standard&sid={sid}&dest_path=/媒体部/@共享网盘/_upload&overwrite=0&progress=$%7Bprogress%7D"
+#     api = f"http://{QNAP_Config['ip']}:{QNAP_Config['port']}/cgi-bin/filemanager/utilRequest.cgi?func=upload&type=standard&sid={sid}&dest_path=/媒体部/@共享网盘/_upload&overwrite=0&progress=$%7Bprogress%7D"
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=16485)

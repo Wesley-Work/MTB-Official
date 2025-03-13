@@ -15,6 +15,10 @@ router.beforeEach((to, from, next) => {
   // 进度条
   if (typeof NProgress !== 'undefined') {
     // eslint-disable-next-line no-undef
+    NProgress.configure({
+      speed: 500,
+      trickleSpeed: 50,
+    });
     NProgress.start();
   }
   next();
