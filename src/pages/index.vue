@@ -58,6 +58,7 @@ import wxjb from '@assets/wxjb.png';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination } from 'swiper/modules';
 import MTB_promotional from '@assets/MTB_promotional.mp4';
+import SDZZ from '@assets/sdzz.mp4';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import type { Swiper as SwiperInstance } from 'swiper';
@@ -73,6 +74,12 @@ const defaultBanner = [
     url: MTB_promotional,
     title: '团委学生会 媒体部',
     desc: '一个充满激情与想象力的部门',
+    type: 'video',
+  },
+  {
+    url: SDZZ,
+    title: '顺德中专技工学校',
+    desc: '',
     type: 'video',
   },
 ];
