@@ -1,3 +1,5 @@
+// TODO：虚拟的单元测试，后续会替换成cypress测试页面功能
+
 import { resolveConfig, basePlugin } from '../config/vite.base.config';
 
 const paths = resolve(__dirname, '../pages');

@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { config } from '@src/config';
 import { version } from '@/package.json';
 import wxjb from '@assets/wxjb.png';
