@@ -1,6 +1,7 @@
 <template>
   <MTBHeader v-if="!showHeader"></MTBHeader>
-  <router-view class="waitHeader" :class="route.meta.extraClass"></router-view>
+  <!-- <div class="waitHeader"></div> -->
+  <router-view :class="route.meta.extraClass"></router-view>
   <MTBFooter v-if="!showFooter"></MTBFooter>
 </template>
 <script setup lang="tsx">

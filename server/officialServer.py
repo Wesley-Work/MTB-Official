@@ -107,13 +107,23 @@ async def save_upload_file_chunks(
         return e
 
 
-def CombineData(errcode: any = 0, errmsg: str = "", data: any = {}) -> dict:
+def CombineData(
+    errcode: any = 0,
+    errmsg: str = "",
+    data: any = {},
+    defaultData: str = "dict",
+) -> dict:
     """
     CombineData
     :param errcode: 错误码
     :param errmsg: 错误信息
     :param data: 数据
     """
+    if not data:
+        if defaultData == "dict":
+            data = {}
+        else:
+            data = []
     return {"errcode": errcode, "errmsg": errmsg, "data": data}
 
 
@@ -144,6 +154,8 @@ def getToppic():
                 sql = "SELECT * FROM toppic"
                 cursor.execute(sql)
                 result = cursor.fetchone()
+                if not result:
+                    result = []
                 return CombineData(0, "ok", result)
     except:
         return CombineData("gte1", traceback.format_exc())
@@ -156,6 +168,8 @@ def getHeaderList():
             with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM header")
                 result = cursor.fetchall()
+                if not result:
+                    result = []
                 all_nodes = [dict(row) for row in result]
 
                 # 构建快速查询字典（处理无效节点）
@@ -216,7 +230,7 @@ def getHeaderList():
                     if tree:
                         final_result.append(tree)
 
-                return CombineData(0, "ok", final_result)
+                return CombineData(0, "ok", final_result, "list")
     except:
         return CombineData("ghe1", traceback.format_exc())
 
@@ -228,6 +242,8 @@ def getFooterList():
             with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM footer")
                 result = cursor.fetchall()
+                if not result:
+                    result = []
                 all_nodes = [dict(row) for row in result]
 
                 # 构建快速查询字典（处理无效节点）
@@ -282,7 +298,7 @@ def getFooterList():
                     if node["bindParent"] == 0 or node["bindParent"] not in valid_ids
                 ]
 
-                final_result = {}
+                final_result = {"list": [], "links": []}
                 for root in root_nodes:
                     tree = build_tree(root)
                     if not tree["type"] in final_result:
@@ -290,7 +306,7 @@ def getFooterList():
                     if tree:
                         final_result[tree["type"]].append(tree)
 
-                return CombineData(0, "ok", final_result)
+                return CombineData(0, "ok", final_result, "list")
     except:
         return CombineData("gfe1", traceback.format_exc())
 
@@ -413,6 +429,8 @@ def addHeader(data: str = fastapi.Form()):
                         for i in node:
                             insert_nodes(i, parent_id, deep)
                     else:
+                        if not "id" in node:
+                            raise ValueError("传入的数据无效，id不存在于数据中")
                         # 检查ID是否冲突
                         if node["id"] in existing_ids:
                             raise ValueError(f"ID {node['id']} 已存在")
@@ -452,8 +470,11 @@ def addHeader(data: str = fastapi.Form()):
                         "root-branch": len(existing_ids) - len(data),
                     },
                 )
+    except ValueError as e:
+
+        return CombineData("ahe2", str(e))
     except:
-        conn.rollback()
+
         return CombineData("ahe1", f"添加失败: {traceback.format_exc()}")
 
 
@@ -516,10 +537,10 @@ def editHeader(data: str = fastapi.Form()):
                         },
                     )
                 else:
-                    conn.rollback()
+
                     return CombineData("ehe3", "数据格式应为列表")
     except:
-        conn.rollback()
+
         return CombineData("ehe1", f"更新失败: {traceback.format_exc()}")
 
 
@@ -583,6 +604,8 @@ def addFooter(data: str = fastapi.Form()):
                                 continue
                         # 非根节点
                         if types:
+                            if not "id" in node:
+                                raise ValueError("传入的数据无效，id不存在于数据中")
                             # 检查ID是否冲突
                             if node["id"] in existing_ids:
                                 raise ValueError(f"ID {node['id']} 已存在")
@@ -623,8 +646,9 @@ def addFooter(data: str = fastapi.Form()):
                         "root-branch": len(existing_ids) - len(data),
                     },
                 )
+    except ValueError as e:
+        return CombineData("afe2", str(e))
     except:
-        conn.rollback()
         return CombineData("afe1", f"添加失败: {traceback.format_exc()}")
 
 
@@ -701,14 +725,23 @@ def editFooter(data: str = fastapi.Form()):
                     },
                 )
     except:
-        conn.rollback()
         return CombineData("efe1", f"更新失败: {traceback.format_exc()}")
 
 
 # 滑动背景管理
-@app.get("/getBanner", description="获取滑动展示列表配置内容")
+@app.get(f"{URLPREFIX}/getBanner", description="获取滑动展示列表配置内容")
 def getBanner():
-    return {"data": "getBanner"}
+    try:
+        with pymysql.connect(**mysqlConfig) as conn:
+            with conn.cursor() as cursor:
+                sql = "SELECT * FROM banner"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                if not result:
+                    result = []
+                return CombineData(0, "ok", result, "list")
+    except:
+        return CombineData("gte1", traceback.format_exc())
 
 
 @app.post(f"{URLPREFIX}/setBanner", description="设置滑动展示列表内容-数据库操作")
@@ -1244,7 +1277,7 @@ def pickUp(
             with conn.cursor() as cursor:
                 sql = "SELECT * FROM netdisk WHERE `key`='pickUpCode' AND `value`= %s"
                 cursor.execute(sql, (code))
-                reault = cursor.fetchall()
+                reault = cursor.fetchone()
                 return CombineData(0, "ok", reault)
     except:
         return CombineData(

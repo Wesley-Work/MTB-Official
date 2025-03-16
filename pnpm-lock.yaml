@@ -26,9 +26,6 @@ importers:
       vite-plugin-pwa:
         specifier: ^0.21.1
         version: 0.21.1(vite@6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3))(workbox-build@7.3.0)(workbox-window@7.3.0)
-      vite-tsconfig-paths:
-        specifier: ^5.1.4
-        version: 5.1.4(typescript@5.7.3)(vite@6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3))
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
@@ -57,6 +54,9 @@ importers:
       '@types/raf':
         specifier: ^3.4.3
         version: 3.4.3
+      '@types/swiper':
+        specifier: ^6.0.0
+        version: 6.0.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^4.33.0
         version: 4.33.0(@typescript-eslint/parser@4.33.0(eslint@7.32.0)(typescript@5.7.3))(eslint@7.32.0)(typescript@5.7.3)
@@ -147,6 +147,9 @@ importers:
       vite:
         specifier: ^6.2.0
         version: 6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3)
+      vite-tsconfig-paths:
+        specifier: ^5.1.4
+        version: 5.1.4(typescript@5.7.3)(vite@6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3))
       vitest:
         specifier: ^3.0.7
         version: 3.0.7(@types/node@22.5.1)(@vitest/ui@2.1.9)(jsdom@19.0.0)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3)
@@ -1133,6 +1136,10 @@ packages:
 
   '@types/sortablejs@1.15.8':
     resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==}
+
+  '@types/swiper@6.0.0':
+    resolution: {integrity: sha512-QPZRgxZ+ivXXtzV43B3LxpXUIC7FE/EoKM+rtxngmgt2M7eeUYypZhyqZD8UxJtlBcUDw/ATGoVeSNpvBBrz2w==}
+    deprecated: This is a stub types definition. swiper provides its own type definitions, so you do not need this installed.
 
   '@types/tinycolor2@1.4.6':
     resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
@@ -5244,6 +5251,10 @@ snapshots:
   '@types/sizzle@2.3.9': {}
 
   '@types/sortablejs@1.15.8': {}
+
+  '@types/swiper@6.0.0':
+    dependencies:
+      swiper: 11.2.5
 
   '@types/tinycolor2@1.4.6': {}
 

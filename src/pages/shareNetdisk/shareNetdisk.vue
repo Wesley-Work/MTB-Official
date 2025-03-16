@@ -38,13 +38,21 @@
       </template>
     </t-dialog>
     <!--取件码弹窗-->
-    <t-dialog
-      v-model:visible="pickUpCodeDialogVisible"
-      :confirm-btn="null"
-      :cancel-btn="null"
-      header="使用『取件码』获取文件"
-      width="40%"
-    >
+    <t-dialog v-model:visible="pickUpCodeDialogVisible" :confirm-btn="null" :cancel-btn="null" width="40%">
+      <template #header>
+        <div style="display: flex; flex-direction: row; align-items: center">
+          <span>使用『取件码』获取文件</span>
+          <t-popup trigger="click">
+            <template #content>
+              <div style="display: flex; flex-direction: column">
+                <span> 额外项：『取件码』设计有6位和8位两种类型，按您获得的『取件码』内容填写即可 </span>
+                <span> 目前暂未开通文件上传共享功能，所以『取件码』只由工作人员下发 </span>
+              </div>
+            </template>
+            <HelpCircleIcon size="16px" style="margin-left: 4px" />
+          </t-popup>
+        </div>
+      </template>
       <template #body>
         <div>
           <NumberInput
@@ -54,7 +62,7 @@
             :extra="pickUpCodeLastIsExtra"
           />
           <div>
-            <t-button theme="primary" variant="outline" block size="large"> 查 询 </t-button>
+            <t-button theme="primary" variant="outline" block size="large" @click="submitPickUpCode"> 查 询 </t-button>
           </div>
         </div>
       </template>
@@ -89,11 +97,9 @@
     </div>
     <!---->
     <div class="breadcrumb">
-      <div
-        style="display: flex; background: var(--td-bg-color-component-disabled); padding: 6px 8px; border-radius: 6px"
-      >
+      <div style="display: flex; background: var(--td-bg-color-container); padding: 6px 8px; border-radius: 6px">
         <div>
-          <t-button shape="circle" variant="outline" style="margin-right: 4px" @click="fetchData()">
+          <t-button shape="circle" variant="outline" style="margin-right: 4px" title="刷新" @click="fetchData()">
             <RefreshIcon />
           </t-button>
         </div>
@@ -146,18 +152,14 @@
           <!-- <span>{{ row }}</span> -->
           <t-space v-if="row.isfolder == 0" size="small">
             <t-button v-if="false" variant="dashed" ghost @click.end="handleCopyFileDownloadUrl(row)">
-              <fileCopyIcon />
+              <FileCopyIcon />
             </t-button>
-            <t-button
-              class="button-hover-text-width--animation"
-              variant="dashed"
-              theme="primary"
-              ghost
-              title="下载文件"
-              @click.end="handleFileDownload(row)"
-            >
-              <DownloadIcon />
-              <span class="button-text">下载</span>
+            <!--class="button-hover-text-width--animation"-->
+            <t-button variant="dashed" theme="primary" ghost title="下载文件" @click.end="handleFileDownload(row)">
+              <div style="display: flex; flex-direction: row; align-items: center">
+                <DownloadIcon />
+                <span class="button-text">下载</span>
+              </div>
             </t-button>
           </t-space>
         </template>
@@ -189,8 +191,10 @@ import {
   DownloadIcon,
   FileCopyIcon,
   RefreshIcon,
+  HelpCircleIcon,
 } from 'tdesign-icons-vue-next';
 import { MessagePlugin, NotifyPlugin } from 'tdesign-vue-next';
+import type { RowClassNameParams } from 'tdesign-vue-next';
 import {
   countFileSize,
   fileIsCode,
@@ -223,6 +227,41 @@ interface BreadcrumbOption {
   path: string;
 }
 
+interface FileListData {
+  filename: string;
+  isfolder: 0 | 1;
+  filesize: string;
+  group: string;
+  owner: string;
+  iscommpressed: 0 | 1;
+  privilege: string;
+  privilege_ex: number;
+  filetype: number;
+  mt: string;
+  epochmt: number;
+  exist: 0 | 1;
+  mp4_240: number;
+  mp4_360: number;
+  mp4_720: number;
+  mp4_480: number;
+  mp4_1080: number;
+  mp4_org: number;
+  mp3: number;
+  trans: number;
+  play: number;
+  subtitle: number;
+  randno: string;
+  sticky_bit: number;
+  encrypt_folder: number;
+  projection_type: number;
+  rf_team_priviege: number;
+  is_cached: number;
+  cache_upload_progress: number;
+  is_h265: number;
+  is_link: number;
+  has_thumbnail: number;
+}
+
 const { toClipboard } = useClipboard();
 const headerConfig: HeaderData = [
   {
@@ -231,7 +270,7 @@ const headerConfig: HeaderData = [
     isRouter: true,
   },
   {
-    label: '『取件码』取件',
+    label: '我有『取件码』',
     callBack: () => {
       pickUpCodeDialogVisible.value = true;
     },
@@ -249,13 +288,13 @@ const headerConfig: HeaderData = [
 ];
 const dialogVisible = ref(false);
 const pickUpCodeDialogVisible = ref(false);
-const pickUpCodeItemTotal = ref(8);
-const pickUpCodeValue = ref('');
+const pickUpCodeItemTotal = ref<number>(8);
+const pickUpCodeValue = ref<string>('');
 // 从后往前数，几项为额外项
-const pickUpCodeLastIsExtra = ref(2);
+const pickUpCodeLastIsExtra = ref<number>(2);
 // 以几项进行分隔
-const pickUpCodeSplit = ref(3);
-const fileList = ref([]);
+const pickUpCodeSplit = ref<number>(3);
+const fileList = ref<FileListData[]>([]);
 const tableColumns = [
   {
     colKey: 'filename',
@@ -294,7 +333,6 @@ const tableError = reactive({
   error: false,
   errorMessage: '',
 });
-
 // 返回上一页
 const handleBackLastPath = () => {
   const path = (dir.value as string) ?? (route.query?.dir as string);
@@ -411,17 +449,14 @@ const handleColClick = (e: any) => {
     },
   });
 };
-// 文件夹列鼠标指针
-const handleRowCursor = (e) => {
+
+// 文件夹列-鼠标指针
+const handleRowCursor = (e: RowClassNameParams<FileListData>) => {
   if (e.row.isfolder == 1) {
     return 'isfloder';
   }
-  // return {
-  //     rowIndex: 0,
-  //     row: e.row,
-  //     type: 'body',
-  // }
 };
+
 // 替换浏览器参数
 // const replaceUrlParam = (url: string, key: string, value: string) => {
 //   if (url.indexOf(key) > -1) {
@@ -433,21 +468,24 @@ const handleRowCursor = (e) => {
 //   }
 //   return url;
 // };
+
 // 复制下载链接
 const handleCopyFileDownloadUrl = (fileEx: any) => {
   const { download_url } = fileEx;
   try {
     toClipboard(download_url);
-    // this.$message.success('复制成功');
+    MessagePlugin.success('复制成功');
   } catch (e) {
     console.info(e);
-    // this.$message.error('复制失败！');
+    MessagePlugin.error('复制失败！');
   }
 };
+
 // 点击下载
 const handleFileDownload = (row: any) => {
   const { filename } = row;
   const filePath = route.query?.dir ?? dir.value;
+  const loading = MessagePlugin.loading('加载中...');
 
   useFetch({
     url: '/netdisk/getDownloadUrl',
@@ -492,6 +530,121 @@ const handleFileDownload = (row: any) => {
       console.error(desc, res);
       NotifyPlugin.error({ title: '获取下载链接失败(Main)', content: `[desc]:${res}` });
     },
+    complete: () => {
+      MessagePlugin.close(loading);
+    },
+  });
+};
+
+// 查询取件码
+const submitPickUpCode = () => {
+  const pickUpCode = pickUpCodeValue.value;
+  const loading = MessagePlugin.loading('加载中...');
+  pickUpCodeDialogVisible.value = false;
+
+  useFetch({
+    url: '/netdisk/pick-up',
+    data: {
+      code: pickUpCode,
+    },
+    success: (res: any) => {
+      const result = JSON.parse(res);
+      if (result?.errcode !== 0) {
+        NotifyPlugin.error({ title: '获取取件码内容失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        return;
+      }
+      type dataType = { id: number; key: string; value: string; type: string; extra: string };
+
+      const { data }: { data: dataType | null } = result;
+      const islocalRoute = (str: dataType) => {
+        try {
+          const obj = JSON.parse(str?.extra);
+          const inval = ['isRouter', 'path'];
+          inval.forEach((key) => {
+            if (!obj[key]) {
+              console.warn(`返回值[${key}]不是有效的本地路由数据`, str);
+            }
+            return false;
+          });
+          return true;
+        } catch (e) {
+          console.warn('返回值不是一个有效的JSON对象', str);
+          return false;
+        }
+      };
+      // 跳转模式
+      if (data?.type === 'redirect') {
+        // 1. 判断是不是一个标准的url
+        if (data?.extra?.startsWith('http')) {
+          const content = () => {
+            return (
+              <div>
+                <span>已打开新标签页，如未正确打开请点击</span>
+                <a
+                  class="t-link t-link--theme-primary t-link--hover-color"
+                  style="padding: 0 3px"
+                  href={data.extra}
+                  target="_blank"
+                >
+                  这里
+                </a>
+                <span>重试</span>
+              </div>
+            );
+          };
+          MessagePlugin.success({ content: content });
+          window.open(data?.extra);
+        }
+        // 2. 判断是不是一个对象
+        else if (data?.extra?.startsWith('{')) {
+          const ilr = islocalRoute(data);
+          if (!ilr) {
+            NotifyPlugin.error({
+              title: '取件码内容无效',
+              content: `请联系管理人员确认，错误内容：解析json字符无效，数据：${data.extra}`,
+            });
+            return;
+          }
+          const js = JSON.parse(data?.extra);
+          if (js?.isRouter && js?.path) {
+            MessagePlugin.success({ content: '正在跳转路由' });
+            router.push({
+              path: js?.path,
+            });
+          } else {
+            const extraContent = js?.isRouter ? `路由地址不正确` : `不允许关闭跳转路由`;
+            NotifyPlugin.error({
+              title: '取件码内容无效[本地路由]',
+              content: `请联系管理人员确认，错误内容：${extraContent}，数据：${data.extra}`,
+            });
+          }
+        } else {
+          NotifyPlugin.error({
+            title: '取件码内容无效',
+            content: `请联系管理人员确认，错误内容：${data.extra}`,
+          });
+        }
+      }
+      // 文件列表模式
+      else if (data?.type === 'fileList') {
+        NotifyPlugin.warning({
+          title: '取件码类型告警',
+          content: '当前不支持FileList类型的取件码，请联系管理人员处理',
+        });
+      } else {
+        NotifyPlugin.error({
+          title: '获取取件码内容失败(Data)',
+          content: `取件码类型无效，请联系管理人员确认，错误类型：${data?.type}`,
+        });
+      }
+    },
+    error: (desc: string, res: any) => {
+      console.error(desc, res);
+      NotifyPlugin.error({ title: '获取取件码内容失败(Main)', content: `[desc]:${res}` });
+    },
+    complete: () => {
+      MessagePlugin.close(loading);
+    },
   });
 };
 
@@ -526,6 +679,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+body {
+  background: var(--td-bg-color-page);
+}
+
 .t-menu__operations {
   .t-button {
     margin-left: 8px;

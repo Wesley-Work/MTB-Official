@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import ShareNetdiskComponent from '@pages/shareNetdisk/component.tsx';
+import ConfigPage from '@pages/config.tsx';
 
 export const RouterConfigMap: RouteRecordRaw[] = [
   {
@@ -18,7 +19,7 @@ export const RouterConfigMap: RouteRecordRaw[] = [
     component: ShareNetdiskComponent,
     children: [
       {
-        name: 'index',
+        name: 'shareNetdisk',
         path: '',
         component: () => import('@pages/shareNetdisk/shareNetdisk.vue'),
         meta: {
@@ -43,6 +44,43 @@ export const RouterConfigMap: RouteRecordRaw[] = [
       noFooter: true,
       extraClass: ['shareNetdisk'],
     },
+  },
+  {
+    name: 'ConfigPage',
+    path: '/config',
+    component: ConfigPage,
+    children: [
+      {
+        name: 'header',
+        path: 'header',
+        component: () => import('@components/header.tsx'),
+        meta: {
+          noHeader: true,
+          noFooter: true,
+          test: true,
+        },
+      },
+      {
+        name: 'banner',
+        path: 'banner',
+        component: () => import('@pages/index.vue'),
+        meta: {
+          noHeader: true,
+          noFooter: true,
+          test: true,
+        },
+      },
+      {
+        name: 'footer',
+        path: 'footer',
+        component: () => import('@components/footer.tsx'),
+        meta: {
+          noHeader: true,
+          noFooter: true,
+          test: true,
+        },
+      },
+    ],
   },
   {
     path: '/:w+',
