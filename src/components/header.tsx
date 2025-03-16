@@ -1,5 +1,6 @@
 // src/components/Header.tsx
 import { defineComponent, computed, ref, onMounted, onUnmounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import type { PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
@@ -32,8 +33,12 @@ export default defineComponent({
     const { toppicInfo } = useToppic();
     const { headerList } = useHeader();
     // const { isMobile } = getDevice();
-    const headerConfig = computed(() => {
-      return props?.useCustomData ?? headerList.value;
+    const route = useRoute();
+    // 如果路由test Meta为true且有测试数据，则优先使用
+    const headerConfig = computed<HeaderData>(() => {
+      return route.query?.testData && route?.meta?.test
+        ? (JSON.parse(route.query?.testData as string) as HeaderData)
+        : props?.useCustomData ?? headerList.value;
     });
     const fixedHeader = ref(false);
     const scrollY = ref(0);
@@ -76,7 +81,7 @@ export default defineComponent({
             'mtb-header',
             'canT-Select',
             hasToppic.value && !props?.hiddenToppic && 'hasToppic',
-            (props?.fixed || fixedHeader.value) && 'header-fixed',
+            (props?.fixed || fixedHeader.value || route.meta?.test) && 'header-fixed',
           ]}
           style={{ top: `${hasToppic_TOP.value}px` }}
         >

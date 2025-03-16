@@ -14,6 +14,10 @@ export default () => {
         allow: [searchForWorkspaceRoot(process.cwd())],
       },
     },
+    build: {
+      outDir: 'dist',
+      assetsDir: 'static',
+    },
     plugins: [...basePlugin, VitePWA()],
   });
 };

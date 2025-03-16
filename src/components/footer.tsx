@@ -1,4 +1,5 @@
 import { computed, defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
 import { version } from '@/package.json';
 import useFooter from '@hooks/useFooter';
 import { getDevice } from '@utils/device';
@@ -59,7 +60,12 @@ export default defineComponent({
   setup() {
     const { footerList } = useFooter();
     const { isMobile } = getDevice();
-    const footerConfig = computed(() => footerList.value as FooterData);
+    const route = useRoute();
+    const footerConfig = computed<FooterData>(() => {
+      return route.query?.testData && route?.meta?.test
+        ? (JSON.parse(route.query?.testData as string) as FooterData)
+        : footerList.value;
+    });
     const crList = [
       '顺德区中等专业学校、顺德区技工学校 团委学生会',
       '顺德中专影视创作基地：媒体部',

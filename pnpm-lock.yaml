@@ -21,14 +21,11 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4(vue@3.5.13(typescript@5.7.3))
       tdesign-vue-next:
-        specifier: ^1.11.2
-        version: 1.11.2(vue@3.5.13(typescript@5.7.3))
+        specifier: ^1.11.3
+        version: 1.11.3(vue@3.5.13(typescript@5.7.3))
       vite-plugin-pwa:
         specifier: ^0.21.1
         version: 0.21.1(vite@6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3))(workbox-build@7.3.0)(workbox-window@7.3.0)
-      vite-tsconfig-paths:
-        specifier: ^5.1.4
-        version: 5.1.4(typescript@5.7.3)(vite@6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3))
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
@@ -57,6 +54,9 @@ importers:
       '@types/raf':
         specifier: ^3.4.3
         version: 3.4.3
+      '@types/swiper':
+        specifier: ^6.0.0
+        version: 6.0.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^4.33.0
         version: 4.33.0(@typescript-eslint/parser@4.33.0(eslint@7.32.0)(typescript@5.7.3))(eslint@7.32.0)(typescript@5.7.3)
@@ -147,6 +147,9 @@ importers:
       vite:
         specifier: ^6.2.0
         version: 6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3)
+      vite-tsconfig-paths:
+        specifier: ^5.1.4
+        version: 5.1.4(typescript@5.7.3)(vite@6.2.0(@types/node@22.5.1)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3))
       vitest:
         specifier: ^3.0.7
         version: 3.0.7(@types/node@22.5.1)(@vitest/ui@2.1.9)(jsdom@19.0.0)(less@4.2.2)(sass-embedded@1.85.1)(terser@5.39.0)(tsx@4.19.3)
@@ -666,6 +669,10 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0 || ^8.0.0-0 <8.0.0
 
+  '@babel/runtime@7.26.10':
+    resolution: {integrity: sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/runtime@7.26.9':
     resolution: {integrity: sha512-aA63XwOkcl4xxQa3HjPMqOP6LiK0ZDv3mUPYEFXkpHbaFjtGggE1A61FjFzJnB+p7/oy2gA8E+rcBNl/zC1tMg==}
     engines: {node: '>=6.9.0'}
@@ -1129,6 +1136,10 @@ packages:
 
   '@types/sortablejs@1.15.8':
     resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==}
+
+  '@types/swiper@6.0.0':
+    resolution: {integrity: sha512-QPZRgxZ+ivXXtzV43B3LxpXUIC7FE/EoKM+rtxngmgt2M7eeUYypZhyqZD8UxJtlBcUDw/ATGoVeSNpvBBrz2w==}
+    deprecated: This is a stub types definition. swiper provides its own type definitions, so you do not need this installed.
 
   '@types/tinycolor2@1.4.6':
     resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
@@ -3653,8 +3664,8 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
-  tdesign-vue-next@1.11.2:
-    resolution: {integrity: sha512-8Y5vTCE8zLrE6etr9cBU4/FHbBKsc3l0E0gWaWmk3qtQvWpAPvloKVXQmiNJnk7BFDN4wH6QjpgpY5KKxIll0g==}
+  tdesign-vue-next@1.11.3:
+    resolution: {integrity: sha512-SU0dRlCVuesClcr2tU/s7jmXb4Q+sR5tBzVV7/YGoIwHSorSz6R3Di/UBMDm5VuNzv0oVLcdRI9T39+9MdqTQA==}
     engines: {node: '>= 18'}
     peerDependencies:
       vue: '>=3.1.0'
@@ -4858,6 +4869,10 @@ snapshots:
       '@babel/types': 7.26.9
       esutils: 2.0.3
 
+  '@babel/runtime@7.26.10':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
   '@babel/runtime@7.26.9':
     dependencies:
       regenerator-runtime: 0.14.1
@@ -5236,6 +5251,10 @@ snapshots:
   '@types/sizzle@2.3.9': {}
 
   '@types/sortablejs@1.15.8': {}
+
+  '@types/swiper@6.0.0':
+    dependencies:
+      swiper: 11.2.5
 
   '@types/tinycolor2@1.4.6': {}
 
@@ -8044,7 +8063,7 @@ snapshots:
       '@babel/runtime': 7.26.9
       vue: 3.5.13(typescript@5.7.3)
 
-  tdesign-vue-next@1.11.2(vue@3.5.13(typescript@5.7.3)):
+  tdesign-vue-next@1.11.3(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       '@babel/runtime': 7.26.9
       '@popperjs/core': 2.11.8
@@ -8525,7 +8544,7 @@ snapshots:
       '@apideck/better-ajv-errors': 0.3.6(ajv@8.17.1)
       '@babel/core': 7.26.9
       '@babel/preset-env': 7.26.9(@babel/core@7.26.9)
-      '@babel/runtime': 7.26.9
+      '@babel/runtime': 7.26.10
       '@rollup/plugin-babel': 5.3.1(@babel/core@7.26.9)(rollup@2.79.2)
       '@rollup/plugin-node-resolve': 15.3.1(rollup@2.79.2)
       '@rollup/plugin-replace': 2.4.2(rollup@2.79.2)

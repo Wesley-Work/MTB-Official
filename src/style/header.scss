@@ -1,11 +1,10 @@
 
 .waitHeader {
-  position: relative;
-  top: 0px;
+  height: 0px;
   transition: all 0.28s ease-in-out;
 }
 .mtb-header.header-fixed + .waitHeader {
-  top: 78px !important;
+  height: 78px !important;
 }
 .mtb-header {
   display: flex;
