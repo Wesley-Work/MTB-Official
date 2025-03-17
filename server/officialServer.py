@@ -1285,6 +1285,22 @@ def pickUp(
         )
 
 
+@app.get(f"{URLPREFIX}/netdisk/pick-up/getList")
+def getPickUpList():
+    try:
+        with pymysql.connect(**mysqlConfig) as conn:
+            with conn.cursor() as cursor:
+                sql = "SELECT * FROM netdisk WHERE `key`='pickUpCode'"
+                cursor.execute(sql)
+                reault = cursor.fetchall()
+                return CombineData(0, "ok", reault)
+    except:
+        return CombineData(
+            "GetPickUpCodeListFail:1",
+            f"获取取件码列表失败，因为{traceback.format_exc()}",
+        )
+
+
 @app.post(f"{URLPREFIX}/netdisk/pick-up/add")
 def addPickUp(
     code: str = fastapi.Form(default=None),
