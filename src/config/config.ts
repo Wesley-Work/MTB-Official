@@ -85,7 +85,7 @@ export const defaultConfig: DefaultConfig = {
     },
     {
       label: '加入我们',
-      href: '',
+      href: 'join-us',
       isRouter: true,
     },
     {
@@ -197,7 +197,7 @@ export const defaultConfig: DefaultConfig = {
       },
       {
         label: '更新日志',
-        href: 'CHANGELOG',
+        href: '/#/CHANGELOG',
         isRouter: true,
       },
     ],

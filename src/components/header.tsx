@@ -1,12 +1,11 @@
 // src/components/Header.tsx
 import { defineComponent, computed, ref, onMounted, onUnmounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { PropType } from 'vue';
 import useTheme from '@hooks/useTheme';
 import useToppic from '@hooks/useToppic';
 import useHeader from '@hooks/useHeader';
 // import { getDevice } from '@utils/device';
-import router from '@src/router';
 import Toppic from './toppic';
 import fhzsn_red from '@assets/fhzsn_red.png';
 import fhzsn_white from '@assets/fhzsn_white.png';
@@ -34,6 +33,7 @@ export default defineComponent({
     const { headerList } = useHeader();
     // const { isMobile } = getDevice();
     const route = useRoute();
+    const router = useRouter();
     // 如果路由test Meta为true且有测试数据，则优先使用
     const headerConfig = computed<HeaderData>(() => {
       return route.query?.testData && route?.meta?.test

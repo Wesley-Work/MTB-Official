@@ -1,5 +1,5 @@
 import { computed, defineComponent } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { version } from '@/package.json';
 import useFooter from '@hooks/useFooter';
 import { getDevice } from '@utils/device';
@@ -59,8 +59,10 @@ export default defineComponent({
   name: 'Footer',
   setup() {
     const { footerList } = useFooter();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { isMobile } = getDevice();
     const route = useRoute();
+    const router = useRouter();
     const footerConfig = computed<FooterData>(() => {
       return route.query?.testData && route?.meta?.test
         ? (JSON.parse(route.query?.testData as string) as FooterData)
@@ -72,9 +74,20 @@ export default defineComponent({
       '顺德中专 全媒体中心',
     ];
 
+    const pushRouter = (path: string) => {
+      router.push(path);
+    };
+
     // 通用链接渲染方法
     const renderLink = (item: FooterItem, index: number) => (
-      <a key={index} target={item.isRouter ? '' : item.target} href={item.href}>
+      <a
+        key={index}
+        target={item.isRouter ? '' : item.target}
+        href={item.isRouter ? 'javascript:void(0)' : item.href}
+        onClick={() => {
+          pushRouter(item.href as string);
+        }}
+      >
         {item.label}
       </a>
     );
@@ -99,6 +112,7 @@ export default defineComponent({
     );
 
     // 移动端内容渲染
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const renderMobile = () => (
       <div class="mobile" style={{ justifyContent: 'center' }}>
         {MOBILE_SECTIONS.map((section, index) => (
@@ -129,7 +143,8 @@ export default defineComponent({
     return () => (
       <div class="footer">
         <div class="wrap">
-          {isMobile ? renderMobile() : renderDesktop()}
+          {/* {isMobile ? renderMobile() : renderDesktop()} */}
+          {renderDesktop()}
 
           <div class="Footer-bootom">
             <a href="javascript:void(0)">
