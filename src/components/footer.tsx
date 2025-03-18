@@ -59,8 +59,7 @@ export default defineComponent({
   name: 'Footer',
   setup() {
     const { footerList } = useFooter();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { isMobile } = getDevice();
+    // const { isMobile } = getDevice();
     const route = useRoute();
     const router = useRouter();
     const footerConfig = computed<FooterData>(() => {
@@ -112,33 +111,32 @@ export default defineComponent({
     );
 
     // 移动端内容渲染
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const renderMobile = () => (
-      <div class="mobile" style={{ justifyContent: 'center' }}>
-        {MOBILE_SECTIONS.map((section, index) => (
-          <div class="Footer-subfooterdiv" key={`mobile-${index}`}>
-            <div class="arrow">
-              <h2>{section.title}</h2>
-              <ArrowIcon />
-            </div>
-            <div class="Footer-subtag">
-              {section.links.map((link, idx) => (
-                <a key={idx} target="_self" href={link.href}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-        <div class="Footer-subfooterdiv find-us">
-          <h2>找到我们↓</h2>
-          <div class="clearfix">
-            <h3>办公楼 一楼 德育处主任室 旁</h3>
-            <p>工作时间：08:00～21:30</p>
-          </div>
-        </div>
-      </div>
-    );
+    // const renderMobile = () => (
+    //   <div class="mobile" style={{ justifyContent: 'center' }}>
+    //     {MOBILE_SECTIONS.map((section, index) => (
+    //       <div class="Footer-subfooterdiv" key={`mobile-${index}`}>
+    //         <div class="arrow">
+    //           <h2>{section.title}</h2>
+    //           <ArrowIcon />
+    //         </div>
+    //         <div class="Footer-subtag">
+    //           {section.links.map((link, idx) => (
+    //             <a key={idx} target="_self" href={link.href}>
+    //               {link.label}
+    //             </a>
+    //           ))}
+    //         </div>
+    //       </div>
+    //     ))}
+    //     <div class="Footer-subfooterdiv find-us">
+    //       <h2>找到我们↓</h2>
+    //       <div class="clearfix">
+    //         <h3>办公楼 一楼 德育处主任室 旁</h3>
+    //         <p>工作时间：08:00～21:30</p>
+    //       </div>
+    //     </div>
+    //   </div>
+    // );
 
     return () => (
       <div class="footer">
