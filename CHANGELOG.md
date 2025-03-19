@@ -1,3 +1,13 @@
+
+## 🌈 2.0.1 `2025-03-19` 
+### 🚀 Features
+- 新增`『取件码』`获取内容到后会延时跳转页面，优化体验 @Wesley-0808 ([#19](https://github.com/Wesley-0808/MTB-Official/pull/19))
+### 🐞 Bug Fixes
+- 修复底部页脚无法跳转本地路由的问题 @Wesley-0808 ([#19](https://github.com/Wesley-0808/MTB-Official/pull/19))
+- 修正部分页面的`router`引用 @Wesley-0808 ([#19](https://github.com/Wesley-0808/MTB-Official/pull/19))
+### 🚧 Others
+- 保留技术字段，用于区分父菜单以及适配管理页面 @Wesley-0808 ([#20](https://github.com/Wesley-0808/MTB-Official/pull/20))
+
 ## 🌈 2.0.0 `2025-03-16` 
 ### 🚀 Features
 - `Component`: 适配深色模式、支持两种方式切换深色模式，可通过配置修改 @Wesley-0808 ([#7](https://github.com/Wesley-0808/MTB-Official/pull/7))
