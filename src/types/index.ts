@@ -25,6 +25,7 @@ declare global {
     isRouter?: boolean; // only type=list or is child
     onlyPC?: boolean;
     onlyMobile?: boolean;
+    bindParent?: number;
     children?: Omit<HeaderItemChildren, 'children'>[];
     /**当CallBack存在时，无论是否为路由都只执行CallBack */
     callBack?: () => void;
@@ -39,6 +40,7 @@ declare global {
     type?: 'list' | 'label';
     onlyPC?: boolean;
     onlyMobile?: boolean;
+    bindParent?: number;
     children?: HeaderItemChildren[];
     /**当CallBack存在时，无论是否为路由都只执行CallBack */
     callBack?: () => void;

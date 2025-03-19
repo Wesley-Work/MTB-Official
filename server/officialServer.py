@@ -214,7 +214,7 @@ def getHeaderList():
                             node["children"].append(processed_child)
 
                     # 清理技术字段（处理完成后统一删除）
-                    del node["deep"], node["bindParent"]
+                    del node["deep"]
                     return node
 
                 # 构建完整树形结构

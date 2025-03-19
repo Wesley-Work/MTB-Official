@@ -35,10 +35,16 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     // 如果路由test Meta为true且有测试数据，则优先使用
+    const isTestRouter = route.query?.testData && route?.meta?.test;
     const headerConfig = computed<HeaderData>(() => {
-      return route.query?.testData && route?.meta?.test
-        ? (JSON.parse(route.query?.testData as string) as HeaderData)
-        : props?.useCustomData ?? headerList.value;
+      try {
+        return isTestRouter
+          ? (JSON.parse(route.query?.testData as string) as HeaderData)
+          : props?.useCustomData ?? headerList.value;
+      } catch (e) {
+        console.warn('解析测试数据失败', e);
+      }
+      return props?.useCustomData ?? headerList.value;
     });
     const fixedHeader = ref(false);
     const scrollY = ref(0);
@@ -63,6 +69,10 @@ export default defineComponent({
       }
       if (!path) {
         console.warn('路径为空');
+        return;
+      }
+      if (isTestRouter) {
+        console.warn('测试路由禁止跳转');
         return;
       }
       router.push(path);
@@ -104,8 +114,8 @@ export default defineComponent({
                       {isNormalTab(item?.type) ? (
                         <a
                           class={['isTabs', item.extraClass]}
-                          target={!!item?.isRouter ? undefined : item.target}
-                          href={!!item?.isRouter ? 'javascript:void(0)' : item.href}
+                          target={!!item?.isRouter || isTestRouter ? undefined : item.target}
+                          href={!!item?.isRouter || isTestRouter ? 'javascript:void(0)' : item.href}
                           onClick={(e) => clickToPath(e, item, item.href)}
                         >
                           <span>{item.label}</span>
