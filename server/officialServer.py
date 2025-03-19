@@ -1304,8 +1304,8 @@ def getPickUpList():
 @app.post(f"{URLPREFIX}/netdisk/pick-up/add")
 def addPickUp(
     code: str = fastapi.Form(default=None),
-    extra: str = fastapi.Form(default=None),
-    type: int = fastapi.Form(default=None),
+    extra: str = fastapi.Form(default=""),
+    type: str = fastapi.Form(default="redirect"),
 ):
     try:
         if not code or not extra or not type:

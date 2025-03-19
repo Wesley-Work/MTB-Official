@@ -579,7 +579,7 @@ const submitPickUpCode = () => {
           const content = () => {
             return (
               <div>
-                <span>已打开新标签页，如未正确打开请点击</span>
+                <span>将打开新标签页，如未正确打开请点击</span>
                 <a
                   class="t-link t-link--theme-primary t-link--hover-color"
                   style="padding: 0 3px"
@@ -593,7 +593,9 @@ const submitPickUpCode = () => {
             );
           };
           MessagePlugin.success({ content: content });
-          window.open(data?.extra);
+          setTimeout(() => {
+            window.open(data?.extra);
+          }, 1000);
         }
         // 2. 判断是不是一个对象
         else if (data?.extra?.startsWith('{')) {
@@ -608,9 +610,11 @@ const submitPickUpCode = () => {
           const js = JSON.parse(data?.extra);
           if (js?.isRouter && js?.path) {
             MessagePlugin.success({ content: '正在跳转路由' });
-            router.push({
-              path: js?.path,
-            });
+            setTimeout(() => {
+              router.push({
+                path: js?.path,
+              });
+            }, 1000);
           } else {
             const extraContent = js?.isRouter ? `路由地址不正确` : `不允许关闭跳转路由`;
             NotifyPlugin.error({
