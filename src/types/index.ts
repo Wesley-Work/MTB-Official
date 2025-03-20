@@ -37,7 +37,7 @@ declare global {
     target?: string;
     href?: string;
     isRouter?: boolean;
-    type?: 'list' | 'label';
+    type?: 'list' | 'label' | 'click';
     onlyPC?: boolean;
     onlyMobile?: boolean;
     bindParent?: number;
