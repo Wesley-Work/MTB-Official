@@ -138,8 +138,8 @@ export default defineComponent({
                               <li key={listIndex}>
                                 <a
                                   class="nav-link"
-                                  target={!!listItem?.isRouter ? undefined : listItem.target}
-                                  href={!!listItem?.isRouter ? 'javascript:void(0)' : listItem.href}
+                                  target={!!listItem?.isRouter || isTestRouter ? undefined : listItem.target}
+                                  href={!!listItem?.isRouter || isTestRouter ? 'javascript:void(0)' : listItem.href}
                                   onClick={(e) => clickToPath(e, listItem, listItem.href)}
                                 >
                                   {listItem.label}
@@ -158,8 +158,8 @@ export default defineComponent({
                                   <a
                                     key={labelItemListIndex}
                                     class="nav-link"
-                                    target={!!labelItem?.isRouter ? undefined : labelItem.target}
-                                    href={!!labelItem?.isRouter ? 'javascript:void(0)' : labelItem.href}
+                                    target={!!labelItem?.isRouter || isTestRouter ? undefined : labelItem.target}
+                                    href={!!labelItem?.isRouter || isTestRouter ? 'javascript:void(0)' : labelItem.href}
                                     onClick={(e) => clickToPath(e, labelItem, labelItem.href)}
                                   >
                                     {labelItemListEl?.label}
