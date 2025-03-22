@@ -1,4 +1,10 @@
 
+## 🌈 2.0.2 `2025-03-22` 
+### 🚀 Features
+- `Server`: 支持`覆盖`设置`Header` @Wesley-0808 ([#23](https://github.com/Wesley-0808/MTB-Official/pull/23))
+-  `测试路由`不支持跳转外部地址 @Wesley-0808 ([#22](https://github.com/Wesley-0808/MTB-Official/pull/22))
+### 🐞 Bug Fixes
+- 修复`Header`类型问题 @Wesley-0808 ([#22](https://github.com/Wesley-0808/MTB-Official/pull/22))
 ## 🌈 2.0.1 `2025-03-19` 
 ### 🚀 Features
 - 新增`『取件码』`获取内容到后会延时跳转页面，优化体验 @Wesley-0808 ([#19](https://github.com/Wesley-0808/MTB-Official/pull/19))
