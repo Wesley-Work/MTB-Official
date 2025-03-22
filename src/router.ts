@@ -11,7 +11,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.info('Navigating to:', to.path, from);
+  console.info(
+    `%c Navigating to: %c ${to.path} %c`,
+    `background: rgb(49, 74, 197);border:1px solid rgb(49, 74, 197); padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
+    `border:1px solid rgb(49, 74, 197); padding: 1px; border-radius: 0 4px 4px 0; color: rgb(49, 74, 197);`,
+    'background:transparent',
+    from,
+  );
   // 进度条
   if (typeof NProgress !== 'undefined') {
     // eslint-disable-next-line no-undef
