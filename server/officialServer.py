@@ -466,15 +466,14 @@ def addHeader(data: str = fastapi.Form()):
                     "ok",
                     {
                         "all": len(existing_ids),
-                        "root": len(data),
-                        "root-branch": len(existing_ids) - len(data),
+                        "rootNode": len(data),
+                        "rootBranch": len(existing_ids) - len(data),
                     },
                 )
     except ValueError as e:
 
         return CombineData("ahe2", str(e))
     except:
-
         return CombineData("ahe1", f"添加失败: {traceback.format_exc()}")
 
 
@@ -543,15 +542,14 @@ def addHeader(data: str = fastapi.Form()):
                     "ok",
                     {
                         "all": len(existing_ids),
-                        "root": len(data),
-                        "root-branch": len(existing_ids) - len(data),
+                        "rootNode": len(data),
+                        "rootBranch": len(existing_ids) - len(data),
                     },
                 )
     except ValueError as e:
 
         return CombineData("ache2", str(e))
     except:
-
         return CombineData("ache1", f"添加失败: {traceback.format_exc()}")
 
 
