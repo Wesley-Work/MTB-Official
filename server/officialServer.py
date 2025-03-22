@@ -425,7 +425,7 @@ def addHeader(data: str = fastapi.Form()):
                     parent_id: int = 0,
                     deep: int = 0,
                 ):
-                    if type(node) is list:
+                    if isinstance(node, list):
                         for i in node:
                             insert_nodes(i, parent_id, deep)
                     else:
@@ -476,6 +476,83 @@ def addHeader(data: str = fastapi.Form()):
     except:
 
         return CombineData("ahe1", f"添加失败: {traceback.format_exc()}")
+
+
+@app.post(f"{URLPREFIX}/setHeader/coverAdd", description="设置顶菜单-强覆盖的新增")
+def addHeader(data: str = fastapi.Form()):
+    # 解析数据
+    try:
+        data = json.loads(data)
+    except:
+        return CombineData("ache3", "传入的数据无效")
+    try:
+        with pymysql.connect(**mysqlConfig) as conn:
+            with conn.cursor() as cursor:
+                conn.begin()
+
+                cursor.execute("DELETE FROM header")
+
+                # 检查是否存在重复ID
+                existing_ids = set()
+                cursor.execute("SELECT id FROM header")
+                existing_ids.update(row["id"] for row in cursor.fetchall())
+
+                def insert_nodes(
+                    node: List[HeaderNode] | HeaderNode,
+                    parent_id: int = 0,
+                    deep: int = 0,
+                ):
+                    if isinstance(node, list):
+                        for i in node:
+                            insert_nodes(i, parent_id, deep)
+                    else:
+                        if not "id" in node:
+                            raise ValueError("传入的数据无效，id不存在于数据中")
+                        # 检查ID是否冲突
+                        if node["id"] in existing_ids:
+                            raise ValueError(f"ID {node['id']} 已存在")
+                        sql = """
+                            INSERT INTO header
+                            (`id`, `title`, `label`, `href`, `target`, `isRouter`, `onlyPC`, `onlyMobile`, `type`, `extraClass`, `bindParent`, `deep`)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        """
+                        values = (
+                            node["id"],
+                            node.get("title"),
+                            node.get("label"),
+                            node.get("href"),
+                            node.get("target"),
+                            node.get("isRouter", False),
+                            node.get("onlyPC", False),
+                            node.get("onlyMobile", False),
+                            node.get("type"),
+                            node.get("extraClass"),
+                            parent_id or 0,
+                            deep or 0,
+                        )
+                        cursor.execute(sql, values)
+                        existing_ids.add(node["id"])
+                        # 递归
+                        if "children" in node:
+                            insert_nodes(node["children"], node["id"], deep + 1)
+
+                insert_nodes(data)
+                conn.commit()
+                return CombineData(
+                    0,
+                    "ok",
+                    {
+                        "all": len(existing_ids),
+                        "root": len(data),
+                        "root-branch": len(existing_ids) - len(data),
+                    },
+                )
+    except ValueError as e:
+
+        return CombineData("ache2", str(e))
+    except:
+
+        return CombineData("ache1", f"添加失败: {traceback.format_exc()}")
 
 
 @app.post(f"{URLPREFIX}/setHeader/edit", description="设置顶菜单-修改")
