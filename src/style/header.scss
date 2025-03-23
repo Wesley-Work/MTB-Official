@@ -1,11 +1,11 @@
 
-.waitHeader {
-  height: 0px;
-  transition: all 0.28s ease-in-out;
-}
-.mtb-header.header-fixed + .waitHeader {
-  height: 78px !important;
-}
+// .waitHeader {
+//   height: 0px;
+//   transition: all 0.28s ease-in-out;
+// }
+// .mtb-header.header-fixed + .waitHeader {
+//   height: 78px !important;
+// }
 .mtb-header {
   display: flex;
   flex-direction: column;

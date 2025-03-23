@@ -47,6 +47,7 @@ export default defineComponent({
       return props?.useCustomData ?? headerList.value;
     });
     const fixedHeader = ref(false);
+    const isFixed = computed(() => props?.fixed || fixedHeader.value || route.meta?.test || route.path !== '/');
     const scrollY = ref(0);
     const hasToppic = computed(() => !!toppicInfo.value);
     const hasToppic_TOP = computed(() => {
@@ -91,7 +92,7 @@ export default defineComponent({
             'mtb-header',
             'canT-Select',
             hasToppic.value && !props?.hiddenToppic && 'hasToppic',
-            (props?.fixed || fixedHeader.value || route.meta?.test) && 'header-fixed',
+            isFixed.value && 'header-fixed',
           ]}
           style={{ top: `${hasToppic_TOP.value}px` }}
         >

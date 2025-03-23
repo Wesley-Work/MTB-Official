@@ -187,22 +187,6 @@ const swiperToNext = (swiperInstance: SwiperInstance) => {
 
 onMounted(() => {
   initHeight.value = window.innerHeight < 480 ? 680 : window.innerHeight;
-  // var a =
-  //   '[{"label":"诗词大会讲解视频收集","target":"_self","href":"/"},{"label":"德育资料收集","target":"_self","href":"/"},{"label":"共享网盘","target":"_self","href":"shareNetdisk","isRouter":true},{"label":"服务","type":"list","children":[{"label":"文件搜索（仅内部）","href":"//10.3.146.12:81/","target":"_self"},{"label":"速度测试","href":"speedtest","isRouter":true}]},{"label":"资源","type":"label","children":[{"title":"内部共享","children":[{"label":"成片库","href":"//10.3.146.11"},{"label":"媒体库","href":"//10.3.146.11"},{"label":"德育处资源库","href":"//10.3.146.11"}]},{"title":"外部资料","children":[{"label":"对外共享","href":"//10.3.146.11"}]}]},{"label":"系统","type":"list","children":[{"label":"媒体部OA","href":"//10.3.146.12/","target":"_blank"},{"label":"统一身份认证平台","href":"//10.3.146.13/","target":"_blank"},{"label":"直播系统","href":"//10.3.146.125:12800/","target":"_blank"}]},{"label":"加入我们","href":"","isRouter":true},{"label":"关于媒体部","href":"about","isRouter":true}]';
-  // var b = JSON.parse(a);
-  // var j = 1001;
-  // const d = (h) => {
-  //   for (var i = 0; i < h.length; i++) {
-  //     h[i]['id'] = j;
-  //     j++;
-  //     if (h[i]?.children) {
-  //       d(h[i].children);
-  //     }
-  //   }
-  // };
-  // d(b);
-  // var g = JSON.stringify(b);
-  // console.log(g);
   useFetch({
     url: '/getBanner',
     success: (res: any) => {
