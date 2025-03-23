@@ -1,4 +1,7 @@
 
+## 🌈 2.1.0-alpha.1 `2025-03-23` 
+### 🚀 Features
+- `feat`: 补充剩余辅助页面 @Wesley-0808 ([#25](https://github.com/Wesley-0808/MTB-Official/pull/25))
 ## 🌈 2.0.2 `2025-03-22` 
 ### 🚀 Features
 - `Server`: 支持`覆盖`设置`Header` @Wesley-0808 ([#23](https://github.com/Wesley-0808/MTB-Official/pull/23))
@@ -13,7 +16,6 @@
 - 修正部分页面的`router`引用 @Wesley-0808 ([#19](https://github.com/Wesley-0808/MTB-Official/pull/19))
 ### 🚧 Others
 - 保留技术字段，用于区分父菜单以及适配管理页面 @Wesley-0808 ([#20](https://github.com/Wesley-0808/MTB-Official/pull/20))
-
 ## 🌈 2.0.0 `2025-03-16` 
 ### 🚀 Features
 - `Component`: 适配深色模式、支持两种方式切换深色模式，可通过配置修改 @Wesley-0808 ([#7](https://github.com/Wesley-0808/MTB-Official/pull/7))
