@@ -16,7 +16,7 @@ const showFooter = computed(() => route.meta.noFooter === true);
 </script>
 
 <style lang="scss">
-// .waitHeader {
-//   margin-top: 78px;
-// }
+.waitHeader {
+  margin-top: 78px;
+}
 </style>
