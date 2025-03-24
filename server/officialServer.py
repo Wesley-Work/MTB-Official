@@ -889,6 +889,7 @@ def setBannerCoverAdd(
                     conn.begin()
                     cursor.execute("DELETE FROM banner")
                     jsons = json.loads(data)
+                    appendIdGroup = []
                     for i in jsons:
                         title = i["title"]
                         desc = i["desc"]
@@ -897,8 +898,9 @@ def setBannerCoverAdd(
                         orders = i["orders"]
                         sql = "INSERT INTO banner (title, `desc`, url, type, orders) VALUES (%s, %s, %s, %s, %s)"
                         cursor.execute(sql, (title, desc, url, type, orders))
+                        appendIdGroup.append(cursor.lastrowid)
                     conn.commit()
-                    return CombineData(0, "ok", {"id": cursor.lastrowid})
+                    return CombineData(0, "ok", {"id": appendIdGroup})
                 except:
                     conn.rollback()
                     return CombineData(
