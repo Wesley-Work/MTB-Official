@@ -1,4 +1,12 @@
 
+## 🌈 2.1.0 `2025-03-24` 
+### 🚀 Features
+- `feat`: 补充剩余辅助页面 @Wesley-0808 ([#25](https://github.com/Wesley-0808/MTB-Official/pull/25))
+- `feat`: 新增`Toppic`前置图标 @Wesley-0808 ([#27](https://github.com/Wesley-0808/MTB-Official/pull/27))
+### 🐞 Bug Fixes
+- `fix`: 修复上传文件检测文件后缀名异常的问题 @Wesley-0808 ([#27](https://github.com/Wesley-0808/MTB-Official/pull/27))
+### 🚧 Others
+- `chore`: 打包后资源文件适配服务端上传文件地址 @Wesley-0808 ([#27](https://github.com/Wesley-0808/MTB-Official/pull/27))
 ## 🌈 2.1.0-alpha.1 `2025-03-23` 
 ### 🚀 Features
 - `feat`: 补充剩余辅助页面 @Wesley-0808 ([#25](https://github.com/Wesley-0808/MTB-Official/pull/25))
