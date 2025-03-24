@@ -830,7 +830,7 @@ def setBanner(
     url: str = fastapi.Form(),
     title: str = fastapi.Form(),
     desc: str = fastapi.Form(),  # subTitle
-    type: str = fastapi.Form(),  # video or picture
+    type: str = fastapi.Form(),  # video or image
     orders: int = fastapi.Form(),
 ):
     if mode == "add":
@@ -941,8 +941,6 @@ def getBannerFileList():
             if mime_type:
                 tp = mime_type[0].split("/")[0]
                 file_type = tp
-                if tp == "image":
-                    file_type = "picture"
             else:
                 file_type = "unknown"
             # 构建文件信息
@@ -1040,10 +1038,7 @@ async def uploadBanner(
         ]
         # 文件类型
         fileContent_type = file.content_type.split("/")[0]
-        if fileContent_type == "image":
-            fileType = "picture"
-        else:
-            fileType = fileContent_type
+        fileType = fileContent_type
         # file.size 是 字节 为单位的
         # 判断黑名单
         if file.filename in BLACKLIST_EXTENSIONS or fileType in BLACKLIST_CONTENT_TYPES:
