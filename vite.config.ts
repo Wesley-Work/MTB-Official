@@ -17,6 +17,17 @@ export default () => {
     build: {
       outDir: 'dist',
       assetsDir: 'static',
+      rollupOptions: {
+        output: {
+          assetFileNames: (assetInfo) => {
+            const reg = /\.mp4$/gi;
+            if (assetInfo.names.some((name) => reg.test(name))) {
+              return `static/_upload/[name].[ext]`;
+            }
+            return `static/[name]-[hash].[ext]`;
+          },
+        },
+      },
     },
     plugins: [...basePlugin, VitePWA()],
   });

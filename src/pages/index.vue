@@ -104,7 +104,7 @@ const countImageProgress = (swiper?: SwiperInstance, el?: HTMLElement | undefine
     console.warn('progressBar is null', item, index);
     return;
   }
-  if (item?.type === 'picture') {
+  if (item?.type === 'image') {
     cancelAnimationFrame(animationFrameInstance);
     let startTime: number;
     const animate = (timestamp: number) => {
@@ -147,7 +147,7 @@ const onSwiperSlideChange = (swiper: SwiperInstance) => {
   }
   const item = bannerData.value[index];
   const element = document.getElementById(`swiperSource_${index}`) as HTMLVideoElement;
-  if (item?.type === 'picture') {
+  if (item?.type === 'image') {
     countImageProgress(swiper);
   } else if (item?.type === 'video') {
     element?.play();
