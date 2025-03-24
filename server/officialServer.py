@@ -1041,7 +1041,8 @@ async def uploadBanner(
         fileType = fileContent_type
         # file.size 是 字节 为单位的
         # 判断黑名单
-        if file.filename in BLACKLIST_EXTENSIONS or fileType in BLACKLIST_CONTENT_TYPES:
+        file_ext = os.path.splitext(file.filename)[1].lower()
+        if file_ext in BLACKLIST_EXTENSIONS or fileType in BLACKLIST_CONTENT_TYPES:
             return CombineData("efe1", "文件类型在黑名单中，请确认文件类型是否正确！")
         # 唯一文件名
         fileNames = file.filename.split(".")
@@ -1065,14 +1066,127 @@ async def uploadBanner(
                 return CombineData("sbe_u4", append["errmsg"])
         except:
             return CombineData("sbe_u3", traceback.format_exc())
-        return {
-            "url": fileUrl,
-            "filename": file.filename,
-            "combineFilename": fileName,
-            "content_type": file.content_type,
-            "size": len(fileContent),
-            "md5": hashlib.md5(fileContent).hexdigest(),
-        }
+        return CombineData(
+            0,
+            "ok",
+            {
+                "url": fileUrl,
+                "filename": file.filename,
+                "combineFilename": fileName,
+                "content_type": file.content_type,
+                "size": len(fileContent),
+                "md5": hashlib.md5(fileContent).hexdigest(),
+            },
+        )
+    except:
+        return CombineData("sbe_u1", traceback.format_exc())
+
+
+@app.post(
+    f"{URLPREFIX}/setBanner/justUpload", description="设置滑动展示列表内容-上传文件"
+)
+async def justUploadBanner(
+    file: fastapi.UploadFile = fastapi.File(...),
+):
+    try:
+        # 分块保存大小
+        chunk_size: Optional[int] = 1024 * 1024
+        # 黑名单扩展名
+        BLACKLIST_EXTENSIONS = [
+            ".exe",
+            ".bat",
+            ".cmd",
+            ".scr",
+            ".com",
+            ".pif",
+            ".php",
+            ".py",
+            ".rb",
+            ".pl",
+            ".sh",
+            ".asp",
+            ".aspx",
+            ".jsp",
+            ".jspx",
+            ".html",
+            ".htm",
+            ".xhtml",
+            ".js",
+            ".mht",
+            ".mhtml",
+            ".zip",
+            ".rar",
+            ".7z",
+            ".tar.gz",
+            ".tgz",
+            ".bz2",
+            ".doc",
+            ".docm",
+            ".xls",
+            ".xlsm",
+            ".ppt",
+            ".pptm",
+            ".dotm",
+            ".xltx",
+            ".xltm",
+            ".potm",
+            ".ppam",
+            ".ppsm",
+        ]
+        # 黑名单 Content-Type
+        BLACKLIST_CONTENT_TYPES = [
+            "application/x-msdownload",
+            "application/x-dosexec",
+            "application/x-httpd-php",
+            "application/x-python-code",
+            "application/x-ruby",
+            "text/plain",
+            "text/html",
+            "application/javascript",
+            "text/javascript",
+            "application/zip",
+            "application/x-rar-compressed",
+            "application/x-7z-compressed",
+            "application/msword",
+            "application/vnd.ms-excel",
+            "application/vnd.ms-powerpoint",
+        ]
+        # 文件类型
+        fileContent_type = file.content_type.split("/")[0]
+        fileType = fileContent_type
+        # file.size 是 字节 为单位的
+        # 判断黑名单
+        file_ext = os.path.splitext(file.filename)[1].lower()
+        if file_ext in BLACKLIST_EXTENSIONS or fileType in BLACKLIST_CONTENT_TYPES:
+            return CombineData("efe1", "文件类型在黑名单中，请确认文件类型是否正确！")
+        # 唯一文件名
+        fileNames = file.filename.split(".")
+        # 在第一个点前面加时间戳
+        fileName = f"{fileNames[0]}_{int(time.time()*1000)}"
+        fileNames.pop(0)
+        fileName = f"{fileName}.{'.'.join(fileNames)}"
+        fileContent = await file.read()
+        # 判断上传文件路径是否存在，不存在就创建
+        if not os.path.exists(UploadPath):
+            os.makedirs(UploadPath, exist_ok=True)
+        filePath = f"{UploadPath}/{fileName}"
+        # 储存文件
+        saveSuccess = await save_upload_file_chunks(file, filePath, chunk_size)
+        if not saveSuccess is True:
+            return CombineData("sbe_u2", saveSuccess)
+        fileUrl = f"{ReviewUploadPath}/{fileName}"
+        return CombineData(
+            0,
+            "ok",
+            {
+                "url": fileUrl,
+                "filename": file.filename,
+                "combineFilename": fileName,
+                "content_type": file.content_type,
+                "size": len(fileContent),
+                "md5": hashlib.md5(fileContent).hexdigest(),
+            },
+        )
     except:
         return CombineData("sbe_u1", traceback.format_exc())
 
