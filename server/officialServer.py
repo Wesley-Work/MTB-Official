@@ -17,13 +17,16 @@ import pymysql.cursors
 from pydantic import BaseModel, Field
 import xmltodict
 from functools import lru_cache
+import mimetypes
 
 
 # 官网业务API
 
 # 上传文件路径，需要适配前端路径
-UploadPath = "./public/static"
-ReviewUploadPath = "./static"
+UploadPath = "../Client/static/_upload"
+ReviewUploadPath = "./static/_upload"
+
+mimetypes.init()
 
 
 def load_mysql_config():
@@ -99,6 +102,7 @@ async def save_upload_file_chunks(
     """
     try:
         async with aiofiles.open(destination, "wb") as out_file:
+            await out_file.flush()
             while chunk := await upload_file.read(chunk_size):
                 await out_file.write(chunk)
         return True
@@ -809,7 +813,7 @@ def getBanner():
     try:
         with pymysql.connect(**mysqlConfig) as conn:
             with conn.cursor() as cursor:
-                sql = "SELECT * FROM banner"
+                sql = "SELECT * FROM banner ORDER BY `orders`"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 if not result:
@@ -827,13 +831,14 @@ def setBanner(
     title: str = fastapi.Form(),
     desc: str = fastapi.Form(),  # subTitle
     type: str = fastapi.Form(),  # video or picture
+    orders: int = fastapi.Form(),
 ):
     if mode == "add":
         try:
             with pymysql.connect(**mysqlConfig) as conn:
                 with conn.cursor() as cursor:
-                    sql = "INSERT INTO banner (title, `desc`, url, type) VALUES (%s, %s, %s, %s)"
-                    cursor.execute(sql, (title, desc, url, type))
+                    sql = "INSERT INTO banner (title, `desc`, url, type, orders) VALUES (%s, %s, %s, %s, %s)"
+                    cursor.execute(sql, (title, desc, url, type, orders))
                     conn.commit()
                     return CombineData(0, "ok", {"id": cursor.lastrowid})
         except:
@@ -867,7 +872,101 @@ def setBanner(
                 "ede1",
                 f"更新失败: {traceback.format_exc()}",
             )
-    return {"data": "uploadBanner"}
+    return CombineData(-1, "null return")
+
+
+@app.post(
+    f"{URLPREFIX}/setBanner/coverAdd", description="设置滑动展示列表内容-覆盖更新"
+)
+def setBannerCoverAdd(
+    data: str = fastapi.Form(),
+):
+
+    try:
+        with pymysql.connect(**mysqlConfig) as conn:
+            with conn.cursor() as cursor:
+                try:
+                    conn.begin()
+                    cursor.execute("DELETE FROM banner")
+                    jsons = json.loads(data)
+                    for i in jsons:
+                        title = i["title"]
+                        desc = i["desc"]
+                        url = i["url"]
+                        type = i["type"]
+                        orders = i["orders"]
+                        sql = "INSERT INTO banner (title, `desc`, url, type, orders) VALUES (%s, %s, %s, %s, %s)"
+                        cursor.execute(sql, (title, desc, url, type, orders))
+                    conn.commit()
+                    return CombineData(0, "ok", {"id": cursor.lastrowid})
+                except:
+                    conn.rollback()
+                    return CombineData(
+                        "abe1",
+                        f"添加失败: {traceback.format_exc()}",
+                    )
+    except:
+        return CombineData(
+            "abe1",
+            f"添加失败: {traceback.format_exc()}",
+        )
+    return CombineData(-1, "null return")
+
+
+@app.get(f"{URLPREFIX}/getBanner/fileList", description="获取上传的文件列表")
+def getBannerFileList():
+    try:
+        if not os.path.exists(UploadPath):
+            os.makedirs(UploadPath, exist_ok=True)
+
+        file_list = []
+        # 遍历目录并过滤隐藏文件
+        for filename in os.listdir(UploadPath):
+            file_path = os.path.join(UploadPath, filename)
+
+            # 跳过目录和隐藏文件
+            if os.path.isdir(file_path) or filename.startswith("."):
+                continue
+
+            file_stat = os.stat(file_path)
+            # 从数据库获取关联信息
+            with pymysql.connect(**mysqlConfig) as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT title, `desc`, type FROM banner WHERE url LIKE %s",
+                        (f"%{filename}",),
+                    )
+                    db_info = cursor.fetchone()
+            mime_type = mimetypes.guess_type(filename)
+            if mime_type:
+                tp = mime_type[0].split("/")[0]
+                file_type = tp
+                if tp == "image":
+                    file_type = "picture"
+            else:
+                file_type = "unknown"
+            # 构建文件信息
+            file_info = {
+                "filename": filename,
+                "url": f"{ReviewUploadPath.lstrip('.')}/{filename}",
+                "size": file_stat.st_size,
+                "mtime": file_stat.st_mtime,
+                "title": db_info["title"] if db_info else "",
+                "description": db_info["desc"] if db_info else "",
+                "file_type": db_info["type"] if db_info else file_type,
+                "is_in_banner": bool(db_info),  # 标记是否已加入轮播
+            }
+            file_list.append(file_info)
+
+        # 按修改时间倒序排序
+        file_list.sort(key=lambda x: x["mtime"], reverse=True)
+
+        return CombineData(0, "ok", file_list, "list")
+
+    except PermissionError:
+        return CombineData("gfl3", "目录访问权限不足", data=[])
+    except Exception as e:
+        return CombineData("gfl4", f"服务器内部错误: {str(e)}", data=[])
 
 
 @app.post(f"{URLPREFIX}/setBanner/upload", description="设置滑动展示列表内容-上传文件")
