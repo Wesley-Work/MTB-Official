@@ -1,4 +1,10 @@
 
+## 🌈 2.1.1 `2025-04-06` 
+### 🐞 Bug Fixes
+- `WebManage`: 修复`header`排序配置无效的问题。 @Wesley-0808 ([#29](https://github.com/Wesley-Work/MTB-Official/pull/29))
+### 🚧 Others
+- `Repo`: 修正仓库地址 @Wesley-0808 ([#29](https://github.com/Wesley-Work/MTB-Official/pull/29))
+- `chore`: 更新服务端文件名 @Wesley-0808 ([#29](https://github.com/Wesley-Work/MTB-Official/pull/29))
 ## 🌈 2.1.0 `2025-03-24`
 ### 🚀 Features
 - `feat`: 补充剩余辅助页面 @Wesley-0808 ([#25](https://github.com/Wesley-Work/MTB-Official/pull/25))
