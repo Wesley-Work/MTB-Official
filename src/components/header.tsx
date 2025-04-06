@@ -106,74 +106,78 @@ export default defineComponent({
 
             <div class="nav">
               <ul class="subnav-ul">
-                {headerConfig.value?.map((item, index) => (
-                  <li
-                    key={index}
-                    class={['navView', item?.type === 'list' && 'dropdown', item?.type === 'label' && 'labelCard']}
-                  >
-                    <div class="navItem">
-                      {isNormalTab(item?.type) ? (
-                        <a
-                          class={['isTabs', item.extraClass]}
-                          target={!!item?.isRouter || isTestRouter ? undefined : item.target}
-                          href={!!item?.isRouter || isTestRouter ? 'javascript:void(0)' : item.href}
-                          onClick={(e) => clickToPath(e, item, item.href)}
-                        >
-                          <span>{item.label}</span>
-                        </a>
-                      ) : (
-                        <span class="isTabs">{item.label}</span>
-                      )}
-                    </div>
-
-                    {!isNormalTab(item.type) && (
-                      <div
-                        class={[
-                          item.type === 'list' && 'navItem-type--list',
-                          item.type === 'label' && 'navItem-type--label',
-                        ]}
-                      >
-                        {item.type === 'list' && item.children && (
-                          <ul>
-                            {item.children.map((listItem, listIndex) => (
-                              <li key={listIndex}>
-                                <a
-                                  class="nav-link"
-                                  target={!!listItem?.isRouter || isTestRouter ? undefined : listItem.target}
-                                  href={!!listItem?.isRouter || isTestRouter ? 'javascript:void(0)' : listItem.href}
-                                  onClick={(e) => clickToPath(e, listItem, listItem.href)}
-                                >
-                                  {listItem.label}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-
-                        {item.type === 'label' && item.children && (
-                          <div>
-                            {item.children.map((labelItem, labelIndex) => (
-                              <div key={labelIndex} class="navItem-labelCard-item">
-                                <h2>{labelItem.title || `项目${labelIndex + 1}`}</h2>
-                                {labelItem?.children?.map((labelItemListEl, labelItemListIndex) => (
-                                  <a
-                                    key={labelItemListIndex}
-                                    class="nav-link"
-                                    target={!!labelItem?.isRouter || isTestRouter ? undefined : labelItem.target}
-                                    href={!!labelItem?.isRouter || isTestRouter ? 'javascript:void(0)' : labelItem.href}
-                                    onClick={(e) => clickToPath(e, labelItem, labelItem.href)}
-                                  >
-                                    {labelItemListEl?.label}
-                                  </a>
-                                ))}
-                              </div>
-                            ))}
-                          </div>
+                {headerConfig.value
+                  ?.sort((a, b) => (a?.orders ?? 0) - (b?.orders ?? 0))
+                  ?.map((item, index) => (
+                    <li
+                      key={index}
+                      class={['navView', item?.type === 'list' && 'dropdown', item?.type === 'label' && 'labelCard']}
+                    >
+                      <div class="navItem">
+                        {isNormalTab(item?.type) ? (
+                          <a
+                            class={['isTabs', item.extraClass]}
+                            target={!!item?.isRouter || isTestRouter ? undefined : item.target}
+                            href={!!item?.isRouter || isTestRouter ? 'javascript:void(0)' : item.href}
+                            onClick={(e) => clickToPath(e, item, item.href)}
+                          >
+                            <span>{item.label}</span>
+                          </a>
+                        ) : (
+                          <span class="isTabs">{item.label}</span>
                         )}
                       </div>
-                    )}
-                  </li>
-                ))}
+
+                      {!isNormalTab(item.type) && (
+                        <div
+                          class={[
+                            item.type === 'list' && 'navItem-type--list',
+                            item.type === 'label' && 'navItem-type--label',
+                          ]}
+                        >
+                          {item.type === 'list' && item.children && (
+                            <ul>
+                              {item.children.map((listItem, listIndex) => (
+                                <li key={listIndex}>
+                                  <a
+                                    class="nav-link"
+                                    target={!!listItem?.isRouter || isTestRouter ? undefined : listItem.target}
+                                    href={!!listItem?.isRouter || isTestRouter ? 'javascript:void(0)' : listItem.href}
+                                    onClick={(e) => clickToPath(e, listItem, listItem.href)}
+                                  >
+                                    {listItem.label}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {item.type === 'label' && item.children && (
+                            <div>
+                              {item.children.map((labelItem, labelIndex) => (
+                                <div key={labelIndex} class="navItem-labelCard-item">
+                                  <h2>{labelItem.title || `项目${labelIndex + 1}`}</h2>
+                                  {labelItem?.children?.map((labelItemListEl, labelItemListIndex) => (
+                                    <a
+                                      key={labelItemListIndex}
+                                      class="nav-link"
+                                      target={!!labelItem?.isRouter || isTestRouter ? undefined : labelItem.target}
+                                      href={
+                                        !!labelItem?.isRouter || isTestRouter ? 'javascript:void(0)' : labelItem.href
+                                      }
+                                      onClick={(e) => clickToPath(e, labelItem, labelItem.href)}
+                                    >
+                                      {labelItemListEl?.label}
+                                    </a>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  ))}
               </ul>
             </div>
 

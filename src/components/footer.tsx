@@ -94,12 +94,14 @@ export default defineComponent({
     // PC端内容渲染
     const renderDesktop = () => (
       <div class="pc" style={{ justifyContent: 'center' }}>
-        {footerConfig.value?.links?.map((section, index) => (
-          <div class="Footer-subfooterdiv" key={`desktop-${index}`}>
-            <h2>{section.title || `项目${index + 1}`}</h2>
-            <div class="Footer-subtag">{section.children?.map(renderLink)}</div>
-          </div>
-        ))}
+        {footerConfig.value?.links
+          ?.sort((a, b) => (a?.orders ?? 0) - (b?.orders ?? 0))
+          .map((section, index) => (
+            <div class="Footer-subfooterdiv" key={`desktop-${index}`}>
+              <h2>{section.title || `项目${index + 1}`}</h2>
+              <div class="Footer-subtag">{section.children?.map(renderLink)}</div>
+            </div>
+          ))}
         <div class="Footer-subfooterdiv find-us">
           <h2>找到我们</h2>
           <div class="clearfix">

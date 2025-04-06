@@ -193,7 +193,7 @@ export const defaultConfig: DefaultConfig = {
       {
         label: '代码仓库',
         target: '_blank',
-        href: 'https://github.com/Wesley-0808/MTB-Official',
+        href: 'https://github.com/Wesley-Work/MTB-Official',
       },
       {
         label: '更新日志',
