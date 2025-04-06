@@ -439,8 +439,8 @@ def addHeader(data: str = fastapi.Form()):
                             raise ValueError(f"ID {node['id']} 已存在")
                         sql = """
                             INSERT INTO header
-                            (`id`, `title`, `label`, `href`, `target`, `isRouter`, `onlyPC`, `onlyMobile`, `type`, `extraClass`, `bindParent`, `deep`)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            (`id`, `title`, `label`, `href`, `target`, `isRouter`, `onlyPC`, `onlyMobile`, `type`, `extraClass`, `bindParent`, `orders`, `deep`)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """
                         values = (
                             node["id"],
@@ -454,6 +454,7 @@ def addHeader(data: str = fastapi.Form()):
                             node.get("type"),
                             node.get("extraClass"),
                             parent_id or 0,
+                            node.get("orders"),
                             deep or 0,
                         )
                         cursor.execute(sql, values)
@@ -515,8 +516,8 @@ def addHeader(data: str = fastapi.Form()):
                             raise ValueError(f"ID {node['id']} 已存在")
                         sql = """
                             INSERT INTO header
-                            (`id`, `title`, `label`, `href`, `target`, `isRouter`, `onlyPC`, `onlyMobile`, `type`, `extraClass`, `bindParent`, `deep`)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            (`id`, `title`, `label`, `href`, `target`, `isRouter`, `onlyPC`, `onlyMobile`, `type`, `extraClass`, `bindParent`, `orders`, `deep`)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """
                         values = (
                             node["id"],
@@ -530,6 +531,7 @@ def addHeader(data: str = fastapi.Form()):
                             node.get("type"),
                             node.get("extraClass"),
                             parent_id or 0,
+                            node.get("orders"),
                             deep or 0,
                         )
                         cursor.execute(sql, values)
@@ -577,8 +579,8 @@ def editHeader(data: str = fastapi.Form()):
                         sql = """
                             INSERT INTO header
                             (id, title, label, href, target, isRouter,
-                             onlyPC, onlyMobile, type, extraClass, bindParent, deep)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                             onlyPC, onlyMobile, type, extraClass, bindParent, orders, deep)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """
                         values = (
                             node["id"],
@@ -592,6 +594,7 @@ def editHeader(data: str = fastapi.Form()):
                             node.get("type", "parent"),
                             node.get("extraClass", ""),
                             parent_id,
+                            node.get("orders"),
                             deep,
                         )
                         # 执行插入
@@ -689,8 +692,8 @@ def addFooter(data: str = fastapi.Form()):
                                 raise ValueError(f"ID {node['id']} 已存在")
                             sql = """
                                 INSERT INTO footer
-                                (`id`, `type`, `title`, `label`, `target`, `href`, `isRouter`, `onlyPC`, `onlyMobile`, `bindParent`, `deep`)
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                (`id`, `type`, `title`, `label`, `target`, `href`, `isRouter`, `onlyPC`, `onlyMobile`, `bindParent`, `orders`, `deep`)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                             """
                             values = (
                                 node["id"],
@@ -703,6 +706,7 @@ def addFooter(data: str = fastapi.Form()):
                                 node.get("onlyPC", False),
                                 node.get("onlyMobile", False),
                                 parent_id or 0,
+                                node.get("orders"),
                                 deep or 0,
                             )
                             cursor.execute(sql, values)
@@ -767,8 +771,8 @@ def editFooter(data: str = fastapi.Form()):
                                 raise ValueError(f"ID {node['id']} 已存在")
                             sql = """
                                 INSERT INTO footer
-                                (`id`, `type`, `title`, `label`, `target`, `href`, `isRouter`, `onlyPC`, `onlyMobile`, `bindParent`, `deep`)
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                (`id`, `type`, `title`, `label`, `target`, `href`, `isRouter`, `onlyPC`, `onlyMobile`, `bindParent`, `orders`, `deep`)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                             """
                             values = (
                                 node["id"],
@@ -781,6 +785,7 @@ def editFooter(data: str = fastapi.Form()):
                                 node.get("onlyPC", False),
                                 node.get("onlyMobile", False),
                                 parent_id or 0,
+                                node.get("orders"),
                                 deep or 0,
                             )
                             cursor.execute(sql, values)
