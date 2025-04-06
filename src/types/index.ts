@@ -42,6 +42,7 @@ declare global {
     onlyMobile?: boolean;
     bindParent?: number;
     children?: HeaderItemChildren[];
+    orders?: number;
     /**当CallBack存在时，无论是否为路由都只执行CallBack */
     callBack?: () => void;
   }
@@ -62,6 +63,7 @@ declare global {
     children?: FooterItem[];
     onlyPC?: boolean;
     onlyMobile?: boolean;
+    orders?: number;
   }
 
   export type FooterData = {

@@ -13,7 +13,7 @@ export default function useHeader() {
       success: (res: any) => {
         const result = JSON.parse(res);
         if (result?.errcode !== 0) {
-          console.error({ title: '获Header失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+          console.error({ title: '获取Header失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
           return;
         }
         const { data } = result;

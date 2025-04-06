@@ -3,16 +3,16 @@
 <p align="center">
     <img src="https://img.shields.io/badge/MTB--Official-4c1" alt="MTB">
     <br/>
-    <img src="https://img.shields.io/github/license/Wesley-0808/MTB-Official?color=green" alt="License">
-    <img src="https://img.shields.io/github/package-json/v/Wesley-0808/MTB-Official?color=blue" alt="Version">
-    <img src="https://img.shields.io/github/commit-activity/m/Wesley-0808/MTB-Official" alt="Commit">
+    <img src="https://img.shields.io/github/license/Wesley-Work/MTB-Official?color=green" alt="License">
+    <img src="https://img.shields.io/github/package-json/v/Wesley-Work/MTB-Official?color=blue" alt="Version">
+    <img src="https://img.shields.io/github/commit-activity/m/Wesley-Work/MTB-Official" alt="Commit">
 </p>
 
 
 # 🎉 About
 
 - 媒体部官网代码仓库，使用Vue3+Vite6开发，后端为Python
-- 支持通过OA([MTB-OA](https://github.com/Wesley-0808/MTB-OA))修改页面内容
+- 支持通过OA([MTB-OA](https://github.com/Wesley-Work/MTB-OA))修改页面内容
 - ShareNetdisk页面使用了『[TDesign](https://github.com/Tencent/Tdesign-vue-next)』组件库
 - 顺德中专团委学生会媒体部版权所有
 

@@ -226,7 +226,7 @@ onMounted(() => {
       'color: #1890ff',
     );
     console.info(
-      '%c本站使用 Vite6+Vue3(TypeScript); 后端使用Python开发  本站使用Github作为代码管理 https://github.com/Wesley-0808/MTB-Official',
+      '%c本站使用 Vite6+Vue3(TypeScript); 后端使用Python开发  本站使用Github作为代码管理 https://github.com/Wesley-Work/MTB-Official',
       'color: #1890ff',
     );
     console.info(
