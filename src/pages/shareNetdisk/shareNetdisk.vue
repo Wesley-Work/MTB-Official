@@ -3,7 +3,11 @@
   <div>
     <div style="height: 78px"></div>
     <!--header-->
-    <MTBHeader :fixed="true" :hidden-toppic="true" :use-custom-data="headerConfig" />
+    <MTBHeader
+      :fixed="true"
+      :hidden-toppic="true"
+      :use-custom-data="headerConfig"
+    />
     <!---->
     <t-dialog
       v-model:visible="dialogVisible"
@@ -23,30 +27,51 @@
               />
             </a>
             <a href="https://python.org/" target="_blank" title="API服务框架">
-              <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=%23fff" />
+              <img
+                src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=%23fff"
+              />
             </a>
             <a href="https://cn.vuejs.org/" target="_blank" title="主体框架">
-              <img src="https://img.shields.io/badge/Vue--Next-grey?style=for-the-badge&logo=vue.js" />
+              <img
+                src="https://img.shields.io/badge/Vue--Next-grey?style=for-the-badge&logo=vue.js"
+              />
             </a>
-            <a href="https://cn.vitejs.dev/guide/ssr.html" target="_blank" title="主要使用框架">
-              <img src="https://img.shields.io/badge/Vite_SSR-646CFF?style=for-the-badge&logo=vite&logoColor=%23fff" />
+            <a
+              href="https://cn.vitejs.dev/guide/ssr.html"
+              target="_blank"
+              title="主要使用框架"
+            >
+              <img
+                src="https://img.shields.io/badge/Vite_SSR-646CFF?style=for-the-badge&logo=vite&logoColor=%23fff"
+              />
             </a>
-            <img src="https://img.shields.io/badge/Wesley-20B2AA?style=for-the-badge" />
+            <img
+              src="https://img.shields.io/badge/Wesley-20B2AA?style=for-the-badge"
+            />
           </t-space>
         </div>
         <!--bodyContent-->
       </template>
     </t-dialog>
     <!--取件码弹窗-->
-    <t-dialog v-model:visible="pickUpCodeDialogVisible" :confirm-btn="null" :cancel-btn="null" width="40%">
+    <t-dialog
+      v-model:visible="pickUpCodeDialogVisible"
+      :confirm-btn="null"
+      :cancel-btn="null"
+      width="40%"
+    >
       <template #header>
         <div style="display: flex; flex-direction: row; align-items: center">
           <span>使用『取件码』获取文件</span>
           <t-popup trigger="click">
             <template #content>
               <div style="display: flex; flex-direction: column">
-                <span> 额外项：『取件码』设计有6位和8位两种类型，按您获得的『取件码』内容填写即可 </span>
-                <span> 目前暂未开通文件上传共享功能，所以『取件码』只由工作人员下发 </span>
+                <span>
+                  额外项：『取件码』设计有6位和8位两种类型，按您获得的『取件码』内容填写即可
+                </span>
+                <span>
+                  目前暂未开通文件上传共享功能，所以『取件码』只由工作人员下发
+                </span>
               </div>
             </template>
             <HelpCircleIcon size="16px" style="margin-left: 4px" />
@@ -62,7 +87,15 @@
             :extra="pickUpCodeLastIsExtra"
           />
           <div>
-            <t-button theme="primary" variant="outline" block size="large" @click="submitPickUpCode"> 查 询 </t-button>
+            <t-button
+              theme="primary"
+              variant="outline"
+              block
+              size="large"
+              @click="submitPickUpCode"
+            >
+              查 询
+            </t-button>
           </div>
         </div>
       </template>
@@ -71,7 +104,13 @@
     <div style="width: 60%; margin: 24px auto">
       <div class="t-alert t-alert--info">
         <div class="t-alert__icon">
-          <svg fill="none" viewBox="0 0 24 24" width="1em" height="1em" class="t-icon t-icon-info-circle-filled">
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            width="1em"
+            height="1em"
+            class="t-icon t-icon-info-circle-filled"
+          >
             <path
               fill="currentColor"
               d="M12 23a11 11 0 100-22 11 11 0 000 22zM11 8.5v-2h2v2h-2zm2 1.5v7.5h-2V10h2z"
@@ -80,7 +119,9 @@
         </div>
         <div class="t-alert__content">
           <div class="t-alert__message">
-            <div class="t-alert__description">文件内容来源于媒体部NAS设备，如有疑问请联系工作人员处理</div>
+            <div class="t-alert__description">
+              文件内容来源于媒体部NAS设备，如有疑问请联系工作人员处理
+            </div>
             <div class="t-alert__operation">
               <span
                 ><a
@@ -97,9 +138,22 @@
     </div>
     <!---->
     <div class="breadcrumb">
-      <div style="display: flex; background: var(--td-bg-color-container); padding: 6px 8px; border-radius: 6px">
+      <div
+        style="
+          display: flex;
+          background: var(--td-bg-color-container);
+          padding: 6px 8px;
+          border-radius: 6px;
+        "
+      >
         <div>
-          <t-button shape="circle" variant="outline" style="margin-right: 4px" title="刷新" @click="fetchData()">
+          <t-button
+            shape="circle"
+            variant="outline"
+            style="margin-right: 4px"
+            title="刷新"
+            @click="fetchData()"
+          >
             <RefreshIcon />
           </t-button>
         </div>
@@ -128,7 +182,10 @@
         :row-class-name="handleRowCursor"
       >
         <template v-if="breadCrumbOption.length >= 2" #firstFullRow>
-          <div class="fileList-firstFullRow--backFolder isfloder" @click="handleBackLastPath">
+          <div
+            class="fileList-firstFullRow--backFolder isfloder"
+            @click="handleBackLastPath"
+          >
             <FolderOpen1Icon />
             <div style="font-weight: bold">... 返回上级</div>
           </div>
@@ -149,14 +206,25 @@
           </t-space>
         </template>
         <template #operation="{ row }">
-          <!-- <span>{{ row }}</span> -->
           <t-space v-if="row.isfolder == 0" size="small">
-            <t-button v-if="false" variant="dashed" ghost @click.end="handleCopyFileDownloadUrl(row)">
+            <t-button
+              v-if="false"
+              variant="dashed"
+              ghost
+              @click.end="handleCopyFileDownloadUrl(row)"
+            >
               <FileCopyIcon />
             </t-button>
-            <!--class="button-hover-text-width--animation"-->
-            <t-button variant="dashed" theme="primary" ghost title="下载文件" @click.end="handleFileDownload(row)">
-              <div style="display: flex; flex-direction: row; align-items: center">
+            <t-button
+              variant="dashed"
+              theme="primary"
+              ghost
+              title="下载文件"
+              @click.end="handleFileDownload(row)"
+            >
+              <div
+                style="display: flex; flex-direction: row; align-items: center"
+              >
                 <DownloadIcon />
                 <span class="button-text">下载</span>
               </div>
@@ -171,13 +239,13 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, defineComponent, reactive, onBeforeMount, watch } from 'vue';
-import useClipboard from 'vue-clipboard3';
-import { useRouter, useRoute } from 'vue-router';
-import MTBHeader from '@components/header';
-import WesleyFooter from '@components/wesley_footer';
-import NumberInput from '@components/numberInput';
-import useFetch from '@utils/fetch';
+import { ref, defineComponent, reactive, onBeforeMount, watch } from "vue";
+import useClipboard from "vue-clipboard3";
+import { useRouter, useRoute } from "vue-router";
+import MTBHeader from "@components/header";
+import WesleyFooter from "@components/wesley_footer";
+import NumberInput from "@components/numberInput";
+import useFetch from "@utils/fetch";
 import {
   FolderOpen1Icon,
   FileWordIcon,
@@ -192,9 +260,9 @@ import {
   FileCopyIcon,
   RefreshIcon,
   HelpCircleIcon,
-} from 'tdesign-icons-vue-next';
-import { MessagePlugin, NotifyPlugin } from 'tdesign-vue-next';
-import type { RowClassNameParams } from 'tdesign-vue-next';
+} from "tdesign-icons-vue-next";
+import { MessagePlugin, NotifyPlugin } from "tdesign-vue-next";
+import type { RowClassNameParams } from "tdesign-vue-next";
 import {
   countFileSize,
   fileIsCode,
@@ -207,7 +275,8 @@ import {
   fileIsZip,
   isInternet,
   isMTBInternet,
-} from '@utils/common';
+} from "@utils/common";
+import { HeaderData } from "@/src/types";
 
 const router = useRouter();
 const route = useRoute();
@@ -219,7 +288,7 @@ watch(
   (newVal) => {
     dir.value = newVal.dir;
     fetchData();
-  },
+  }
 );
 
 interface BreadcrumbOption {
@@ -265,20 +334,20 @@ interface FileListData {
 const { toClipboard } = useClipboard();
 const headerConfig: HeaderData = [
   {
-    label: '返回 官网',
-    href: '/',
+    label: "返回 官网",
+    href: "/",
     isRouter: true,
   },
   {
-    label: '我有『取件码』',
+    label: "我有『取件码』",
     callBack: () => {
       pickUpCodeDialogVisible.value = true;
     },
   },
   {
-    label: '问题反馈',
-    href: 'https://wj.qq.com/s2/14786781/3fb8/',
-    target: '_blank',
+    label: "问题反馈",
+    href: "https://wj.qq.com/s2/14786781/3fb8/",
+    target: "_blank",
   },
   // {
   //   label: 'Github Repository',
@@ -289,7 +358,7 @@ const headerConfig: HeaderData = [
 const dialogVisible = ref(false);
 const pickUpCodeDialogVisible = ref(false);
 const pickUpCodeItemTotal = ref<number>(8);
-const pickUpCodeValue = ref<string>('');
+const pickUpCodeValue = ref<string>("");
 // 从后往前数，几项为额外项
 const pickUpCodeLastIsExtra = ref<number>(2);
 // 以几项进行分隔
@@ -297,19 +366,19 @@ const pickUpCodeSplit = ref<number>(3);
 const fileList = ref<FileListData[]>([]);
 const tableColumns = [
   {
-    colKey: 'filename',
-    title: '文件名',
+    colKey: "filename",
+    title: "文件名",
     width: 300,
   },
   {
-    colKey: 'mt',
-    title: '修改时间',
+    colKey: "mt",
+    title: "修改时间",
     width: 170,
     ellipsis: true,
   },
   {
-    colKey: 'filesize',
-    title: '文件大小',
+    colKey: "filesize",
+    title: "文件大小",
     width: 120,
     cell: (_h: any, { row }: { row?: any }) => {
       const { isfolder } = row;
@@ -322,21 +391,23 @@ const tableColumns = [
     },
   },
   {
-    colKey: 'operation',
-    title: '操作',
+    colKey: "operation",
+    title: "操作",
     width: 150,
   },
 ];
-const breadCrumbOption = ref<BreadcrumbOption[]>([{ content: '首页', path: '/' }]);
+const breadCrumbOption = ref<BreadcrumbOption[]>([
+  { content: "首页", path: "/" },
+]);
 const tableLoading = ref(false);
 const tableError = reactive({
   error: false,
-  errorMessage: '',
+  errorMessage: "",
 });
 // 返回上一页
 const handleBackLastPath = () => {
   const path = (dir.value as string) ?? (route.query?.dir as string);
-  const pathGroup = path.split('/').filter(Boolean);
+  const pathGroup = path.split("/").filter(Boolean);
   if (pathGroup.length === 0) {
     // 已经是根路径，无需跳转
     return;
@@ -344,7 +415,7 @@ const handleBackLastPath = () => {
   // 移除最后一级目录
   pathGroup.pop();
   // 上一级路径
-  const lastPath = `/${pathGroup.join('/')}`;
+  const lastPath = `/${pathGroup.join("/")}`;
   router.push({
     path: route.path,
     query: {
@@ -367,9 +438,9 @@ const handleClickBreadcrumb = (path: string) => {
 
 // 根据路径更新
 const breadCrumbUpdate = (path: string) => {
-  breadCrumbOption.value = [{ content: '首页', path: '/' }];
-  const pathSegments = path.split('/').filter((s) => s.trim() !== '');
-  let currentPath = '';
+  breadCrumbOption.value = [{ content: "首页", path: "/" }];
+  const pathSegments = path.split("/").filter((s) => s.trim() !== "");
+  let currentPath = "";
   pathSegments.forEach((segment) => {
     currentPath += `/${segment}`;
     breadCrumbOption.value.push({
@@ -382,10 +453,10 @@ const breadCrumbUpdate = (path: string) => {
 const fetchData = () => {
   tableLoading.value = true;
   tableError.error = false;
-  tableError.errorMessage = '';
-  const path = dir.value ?? route.query?.dir ?? '/';
+  tableError.errorMessage = "";
+  const path = dir.value ?? route.query?.dir ?? "/";
   useFetch({
-    url: '/netdisk/getFileList',
+    url: "/netdisk/getFileList",
     // sort = "mt"  # (filename/filesize/filetype/mt/privilege/owner/group)
     // dirs = "DESC"  # ASC / DESC
     data: {
@@ -396,22 +467,31 @@ const fetchData = () => {
       const { filePath, datas: data } = result.data;
       breadCrumbUpdate(filePath);
       if (result?.errcode !== 0) {
-        if (result?.errcode === 'GetFileListFail:5') {
+        if (result?.errcode === "GetFileListFail:5") {
           tableError.error = true;
           tableError.errorMessage = `文件夹路径不存在`;
-          NotifyPlugin.warning({ title: '获取列表失败', content: `文件夹不存在！` });
+          NotifyPlugin.warning({
+            title: "获取列表失败",
+            content: `文件夹不存在！`,
+          });
           return;
         }
         tableError.error = true;
         tableError.errorMessage = `获取文件列表失败: ${result?.errmsg}`;
-        NotifyPlugin.error({ title: '获取文件列表失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        NotifyPlugin.error({
+          title: "获取文件列表失败(Error)",
+          content: `${result?.errcode}:${result?.errmsg}`,
+        });
         return;
       }
       fileList.value = data;
     },
     error: (desc: string, res: any) => {
       console.error(desc, res);
-      NotifyPlugin.error({ title: '获取文件列表失败(Fail)', content: `[desc]:${res}` });
+      NotifyPlugin.error({
+        title: "获取文件列表失败(Fail)",
+        content: `[desc]:${res}`,
+      });
       tableError.error = true;
       tableError.errorMessage = `获取文件列表失败: ${res}`;
     },
@@ -427,17 +507,17 @@ const handleColClick = (e: any) => {
   if (e.colIndex !== 0 || e.row.isfolder === 0) return;
 
   // 获取标准化当前路径
-  const currentPath = (route.query.dir as string) || '/';
-  const normalizedCurrent = currentPath.replace(/\/+/g, '/').replace(/\/$/, ''); // 处理多余斜杠
+  const currentPath = (route.query.dir as string) || "/";
+  const normalizedCurrent = currentPath.replace(/\/+/g, "/").replace(/\/$/, ""); // 处理多余斜杠
 
   // 构建新路径
-  const pathSegments = normalizedCurrent.split('/').filter(Boolean);
+  const pathSegments = normalizedCurrent.split("/").filter(Boolean);
   pathSegments.push(e.row.filename);
-  const newDir = `/${pathSegments.join('/')}`;
+  const newDir = `/${pathSegments.join("/")}`;
 
   // 检查是否与当前路径相同
   if (decodeURIComponent(newDir) === decodeURIComponent(normalizedCurrent)) {
-    console.warn('重复跳转到相同路径:', newDir);
+    console.warn("重复跳转到相同路径:", newDir);
     return;
   }
 
@@ -453,7 +533,7 @@ const handleColClick = (e: any) => {
 // 文件夹列-鼠标指针
 const handleRowCursor = (e: RowClassNameParams<FileListData>) => {
   if (e.row.isfolder == 1) {
-    return 'isfloder';
+    return "isfloder";
   }
 };
 
@@ -474,10 +554,10 @@ const handleCopyFileDownloadUrl = (fileEx: any) => {
   const { download_url } = fileEx;
   try {
     toClipboard(download_url);
-    MessagePlugin.success('复制成功');
+    MessagePlugin.success("复制成功");
   } catch (e) {
     console.info(e);
-    MessagePlugin.error('复制失败！');
+    MessagePlugin.error("复制失败！");
   }
 };
 
@@ -485,26 +565,40 @@ const handleCopyFileDownloadUrl = (fileEx: any) => {
 const handleFileDownload = (row: any) => {
   const { filename } = row;
   const filePath = route.query?.dir ?? dir.value;
-  const loading = MessagePlugin.loading('加载中...');
+  const loading = MessagePlugin.loading("加载中...");
 
   useFetch({
-    url: '/netdisk/getDownloadUrl',
+    url: "/netdisk/getDownloadUrl",
     success: (res: any) => {
       const result = JSON.parse(res);
       if (result?.errcode !== 0) {
-        NotifyPlugin.error({ title: '获取下载链接失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        NotifyPlugin.error({
+          title: "获取下载链接失败(Error)",
+          content: `${result?.errcode}:${result?.errmsg}`,
+        });
         return;
       }
       const { data } = result;
-      const ip = isMTBInternet() ? data.internal_ip : isInternet() ? data.out_ip : null;
-      const port = isMTBInternet() ? data.internal_port : isInternet() ? data.out_port : null;
+      const ip = isMTBInternet()
+        ? data.internal_ip
+        : isInternet()
+        ? data.out_ip
+        : null;
+      const port = isMTBInternet()
+        ? data.internal_port
+        : isInternet()
+        ? data.out_port
+        : null;
       if (!ip || !port) {
-        NotifyPlugin.warning({ title: '无法组合下载链接', content: `判断网络环境失败` });
+        NotifyPlugin.warning({
+          title: "无法组合下载链接",
+          content: `判断网络环境失败`,
+        });
         return;
       }
       // 组合
       const downloadUrl = `${data.protocol}://${ip}:${port}${data.path}&source_path=${data.source_path}${filePath}&source_file=${filename}&source_total=1`;
-      var a = document.createElement('a');
+      var a = document.createElement("a");
       a.href = downloadUrl;
       a.download = filename;
       a.click();
@@ -528,7 +622,10 @@ const handleFileDownload = (row: any) => {
     },
     error: (desc: string, res: any) => {
       console.error(desc, res);
-      NotifyPlugin.error({ title: '获取下载链接失败(Main)', content: `[desc]:${res}` });
+      NotifyPlugin.error({
+        title: "获取下载链接失败(Main)",
+        content: `[desc]:${res}`,
+      });
     },
     complete: () => {
       MessagePlugin.close(loading);
@@ -539,27 +636,36 @@ const handleFileDownload = (row: any) => {
 // 查询取件码
 const submitPickUpCode = () => {
   const pickUpCode = pickUpCodeValue.value;
-  const loading = MessagePlugin.loading('加载中...');
+  const loading = MessagePlugin.loading("加载中...");
   pickUpCodeDialogVisible.value = false;
 
   useFetch({
-    url: '/netdisk/pick-up',
+    url: "/netdisk/pick-up",
     data: {
       code: pickUpCode,
     },
     success: (res: any) => {
       const result = JSON.parse(res);
       if (result?.errcode !== 0) {
-        NotifyPlugin.error({ title: '获取取件码内容失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        NotifyPlugin.error({
+          title: "获取取件码内容失败(Error)",
+          content: `${result?.errcode}:${result?.errmsg}`,
+        });
         return;
       }
-      type dataType = { id: number; key: string; value: string; type: string; extra: string };
+      type dataType = {
+        id: number;
+        key: string;
+        value: string;
+        type: string;
+        extra: string;
+      };
 
       const { data }: { data: dataType | null } = result;
       const islocalRoute = (str: dataType) => {
         try {
           const obj = JSON.parse(str?.extra);
-          const inval = ['isRouter', 'path'];
+          const inval = ["isRouter", "path"];
           inval.forEach((key) => {
             if (!obj[key]) {
               console.warn(`返回值[${key}]不是有效的本地路由数据`, str);
@@ -568,14 +674,14 @@ const submitPickUpCode = () => {
           });
           return true;
         } catch (e) {
-          console.warn('返回值不是一个有效的JSON对象', str);
+          console.warn("返回值不是一个有效的JSON对象", str);
           return false;
         }
       };
       // 跳转模式
-      if (data?.type === 'redirect') {
+      if (data?.type === "redirect") {
         // 1. 判断是不是一个标准的url
-        if (data?.extra?.startsWith('http')) {
+        if (data?.extra?.startsWith("http")) {
           const content = () => {
             return (
               <div>
@@ -598,53 +704,58 @@ const submitPickUpCode = () => {
           }, 1000);
         }
         // 2. 判断是不是一个对象
-        else if (data?.extra?.startsWith('{')) {
+        else if (data?.extra?.startsWith("{")) {
           const ilr = islocalRoute(data);
           if (!ilr) {
             NotifyPlugin.error({
-              title: '取件码内容无效',
+              title: "取件码内容无效",
               content: `请联系管理人员确认，错误内容：解析json字符无效，数据：${data.extra}`,
             });
             return;
           }
           const js = JSON.parse(data?.extra);
           if (js?.isRouter && js?.path) {
-            MessagePlugin.success({ content: '正在跳转路由' });
+            MessagePlugin.success({ content: "正在跳转路由" });
             setTimeout(() => {
               router.push({
                 path: js?.path,
               });
             }, 1000);
           } else {
-            const extraContent = js?.isRouter ? `路由地址不正确` : `不允许关闭跳转路由`;
+            const extraContent = js?.isRouter
+              ? `路由地址不正确`
+              : `不允许关闭跳转路由`;
             NotifyPlugin.error({
-              title: '取件码内容无效[本地路由]',
+              title: "取件码内容无效[本地路由]",
               content: `请联系管理人员确认，错误内容：${extraContent}，数据：${data.extra}`,
             });
           }
         } else {
           NotifyPlugin.error({
-            title: '取件码内容无效',
+            title: "取件码内容无效",
             content: `请联系管理人员确认，错误内容：${data.extra}`,
           });
         }
       }
       // 文件列表模式
-      else if (data?.type === 'fileList') {
+      else if (data?.type === "fileList") {
         NotifyPlugin.warning({
-          title: '取件码类型告警',
-          content: '当前不支持FileList类型的取件码，请联系管理人员处理',
+          title: "取件码类型告警",
+          content: "当前不支持FileList类型的取件码，请联系管理人员处理",
         });
       } else {
         NotifyPlugin.error({
-          title: '获取取件码内容失败(Data)',
+          title: "获取取件码内容失败(Data)",
           content: `取件码类型无效，请联系管理人员确认，错误类型：${data?.type}`,
         });
       }
     },
     error: (desc: string, res: any) => {
       console.error(desc, res);
-      NotifyPlugin.error({ title: '获取取件码内容失败(Main)', content: `[desc]:${res}` });
+      NotifyPlugin.error({
+        title: "获取取件码内容失败(Main)",
+        content: `[desc]:${res}`,
+      });
     },
     complete: () => {
       MessagePlugin.close(loading);
@@ -678,7 +789,7 @@ onBeforeMount(() => {
 
 <script lang="tsx">
 export default defineComponent({
-  name: 'MTBShareNetdisk',
+  name: "MTBShareNetdisk",
 });
 </script>
 
@@ -741,7 +852,8 @@ body {
 }
 
 .fileList {
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
 
   .t-table__row-full-element {
     &:has(.fileList-firstFullRow--backFolder) {

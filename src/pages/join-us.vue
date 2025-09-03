@@ -1,6 +1,9 @@
 <template>
   <div class="content waitHeader">
-    <div class="banner mtb-together" :style="{ backgroundImage: `url(${MTBTogether})` }">
+    <div
+      class="banner mtb-together"
+      :style="{ backgroundImage: `url(${MTBTogether})` }"
+    >
       <div class="wrap">
         <h2 class="mtb-together-title title">加 入 我 们</h2>
       </div>
@@ -18,8 +21,12 @@
         </div>
       </div>
       <div class="item">
-        <div class="title" style="font-weight: 600; margin: 16px 0 8px">纳新对象</div>
-        <div class="text" style="font-weight: 500; padding-left: 20px">全校非毕业级班级 学生</div>
+        <div class="title" style="font-weight: 600; margin: 16px 0 8px">
+          纳新对象
+        </div>
+        <div class="text" style="font-weight: 500; padding-left: 20px">
+          全校非毕业级班级 学生
+        </div>
       </div>
       <div class="tt">FAQ</div>
       <div v-for="(item, index) in faqList" :key="index" class="item">
@@ -31,35 +38,35 @@
 </template>
 
 <script setup lang="tsx">
-import { defineComponent, ref } from 'vue';
-import MTBTogether from '@assets/MTB-together-wywh.png';
+import { defineComponent, ref } from "vue";
+import MTBTogether from "@assets/MTB-together-wywh.png";
 const faqList = ref([
   {
-    q: '为什么要加入媒体部？',
-    a: '在这里，你能学到摄影技术，增长个人见识，培养兴趣爱好。',
+    q: "为什么要加入媒体部？",
+    a: "在这里，你能学到摄影技术，增长个人见识，培养兴趣爱好，认识志同道合的人。",
   },
   {
-    q: '媒体部的内部分组是怎样的？',
-    a: '部门内分为：照片组、视频组、海报组、技术组。其对应的工作内容为：照片[无人机]、视频[特效]、海报、技术支持。同时支持跨组作业。',
+    q: "媒体部内的分组是怎样的？",
+    a: "部门内分为：照片组、视频组、海报组、技术组。其对应的工作内容为：照片[无人机]、视频[特效]、海报、技术支持。在此基础上支持跨组作业。",
   },
   {
-    q: '媒体部和别的部门有什么不同？',
-    a: '媒体部与学生会其他部门的工作大相径庭，不像常规管理部门一样，每天都要"上班"，其次可以带电脑回校工作（遵守规则的前提下）',
+    q: "媒体部和别的部门有什么不同？",
+    a: '媒体部与学生会其他部门的工作大相径庭，不像常规管理部门一样，每天都要"上班"，但在一些特定时期需要参与任务，其次，在遵守部门规则的前提下可以带电脑回校工作。',
   },
   {
-    q: '部门待遇？',
-    a: '学生会是以“引领、奉献、服务、发展”为宗旨，故在学生会的工作中，没有待遇好坏之分。',
+    q: "部门待遇？",
+    a: "团委学生会是以“引领、奉献、服务、发展”为宗旨，在学生会的工作中，没有待遇的好坏之分。",
   },
   {
-    q: '媒体部有/提供哪些设备？',
-    a: '部门内现有索尼M3相机若干、尼康相机若干、无人机若干、GoPro以及工作电脑四台等，总价值超10w。具体配置请咨询部门人员。',
+    q: "媒体部有/提供哪些设备？",
+    a: "部门内现有相机若干、无人机若干、手持拍摄设备以及固定工作电脑等。具体的配置可咨询部门人员。",
   },
 ]);
 </script>
 
 <script lang="tsx">
 export default defineComponent({
-  name: 'JoinUs',
+  name: "JoinUs",
 });
 </script>
 
@@ -79,7 +86,7 @@ export default defineComponent({
     line-height: 30px;
     color: #333;
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 100%;
       height: 100%;

@@ -1,5 +1,5 @@
-module.exports = {
-  // 一行最多 120 字符
+export default {
+  // 一行最多 120 字符..
   printWidth: 120,
   // 使用 2 个空格缩进
   tabWidth: 2,
@@ -17,6 +17,8 @@ module.exports = {
   trailingComma: 'all',
   // 大括号内的首尾需要空格
   bracketSpacing: true,
+  // jsx 标签的反尖括号需要换行
+  jsxBracketSameLine: false,
   // 箭头函数，只有一个参数的时候，也需要括号
   arrowParens: 'always',
   // 每个文件格式化的范围是文件的全部内容
@@ -33,5 +35,5 @@ module.exports = {
   // vue 文件中的 script 和 style 内不用缩进
   vueIndentScriptAndStyle: false,
   // 换行符使用 lf
-  endOfLine: 'auto',
+  endOfLine: 'lf',
 };
