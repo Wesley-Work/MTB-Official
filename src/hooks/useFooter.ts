@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { defaultConfig } from '@config/config';
 import { useFetch } from '@utils/fetch';
+import { FooterData } from '../types';
 
 export default function useFooter() {
   const footerList = ref<FooterData>(defaultConfig?.footer);

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { defaultConfig } from '@config/config';
 import useFetch from '@utils/fetch';
+import { HeaderData } from '../types';
 export default function useHeader() {
   const headerList = ref<HeaderData>(defaultConfig.header);
 

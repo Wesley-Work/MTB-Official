@@ -37,7 +37,8 @@ export default function useTheme() {
   // };
 
   onMounted(() => {
-    initTheme();
+    // disable theme change
+    // initTheme();
     // mediaQuery.addEventListener('change', handleSystemThemeChange);
   });
 

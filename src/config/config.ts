@@ -1,3 +1,5 @@
+import { CONFIG, DefaultConfig } from "../types";
+
 export const config: CONFIG = {
   RecruitConsole: false,
   // 使用新API进行切换

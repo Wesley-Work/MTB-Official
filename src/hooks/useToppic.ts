@@ -1,6 +1,7 @@
 // useToppic.ts
 import { ref, onMounted } from 'vue';
 import { useFetch } from '@utils/fetch';
+import { ToppicInfo } from '../types';
 
 export default function useToppic() {
   const toppicInfo = ref<ToppicInfo>();
