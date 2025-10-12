@@ -149,12 +149,12 @@ def index():
     return {}
 
 
-@app.get(f"{URLPREFIX}/getToppic", description="获取置顶通知内容列表")
-def getToppic():
+@app.get(f"{URLPREFIX}/getTopic", description="获取置顶通知内容列表")
+def getTopic():
     try:
         with pymysql.connect(**mysqlConfig) as conn:
             with conn.cursor() as cursor:
-                sql = "SELECT * FROM toppic"
+                sql = "SELECT * FROM `topic`"
                 cursor.execute(sql)
                 result = cursor.fetchone()
                 if not result:
@@ -315,14 +315,14 @@ def getFooterList():
 
 
 # 管理功能API
-@app.post(f"{URLPREFIX}/setToppic/del", description="设置置顶通知内容-删除")
-def delToppic(
+@app.post(f"{URLPREFIX}/setTopic/del", description="设置置顶通知内容-删除")
+def delTopic(
     id: int = fastapi.Form(),
 ):
     try:
         with pymysql.connect(**mysqlConfig) as conn:
             with conn.cursor() as cursor:
-                sql = "DELETE FROM toppic WHERE id = %s"
+                sql = "DELETE FROM `topic` WHERE id = %s"
                 cursor.execute(sql, (id))
                 conn.commit()
                 if cursor.rowcount == 0:
@@ -332,15 +332,28 @@ def delToppic(
         return CombineData("dte1", f"删除失败: {traceback.format_exc()}")
 
 
-@app.post(f"{URLPREFIX}/setToppic/add", description="设置置顶通知内容-添加")
-def addToppic(
+@app.post(f"{URLPREFIX}/setTopic/clear", description="设置置顶通知内容-删除")
+def clearTopic():
+    try:
+        with pymysql.connect(**mysqlConfig) as conn:
+            with conn.cursor() as cursor:
+                sql = "DELETE FROM `topic`"
+                cursor.execute(sql)
+                conn.commit()
+                return CombineData(0, "删除成功")
+    except:
+        return CombineData("dtc1", f"删除失败: {traceback.format_exc()}")
+
+
+@app.post(f"{URLPREFIX}/setTopic/add", description="设置置顶通知内容-添加")
+def addTopic(
     data: str = fastapi.Form(),
     type: str = fastapi.Form(),
 ):
     try:
         with pymysql.connect(**mysqlConfig) as conn:
             with conn.cursor() as cursor:
-                select_sql = "SELECT * FROM toppic"
+                select_sql = "SELECT * FROM `topic`"
                 cursor.execute(select_sql)
                 selectResult = cursor.fetchall()
                 if selectResult:
@@ -349,7 +362,7 @@ def addToppic(
                         f"添加失败: 数据表有其他数据，根据规则，只允许一条置顶消息通知。",
                     )
                 # 可以添加
-                sql = "INSERT INTO toppic (data, type) VALUES (%s, %s)"
+                sql = "INSERT INTO `topic` (data, type) VALUES (%s, %s)"
                 cursor.execute(sql, (data, type))
                 conn.commit()
                 return CombineData(0, "ok", {"id": cursor.lastrowid})
@@ -360,8 +373,30 @@ def addToppic(
         )
 
 
-@app.post(f"{URLPREFIX}/setToppic/edit", description="设置置顶通知内容-修改")
-def editToppic(
+@app.post(f"{URLPREFIX}/setTopic/coverAdd", description="设置置顶通知内容-覆盖添加")
+def addTopic(
+    data: str = fastapi.Form(),
+    type: str = fastapi.Form(),
+):
+    try:
+        with pymysql.connect(**mysqlConfig) as conn:
+            with conn.cursor() as cursor:
+                del_sql = "DELETE FROM `topic`"
+                cursor.execute(del_sql)
+
+                sql = "INSERT INTO `topic` (data, type) VALUES (%s, %s)"
+                cursor.execute(sql, (data, type))
+                conn.commit()
+                return CombineData(0, "ok", {"id": cursor.lastrowid})
+    except:
+        return CombineData(
+            "cate1",
+            f"添加失败: {traceback.format_exc()}",
+        )
+
+
+@app.post(f"{URLPREFIX}/setTopic/edit", description="设置置顶通知内容-修改")
+def editTopic(
     id: int = fastapi.Form(),
     data: str = fastapi.Form(),
     type: str = fastapi.Form(),
@@ -369,7 +404,7 @@ def editToppic(
     try:
         with pymysql.connect(**mysqlConfig) as conn:
             with conn.cursor() as cursor:
-                sql = "UPDATE toppic SET data = %s, type = %s WHERE id = %s"
+                sql = "UPDATE `topic` SET data = %s, type = %s WHERE id = %s"
                 cursor.execute(sql, (data, type, id))
                 conn.commit()
                 if cursor.rowcount == 0:
@@ -1056,16 +1091,26 @@ async def uploadBanner(
         fileName = f"{fileNames[0]}_{int(time.time()*1000)}"
         fileNames.pop(0)
         fileName = f"{fileName}.{'.'.join(fileNames)}"
-        fileContent = await file.read()
+
         # 判断上传文件路径是否存在，不存在就创建
         if not os.path.exists(UploadPath):
             os.makedirs(UploadPath, exist_ok=True)
         filePath = f"{UploadPath}/{fileName}"
+
         # 储存文件
         saveSuccess = await save_upload_file_chunks(file, filePath, chunk_size)
         if not saveSuccess is True:
             return CombineData("sbe_u2", saveSuccess)
+
         fileUrl = f"{ReviewUploadPath}/{fileName}"
+
+        file_md5 = ""
+        file_size = 0
+        async with aiofiles.open(filePath, "rb") as f:
+            fileContent = await f.read()
+            file_md5 = hashlib.md5(fileContent).hexdigest()
+            file_size = len(fileContent)
+
         try:
             append = setBanner(None, "add", fileUrl, title, desc, fileType)
             if append["errcode"] != 0:
@@ -1080,8 +1125,8 @@ async def uploadBanner(
                 "filename": file.filename,
                 "combineFilename": fileName,
                 "content_type": file.content_type,
-                "size": len(fileContent),
-                "md5": hashlib.md5(fileContent).hexdigest(),
+                "size": file_size,
+                "md5": file_md5,
             },
         )
     except:
@@ -1171,16 +1216,28 @@ async def justUploadBanner(
         fileName = f"{fileNames[0]}_{int(time.time()*1000)}"
         fileNames.pop(0)
         fileName = f"{fileName}.{'.'.join(fileNames)}"
-        fileContent = await file.read()
+
         # 判断上传文件路径是否存在，不存在就创建
         if not os.path.exists(UploadPath):
             os.makedirs(UploadPath, exist_ok=True)
         filePath = f"{UploadPath}/{fileName}"
+
         # 储存文件
         saveSuccess = await save_upload_file_chunks(file, filePath, chunk_size)
         if not saveSuccess is True:
             return CombineData("sbe_u2", saveSuccess)
+
         fileUrl = f"{ReviewUploadPath}/{fileName}"
+
+        file_md5 = ""
+        file_size = 0
+        async with aiofiles.open(filePath, "rb") as f:
+            fileContent = await f.read()
+            file_md5 = hashlib.md5(fileContent).hexdigest()
+            file_size = len(fileContent)
+
+        fileUrl = f"{ReviewUploadPath}/{fileName}"
+
         return CombineData(
             0,
             "ok",
@@ -1189,8 +1246,8 @@ async def justUploadBanner(
                 "filename": file.filename,
                 "combineFilename": fileName,
                 "content_type": file.content_type,
-                "size": len(fileContent),
-                "md5": hashlib.md5(fileContent).hexdigest(),
+                "size": file_size,
+                "md5": file_md5,
             },
         )
     except:

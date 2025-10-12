@@ -1,6 +1,9 @@
 <template>
   <div class="content waitHeader">
-    <div class="banner mtb-together" :style="{ backgroundImage: `url(${MTBTogether})` }">
+    <div
+      class="banner mtb-together"
+      :style="{ backgroundImage: `url(${MTBTogether})` }"
+    >
       <div class="wrap">
         <h2 class="mtb-together-title title">关 于 媒 体 部</h2>
       </div>
@@ -21,7 +24,7 @@
       <div class="item">
         <div class="title">如何加入媒体部？</div>
         <div class="text">
-          请在<a href="/join-us">此处</a
+          请在<a href="/#/join-us">此处</a
           >查阅相关资料。媒体部非常欢迎热爱摄影、剪辑、编程的同学！如有意加入，请直接联系我们/校团委。
         </div>
       </div>
@@ -30,13 +33,13 @@
 </template>
 
 <script setup lang="tsx">
-import { defineComponent } from 'vue';
-import MTBTogether from '@assets/MTB_together-2024.png';
+import { defineComponent } from "vue";
+import MTBTogether from "@assets/MTB_together-2024.png";
 </script>
 
 <script lang="tsx">
 export default defineComponent({
-  name: 'AboutUs',
+  name: "AboutUs",
 });
 </script>
 
@@ -56,7 +59,7 @@ export default defineComponent({
     line-height: 30px;
     color: #333;
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 100%;
       height: 100%;

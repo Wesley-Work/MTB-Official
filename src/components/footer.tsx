@@ -6,6 +6,7 @@ import useFooter from '@hooks/useFooter';
 import fhzsn_white from '@assets/fhzsn_white.png';
 import wesleyLogo from '@assets/source/wesley.svg';
 import '@style/footer.scss';
+import { FooterData, FooterItem } from '../types';
 // SVG 箭头图标组件
 // const ArrowIcon = () => (
 //   <svg viewBox="0 0 300 250" width="24" height="24" style={{ fill: '#ffffff', flexShrink: 0 }}>
@@ -70,7 +71,7 @@ export default defineComponent({
     const crList = [
       '顺德区中等专业学校、顺德区技工学校 团委学生会',
       '顺德中专影视创作基地：媒体部',
-      '顺德中专 全媒体中心',
+      '顺德中专全媒体中心',
     ];
 
     const pushRouter = (path: string) => {

@@ -8,7 +8,11 @@
         :slides-per-view="1"
         :loop="true"
         :autoplay="false"
-        :pagination="{ clickable: true, type: 'bullets', renderBullet: renderBullets }"
+        :pagination="{
+          clickable: true,
+          type: 'bullets',
+          renderBullet: renderBullets,
+        }"
         :speed="800"
         @swiper="onSwiperInit"
         @slide-change-transition-start="onSwiperSlideChange"
@@ -25,7 +29,13 @@
             @timeupdate="onVideoPlaying"
             @ended="onVideoEnd"
           />
-          <img v-else :id="`swiperSource_${index}`" :src="item.url" :alt="item.title" class="banner-image" />
+          <img
+            v-else
+            :id="`swiperSource_${index}`"
+            :src="item.url"
+            :alt="item.title"
+            class="banner-image"
+          />
           <div class="other-bannerceter">
             <h2>{{ item?.title }}</h2>
             <h3>{{ item?.desc }}</h3>
@@ -35,13 +45,21 @@
       </Swiper>
     </div>
     <!---->
-    <div class="wxjb" :style="`background-image: url(${wxjb})`">
+    <div class="wxjb" :style="`background-image: url(${wxjb_bg})`">
       <div class="wxjb-wrap">
-        <h2 class="wxjb-title" data-sr-id="0" style="">無 限 進 步</h2>
+        <div class="wxjb-title">
+          <img :src="wxjb" />
+        </div>
         <p>我们不断发展和提升，超越现有的限制和成就，追求更高的目标。</p>
         <router-link to="/join-us" class="base-more">
           <i>加 入 我 们</i>
-          <svg width="19" height="6" viewBox="0 0 19 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="19"
+            height="6"
+            viewBox="0 0 19 6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path d="M0 5H16L12 1" stroke="white" stroke-width="2"></path>
           </svg>
         </router-link>
@@ -51,36 +69,37 @@
 </template>
 
 <script setup lang="tsx">
-import { onMounted, ref } from 'vue';
-import { config } from '@src/config';
-import { version } from '@/package.json';
-import wxjb from '@assets/wxjb.png';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination } from 'swiper/modules';
-import MTB_promotional from '@assets/MTB_promotional.mp4';
-import SDZZ from '@assets/sdzz.mp4';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import type { Swiper as SwiperInstance } from 'swiper';
-import useFetch from '../utils/fetch';
+import { onMounted, ref } from "vue";
+import { config } from "@src/config";
+import { version } from "@/package.json";
+import wxjb_bg from "@assets/wxjb_bg.png";
+import wxjb from "@assets/wxjb.png";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Pagination } from "swiper/modules";
+import MTB_promotional from "@assets/MTB_promotional.mp4";
+import SDZZ from "@assets/sdzz.mp4";
+import "swiper/css";
+import "swiper/css/pagination";
+import type { Swiper as SwiperInstance } from "swiper";
+import useFetch from "../utils/fetch";
 
 const swiperModules = [Pagination];
 const renderBullets = (index: number, className: string) => {
-  const grooveId = 'swiperGroove_' + index;
+  const grooveId = "swiperGroove_" + index;
   return `<span class="${className}"><div id="${grooveId}" class="groove"></div></span>`;
 };
 const defaultBanner = [
   {
     url: MTB_promotional,
-    title: '团委学生会 媒体部',
-    desc: '一个充满激情与想象力的部门',
-    type: 'video',
+    title: "团委学生会 媒体部",
+    desc: "一个充满激情与想象力的部门",
+    type: "video",
   },
   {
     url: SDZZ,
-    title: '顺德中专技工学校',
-    desc: '',
-    type: 'video',
+    title: "顺德中专技工学校",
+    desc: "",
+    type: "video",
   },
 ];
 const bannerData = ref([...defaultBanner]);
@@ -95,16 +114,21 @@ const onSwiperInit = (swiper: SwiperInstance) => {
   countImageProgress(swiper);
 };
 
-const countImageProgress = (swiper?: SwiperInstance, el?: HTMLElement | undefined, progress = 0) => {
+const countImageProgress = (
+  swiper?: SwiperInstance,
+  el?: HTMLElement | undefined,
+  progress = 0
+) => {
   // 由于swiper的activeIndex问题，所以使用realIndex
   const index = swiper?.realIndex;
   const item = bannerData.value[index];
-  const progressBar = document.getElementById(`swiperGroove_${index}`) ?? el ?? undefined;
+  const progressBar =
+    document.getElementById(`swiperGroove_${index}`) ?? el ?? undefined;
   if (!progressBar) {
-    console.warn('progressBar is null', item, index);
+    console.warn("progressBar is null", item, index);
     return;
   }
-  if (item?.type === 'image') {
+  if (item?.type === "image") {
     cancelAnimationFrame(animationFrameInstance);
     let startTime: number;
     const animate = (timestamp: number) => {
@@ -124,7 +148,7 @@ const countImageProgress = (swiper?: SwiperInstance, el?: HTMLElement | undefine
         swiperToNext(swiper as SwiperInstance);
       }
     };
-    progressBar.style.width = '0%';
+    progressBar.style.width = "0%";
     animationFrameInstance = requestAnimationFrame(animate);
   } else if (el && progress) {
     cancelAnimationFrame(animationFrameInstance);
@@ -139,17 +163,21 @@ const onSwiperSlideChange = (swiper: SwiperInstance) => {
   const index = swiper?.realIndex;
   const previousRealIndex = swiper?.previousRealIndex ?? swiper?.previousIndex;
   if (previousRealIndex !== undefined) {
-    const prevEl = document.getElementById(`swiperSource_${previousRealIndex}`) as HTMLVideoElement;
-    if (prevEl?.tagName === 'VIDEO') {
+    const prevEl = document.getElementById(
+      `swiperSource_${previousRealIndex}`
+    ) as HTMLVideoElement;
+    if (prevEl?.tagName === "VIDEO") {
       prevEl?.pause();
       prevEl.currentTime = 0;
     }
   }
   const item = bannerData.value[index];
-  const element = document.getElementById(`swiperSource_${index}`) as HTMLVideoElement;
-  if (item?.type === 'image') {
+  const element = document.getElementById(
+    `swiperSource_${index}`
+  ) as HTMLVideoElement;
+  if (item?.type === "image") {
     countImageProgress(swiper);
-  } else if (item?.type === 'video') {
+  } else if (item?.type === "video") {
     element?.play();
   }
 };
@@ -165,8 +193,10 @@ const onVideoPlaying = (e: Event) => {
   const duration = video?.duration;
   const currentTime = video?.currentTime;
   const progress = currentTime / duration;
-  const id = video?.id?.split('_')[1];
-  const progressEl = document.getElementById(`swiperGroove_${id}`) as HTMLElement;
+  const id = video?.id?.split("_")[1];
+  const progressEl = document.getElementById(
+    `swiperGroove_${id}`
+  ) as HTMLElement;
   countImageProgress(undefined, progressEl, progress);
 };
 
@@ -188,11 +218,14 @@ const swiperToNext = (swiperInstance: SwiperInstance) => {
 onMounted(() => {
   initHeight.value = window.innerHeight < 480 ? 680 : window.innerHeight;
   useFetch({
-    url: '/getBanner',
+    url: "/getBanner",
     success: (res: any) => {
       const result = JSON.parse(res);
       if (result?.errcode !== 0) {
-        console.error({ title: '获取Banner失败(Error)', content: `${result?.errcode}:${result?.errmsg}` });
+        console.error({
+          title: "获取Banner失败(Error)",
+          content: `${result?.errcode}:${result?.errmsg}`,
+        });
         return;
       }
       const { data } = result;
@@ -201,7 +234,7 @@ onMounted(() => {
         bannerData.value = data;
         return;
       }
-      console.warn('Banner内容为空，使用默认值');
+      console.warn("Banner内容为空，使用默认值");
     },
     error: (desc: string, res: any) => {
       console.error(desc, res);
@@ -210,39 +243,45 @@ onMounted(() => {
   // Console Group
   console.info(
     `%c MTB-Official %c Version: ${version} `,
-    'background: #35495e; padding: 4px; border-radius: 3px 0 0 3px; color: #fff',
-    'background: #41b883; padding: 4px; border-radius: 0 3px 3px 0; color: #fff',
+    "background: #35495e; padding: 4px; border-radius: 3px 0 0 3px; color: #fff",
+    "background: #41b883; padding: 4px; border-radius: 0 3px 3px 0; color: #fff"
   );
   console.info(
     `%c Copyright © Wesley %c MTB All Right Reserved %c`,
     `background: rgb(45, 140, 240);border:1px solid rgb(45, 140, 240); padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
     `border:1px solid rgb(45, 140, 240); padding: 1px; border-radius: 0 4px 4px 0; color: rgb(45, 140, 240);`,
-    'background:transparent',
+    "background:transparent"
   );
   // 招新Console
   if (config.RecruitConsole) {
     console.group(
-      '%c恭喜你发现了媒体部技术组招新特别渠道！ (互联网班级、有编程经验 优先[不包括编程猫等软件])',
-      'color: #1890ff',
+      "%c恭喜你发现了媒体部技术组招新特别渠道！ (互联网班级、有编程经验 优先[不包括编程猫等软件])",
+      "color: #1890ff"
     );
     console.info(
-      '%c本站使用 Vite6+Vue3(TypeScript); 后端使用Python开发  本站使用Github作为代码管理 https://github.com/Wesley-Work/MTB-Official',
-      'color: #1890ff',
+      "%c本站使用 Vite6+Vue3(TypeScript); 后端使用Python开发  本站使用Github作为代码管理 https://github.com/Wesley-Work/MTB-Official",
+      "color: #1890ff"
     );
     console.info(
-      '%c媒体部技术组长期招新！！！！如果你也对网络、编程有兴趣，想加入媒体部技术组，欢迎到我们部门找部长！！！（部门位置：办公楼一楼德育处 隔壁办公室）',
-      'color: #07c160',
+      "%c媒体部技术组长期招新！！！！如果你也对网络、编程有兴趣，想加入媒体部技术组，欢迎到我们部门找部长！！！（部门位置：办公楼一楼德育处 隔壁办公室）",
+      "color: #07c160"
     );
-    console.info('%c技术组很好玩的~~', 'color: rgb(255,152,0)');
+    console.info("%c技术组很好玩的~~", "color: rgb(255,152,0)");
     console.groupEnd();
-    console.group('%c【技术组简介】', 'color: rgb(255,152,0)');
-    console.info('%c1. 维护部门内网络、服务器正常运行，必要时需排查故障、解决问题。', 'font-weight: bold');
-    console.info('%c2. 协调部门内工作，保障其他组正常工作。', 'font-weight: bold');
+    console.group("%c【技术组简介】", "color: rgb(255,152,0)");
     console.info(
-      '%c3. 校园活动后台，包含：灯光、音响、直播、场控等内容，保障活动正常进行，给予技术支持。',
-      'font-weight: bold',
+      "%c1. 维护部门内网络、服务器正常运行，必要时需排查故障、解决问题。",
+      "font-weight: bold"
     );
-    console.info('%c...', 'font-weight: bold');
+    console.info(
+      "%c2. 协调部门内工作，保障其他组正常工作。",
+      "font-weight: bold"
+    );
+    console.info(
+      "%c3. 校园活动后台，包含：灯光、音响、直播、场控等内容，保障活动正常进行，给予技术支持。",
+      "font-weight: bold"
+    );
+    console.info("%c...", "font-weight: bold");
     console.groupEnd();
   }
 });
@@ -304,14 +343,18 @@ onMounted(() => {
     height: auto !important;
     overflow: hidden;
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 100%;
       height: 100%;
       left: 0;
       top: 0;
       z-index: 1;
-      background: linear-gradient(180deg, rgb(255 255 255 / 0%) 30.34%, var(--td-mask-active));
+      background: linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0%) 30.34%,
+        var(--td-mask-active)
+      );
     }
     video,
     img {
@@ -392,14 +435,17 @@ onMounted(() => {
   line-height: 30px;
   color: #333;
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
     z-index: 1;
-    background-image: radial-gradient(transparent 2px, var(--td-mask-active) 2px);
+    background-image: radial-gradient(
+      transparent 2px,
+      var(--td-mask-active) 2px
+    );
     background-size: 5px 5px;
     -webkit-backdrop-filter: saturate(50%) blur(4px);
     backdrop-filter: saturate(50%) blur(4px);
@@ -412,13 +458,13 @@ onMounted(() => {
     text-shadow: 0.125rem 0.125rem 2px black;
     padding: 0 32px;
     .wxjb-title {
-      text-shadow: 3px 5px 2px black;
-      font-weight: 700;
-      font-size: 50px;
       margin-bottom: 38px;
       background-image: none;
       padding: 0;
       color: #fff;
+      img {
+        height: 50px;
+      }
     }
     .base-more {
       line-height: 54px;
@@ -435,7 +481,7 @@ onMounted(() => {
       border: 2px solid rgba(255, 255, 255, 0.5);
       text-shadow: 0px 0px 20px black;
       &::before {
-        content: ' ';
+        content: " ";
         display: block;
         position: absolute;
         right: 0;

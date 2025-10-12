@@ -5,10 +5,10 @@
   <MTBFooter v-if="!showFooter"></MTBFooter>
 </template>
 <script setup lang="tsx">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import MTBHeader from '@components/header.tsx';
-import MTBFooter from '@components/footer.tsx';
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import MTBHeader from "@components/header";
+import MTBFooter from "@components/footer";
 const route = useRoute();
 
 const showHeader = computed(() => route.meta.noHeader === true);
