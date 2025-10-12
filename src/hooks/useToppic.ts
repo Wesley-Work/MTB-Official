@@ -10,7 +10,7 @@ export default function useToppic() {
   const initList = () => {
     // 请求数据
     useFetch({
-      url: '/getToppic',
+      url: '/getTopic',
       success: (res: any) => {
         const result = JSON.parse(res);
         if (result?.errcode !== 0) {
