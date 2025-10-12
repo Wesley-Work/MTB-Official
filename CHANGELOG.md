@@ -1,4 +1,7 @@
 
+## 🌈 2.2.0 `2025-10-12` 
+### 🚧 Others
+- chore: update topic @Wesley-0808 ([#33](https://github.com/Wesley-Work/MTB-Official/pull/33))
 ## 🌈 2.1.1 `2025-04-06` 
 ### 🐞 Bug Fixes
 - `WebManage`: 修复`header`排序配置无效的问题。 @Wesley-0808 ([#29](https://github.com/Wesley-Work/MTB-Official/pull/29))
